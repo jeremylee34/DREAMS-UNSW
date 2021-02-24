@@ -12,20 +12,37 @@ def test_login_invalid_email():
 def test_login_valid_email():
     pass
 
-def test_email_unshared():
+def test_login_email_unshared():
     pass
 
-def test_email_shared():
+def test_login_email_shared():
     pass
 
-def test_incorrect_password():
+def test_login_incorrect_password():
     pass
 
-def test_correct_password():
+def test_login_correct_password():
     pass
 
 
 #test for auth_register
-def test_update():
-    print(users["user1"]["password"])
+def test_register_invalid_email():
+    pass
+
+def test_register_valid_email():
+    pass
+
+def test_register_email_unshared():
+    pass
+
+def test_register_email_shared():
+    pass
+
+def check_password(): #less than 6 characters is a fail
+    pass
+
+def firstname_length(): # if firstname < 1 or >50 is a fail
+    pass
+
+def lastname_length(): #if lastname < 1 or >50 is a fail
     pass
