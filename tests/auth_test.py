@@ -3,6 +3,7 @@ import pytest
 from src.auth import auth_login_v1
 from src.auth import auth_register_v1
 from src.error import InputError
+import tests.auth_info
 
 #tests for auth_login
 def test_login_invalid_email():
@@ -22,7 +23,7 @@ def test_login_valid_email():
     assert ("asdfg@com", "asaadf" == "invalid mail")        
 
 def test_login_email_unshared():
-    pass
+    pass 
 
 #def test_login_email_shared():
     #pass
@@ -36,10 +37,13 @@ def test_login_incorrect_password():
 
 #test for auth_register
 def test_register_invalid_email():
-    pass
+    with pytest.raises(InputError):
+        assert auth_register_v1("12345678", "hello!!!1", "Tim", "Oreo")
+    
 
 def test_register_valid_email():
-    pass
+    assert auth_register_v1("honey@outlook.com", "hello!!!1", "Tim", "Oreo") == users["user1"]["email"]
+    
 
 def test_register_email_unshared():
     pass
@@ -48,6 +52,7 @@ def test_register_email_shared():
     pass
 
 def check_password(): #less than 6 characters is a fail
+    
     pass
 
 def firstname_length(): # if firstname < 1 or >50 is a fail
