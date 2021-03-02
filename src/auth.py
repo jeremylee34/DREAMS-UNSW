@@ -1,4 +1,4 @@
-import tests.auth_info
+from src.auth_info import users
 import re
 from src.error import InputError
 
@@ -9,47 +9,74 @@ def auth_login_v1(email, password):
         pass
     else:    
         raise InputError("Invalid email")
-    #checks if email is correct
-    if email is not users["user1"]["email"]:
+    #checks if email and password is correct
+    e = 0
+    p = 0
+    count = 1
+    num = 0
+    for x in users:
+        if users[x]["email"] == email:
+            e = 1
+            num = count
+        if users[x]["password"] == password:
+            p = 1
+        count += 1
+    if e == 0:
         raise InputError("Incorrect email")
-    #checks if password is correct
-    if password is not users["user1"]["password"]:
+    if p == 0:
         raise InputError("Incorrect password")
+    print(num)
     return {
-        'auth_user_id': 1,
+        'auth_user_id': num,
     }
+
+#HANDLES AND AUTH_USER_ID AND ASSUMPTION
 
 def auth_register_v1(email, password, name_first, name_last):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
+    #getting auth_user_id
+    count = 1
+    for i in users:
+        count += 1
+    users[f"user{count}"] = {}
     #checks for valid email
     if re.search(regex, email):
         pass
     else:    
         raise InputError("Invalid email")
     #checks for shared email
-    i = 0
-    for x in users:
-        if email == users[x]["email"]:
-            raise InputError("Email is already used")
-            i = 1
-    if i == 0:
-        users["user1"]["email"] = email
+    if count == 1:
+        users[f"user{count}"]["email"] = email
+    else:
+        x = 0
+        while x < count-1:
+            if email == users[i]["email"]:
+                raise InputError("Email is already used")
+            x += 1
+        users[f"user{count}"]["email"] = email
     #checks for valid password
     if len(password) >= 6:
-        users["user1"]["password"] = password
+        users[f"user{count}"]["password"] = password
     else:
         raise InputError("Password too short")
     #checks for valid firstname
-    if len(firstname) >= 1 and len(firstname) <= 50:
-        users["user1"]["firstname"] = firstname
+    if len(name_first) >= 1 and len(name_first) <= 50:
+        users[f"user{count}"]["firstname"] = name_first
     else:
         raise InputError("Invalid firstname")
     #checks for valid lastname
-    if len(Lastname) >= 1 and len(Lastname) <= 50:
-        users["user1"]["Lastname"] = Lastname
+    if len(name_last) >= 1 and len(name_last) <= 50:
+        users[f"user{count}"]["Lastname"] = name_last
     else:
         raise InputError("Invalid lastname")
+    print(count)
     return {
-        'auth_user_id' : 1,
+        'auth_user_id' : count,
     }
 
+"""auth_register_v1("honey@outlook.com", "hellooooo!!!", "Tim", "Oreo")
+auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
+auth_register_v1("andy@gmail.com", "coooooool!!!", "boris", "crook")
+auth_login_v1("andy@gmail.com", "hellooooo!!!")
+auth_login_v1("tom@outlook.com", "hellooooo!!!")"""
