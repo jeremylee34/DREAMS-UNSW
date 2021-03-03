@@ -54,10 +54,9 @@ def test_register_email_unshared():
     pass
 
 def test_register_email_shared():
-    auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
     with pytest.raises(InputError):
-        assert auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Blue")
-    pass
+        auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
+        assert auth_register_v1("tim@gmail.com", "1cooooool!!!", "Tim", "Blue")
 
 def check_password_test(): #less than 6 characters is a fail
     with pytest.raises(InputError):

@@ -53,9 +53,9 @@ def auth_register_v1(email, password, name_first, name_last):
     if count == 1:
         users[f"user{count}"]["email"] = email
     else:
-        x = 0
-        while x < count-1:
-            if email == users[i]["email"]:
+        x = 1
+        while x < count:
+            if email == users[f"user{x}"]["email"]:
                 raise InputError("Email is already used")
             x += 1
         users[f"user{count}"]["email"] = email
@@ -78,9 +78,8 @@ def auth_register_v1(email, password, name_first, name_last):
         'auth_user_id' : count,
     }
 
-"""auth_register_v1("honey@outlook.com", "hellooooo!!!", "Tim", "Oreo")
-auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
-auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
-auth_register_v1("andy@gmail.com", "coooooool!!!", "boris", "crook")
-auth_login_v1("andy@gmail.com", "hellooooo!!!")
-auth_login_v1("tom@outlook.com", "hellooooo!!!")"""
+#auth_register_v1("honey@outlook.com", "hellooooo!!!", "Tim", "Oreo")
+#auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
+#auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
+#auth_login_v1("andy@gmail.com", "hellooooo!!!")
+#auth_login_v1("tom@outlook.com", "hellooooo!!!")
