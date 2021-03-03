@@ -2,7 +2,7 @@ import pytest
 from src.auth import auth_login_v1
 from src.auth import auth_register_v1
 from src.error import InputError
-import src.auth_info
+from src.auth_info import users
 
 #tests for auth_login
 def test_login_valid_email():
@@ -16,27 +16,33 @@ def test_login_valid_email():
         auth_login_v1("42542552@gmail.com", "asdasff1234@") == "user_4"
 
 
-def test_login_valid_email():
+"""def test_login_invalid_email():
     assert auth_login_v1("asdfg.com", "a2sdf") == "invalid mail"
     assert auth_login_v1("asdfg@gmailcom", "as2df") == "invalid mail"   
     assert auth_login_v1("asdfgcom", "asdssf") == "invalid mail"    
-    assert auth_login_v1("asdfg@com", "asaadf") == "invalid mail"  
+    assert auth_login_v1("asdfg@com", "asaadf") == "invalid mail"  """
      
 
 def test_login_email_unshared():
     pass 
 
-#def test_login_email_shared():
-    #pass
-
-def test_login_incorrect_password():
+def test_login_email_shared():
     pass
 
-#def test_login_correct_password():
-    #pass
+def test_login_incorrect_password():
+    with pytest.raises(InputError):
+        assert auth_login_v1("tim@gmail.com", "1234")    
+
+def test_login_correct_password():
+    auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
+    auth_login_v1("tim@gmail.com", "1234hello!")
+    auth_register_v1("tom@yahoo.com", "asdfgasdg123", "Tom", "Blue")
+    assert users["user1"]["password"] == "1234hello!"
+    auth_login_v1("tom@yahoo.com", "asdfgasdg123")
+    assert users["user2"]["password"] == "asdfgasdg123"
 
 
-#test for auth_register"""
+#test for auth_register
 def test_register_invalid_email():
     with pytest.raises(InputError):
         assert auth_register_v1("12345678", "hello!!!1", "Tim", "Oreo")
@@ -48,6 +54,9 @@ def test_register_email_unshared():
     pass
 
 def test_register_email_shared():
+    auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
+    with pytest.raises(InputError):
+        assert auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Blue")
     pass
 
 def check_password_test(): #less than 6 characters is a fail

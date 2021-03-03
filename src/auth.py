@@ -5,10 +5,16 @@ from src.error import InputError
 def auth_login_v1(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     #checks for valid email
-    if re.search(regex, email):
+    """if re.search(regex, email):
         pass
     else:    
-        raise InputError("Invalid email")
+        raise InputError("Invalid email")"""
+
+    try:
+        re.search(regex, email)
+    except:
+        InputError("Invalid email")
+        
     #checks if email and password is correct
     e = 0
     p = 0
@@ -25,7 +31,6 @@ def auth_login_v1(email, password):
         raise InputError("Incorrect email")
     if p == 0:
         raise InputError("Incorrect password")
-    print(num)
     return {
         'auth_user_id': num,
     }
@@ -69,7 +74,6 @@ def auth_register_v1(email, password, name_first, name_last):
         users[f"user{count}"]["Lastname"] = name_last
     else:
         raise InputError("Invalid lastname")
-    print(count)
     return {
         'auth_user_id' : count,
     }
