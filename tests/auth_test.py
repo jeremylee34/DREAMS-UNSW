@@ -7,21 +7,19 @@ from src.auth_info import users
 #tests for auth_login
 def test_login_valid_email():
     with pytest.raises(Exception):
-        auth_login_v1("fafasf@gmail.com", "asdf1234@") == "user_1"
+        auth_login_v1("fafasf@gmail.com", "asdf1234@") == "user1"
     with pytest.raises(Exception):
-        auth_login_v1("asd@gmail.com", "asdfasf1234@") == "user_2"
+        auth_login_v1("asd@gmail.com", "asdfasf1234@") == "user2"
     with pytest.raises(Exception):
-        auth_login_v1("2424ssss@gmail.com", "asasfdf1234@") == "user_3"
+        auth_login_v1("2424ss@gmail.com", "asasfdf1234@") == "user3"
     with pytest.raises(Exception):
-        auth_login_v1("42542552@gmail.com", "asdasff1234@") == "user_4"
+        auth_login_v1("42542552@gmail.com", "asdasff1234@") == "user4"
 
-
-"""def test_login_invalid_email():
-    assert auth_login_v1("asdfg.com", "a2sdf") == "invalid mail"
-    assert auth_login_v1("asdfg@gmailcom", "as2df") == "invalid mail"   
-    assert auth_login_v1("asdfgcom", "asdssf") == "invalid mail"    
-    assert auth_login_v1("asdfg@com", "asaadf") == "invalid mail"  """
-     
+def test_login_invalid_email():
+    assert (auth_login_v1("asdfg.com", "a2sdf") == "invalid mail")
+    assert (auth_login_v1("asdfg@gmailcom", "as2df") == "invalid mail")    
+    assert (auth_login_v1("asdfgcom", "asdssf") == "invalid mail")    
+    assert (auth_login_v1("asdfg@com", "asaadf") == "invalid mail")        
 
 def test_login_email_unshared():
     pass 
@@ -34,12 +32,16 @@ def test_login_incorrect_password():
         assert auth_login_v1("tim@gmail.com", "1234")    
 
 def test_login_correct_password():
+<<<<<<< HEAD
     auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
     auth_login_v1("tim@gmail.com", "1234hello!")
     auth_register_v1("tom@yahoo.com", "asdfgasdg123", "Tom", "Blue")
     assert users["user1"]["password"] == "1234hello!"
     auth_login_v1("tom@yahoo.com", "asdfgasdg123")
     assert users["user2"]["password"] == "asdfgasdg123"
+=======
+    pass
+>>>>>>> more commit finish merge
 
 
 #test for auth_register

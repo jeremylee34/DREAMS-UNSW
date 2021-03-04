@@ -74,6 +74,8 @@ def auth_register_v1(email, password, name_first, name_last):
         users[f"user{count}"]["Lastname"] = name_last
     else:
         raise InputError("Invalid lastname")
+    print(count)
+    
     return {
         'auth_user_id' : count,
     }
