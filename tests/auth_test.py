@@ -32,16 +32,12 @@ def test_login_incorrect_password():
         assert auth_login_v1("tim@gmail.com", "1234")    
 
 def test_login_correct_password():
-<<<<<<< HEAD
     auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
     auth_login_v1("tim@gmail.com", "1234hello!")
     auth_register_v1("tom@yahoo.com", "asdfgasdg123", "Tom", "Blue")
     assert users["user1"]["password"] == "1234hello!"
     auth_login_v1("tom@yahoo.com", "asdfgasdg123")
     assert users["user2"]["password"] == "asdfgasdg123"
-=======
-    pass
->>>>>>> more commit finish merge
 
 
 #test for auth_register
@@ -71,3 +67,30 @@ def firstname_length_test(): # if firstname < 1 or >50 is a fail
 def lastname_length_test(): #if lastname < 1 or >50 is a fail
     with pytest.raises(InputError):
         assert auth_register_v1("honey@outlook.com", "hi", "Tim", "")
+
+#register handle
+def test_handle_taken():
+    #clear()
+    user_1 = auth_register_v1("asdf@gmail.com","1234", "Tom", "Holyy")
+    user_1["handle"] = "tomholyy"
+    user_1 = auth_register_v1("fdsa@gmail.com","12345", "Tom", "Holyy")
+    assert (user_1["handle"] == "tomholyy0")
+
+def test_handle_nospace():
+    #clear()
+    user_1 = auth_register_v1("asdf@gmail.com","1234", "Tom", "Holyy@")
+    assert (user_1["handle"] == "tomholyy")
+
+def test_handle_toolong():
+    #clear()
+    user_1 = auth_register_v1("asdf@gmail.com","1234", "asdfasdfasdf", "asdfasdfasdf")
+    assert (user_1["handle"] == "asdfasdfasdfasdfasdf")
+
+def test_handle_same():
+    #clear()
+    user_1 = auth_register_v1("asdf@gmail.com","1234", "hellomynameis", "garythekingpingyo")
+    assert (user_1["handle"] == "hellomynameisgarythe")
+    user_2 = auth_register_v1("fdsadasd@gmail.com","1234444", "hellomynameis", "garythekingpingyo")
+    assert (user_2["handle"] == "hellomynameisgaryth0")
+    user_3 = auth_register_v1("fdsadasd@gmail.com","1234444", "hellomynameis", "garythekingpingyo")
+    assert (user_3["handle"] == "hellomynameisgaryth1")
