@@ -75,7 +75,16 @@ def auth_register_v1(email, password, name_first, name_last):
     else:
         raise InputError("Invalid lastname")
     print(count)
-    
+    #handle	
+    handle = ''
+    #error will occur before getting here?
+    conca = users[f"user{count}"]["firstname"]+users[f"user{count}"]["lastname"]
+    r = re.compiler(r"[@]")
+    cut_ad = r.sub("",s)
+    handle += conca.replace(" ","")
+    if len(handle)>20
+	raise InputError("too long conca")    
+
     return {
         'auth_user_id' : count,
     }
