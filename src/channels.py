@@ -1,5 +1,5 @@
 from src.error import InputError
-from data import data
+from src.data import data
 
 def channels_list_v1(auth_user_id):
     channel_list = []
@@ -13,13 +13,11 @@ def channels_list_v1(auth_user_id):
     }
 
 def channels_listall_v1(auth_user_id):
+    channel_list = []
+    for channel in data['channels']:
+        channel_list.append(channel)
     return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
+        'channels': channel_list
     }
 
 def channels_create_v1(auth_user_id, name, is_public):
