@@ -90,9 +90,59 @@ def auth_register_v1(email, password, name_first, name_last):
     #check 20 chars; if exceed cut'em
     if len(handle) > 20:
         handle = handle[:20]
-
-
     
+        #finding repetitions of names
+        repeat = 0
+        for r in data["users"]:
+            last = r["Lastname"].replace("@", "")
+            last = r["Lastname"].replace(" ", "")
+            first = r["firstname"].replace("@", "")
+            first = r["firstname"].replace(" ", "")        
+            if last == name_last and first == name_first:
+                repeat += 1
+        
+        #find how many characters need to be replaced
+        chars = list(str(repeat))
+        num = 0
+        for c in chars:
+            num += 1
+
+        #separate the characters of the handle
+        if repeat >= 1:
+            n = 0
+            char_handle = list(handle) #[h, a, n, d, l, e]
+            while n < num:
+                pop_handle = char_handle.pop(-1)
+                n += 1
+            n = 0
+            while n < num:
+                char_handle.append(chars[n])
+                n += 1
+            char_handle = "".join(char_handle)
+            print(char_handle)
+        else:
+            print(handle)
+    else:
+        repeat = 0
+        for r in data["users"]:
+            last = r["Lastname"].replace("@", "")
+            last = r["Lastname"].replace(" ", "")
+            first = r["firstname"].replace("@", "")
+            first = r["firstname"].replace(" ", "")        
+            if last == name_last and first == name_first:
+                repeat += 1
+
+        #separate the characters of the handle
+        if repeat >= 1:
+            n = 0
+            char_handle = list(handle) #[h, a, n, d, l, e]
+            #while n < num:
+            char_handle.append(str(repeat))
+                #n += 1
+            char_handle = "".join(char_handle)
+            print(char_handle)
+        else:
+            print(handle)    
 
     #check if handle repeat itself 
     ##last_idx = -1
@@ -118,18 +168,28 @@ def auth_register_v1(email, password, name_first, name_last):
         'auth_user_id' : count,
     }
 
-auth_register_v1("honey@outlook.com", "hellooooo!!!", "12345@@67890", "123456  7890123")
+auth_register_v1("honey@outlook.com", "hellooooo!!!", "honey", "smith")
 #print(data)
 #print(data["users"][0]["password"])
 #print(data["user1"]["email"])
-auth_register_v1("asdfy@outlook.com", "hasdfooooo!!!", "12345@@67890", "123456  7890s123")
+auth_register_v1("asdfy@outlook.com", "hasdfooooo!!!", "ash", "blue")
 #print(data)
 #print(data["user2"]["email"])
 auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
 #print(data["user3"]["email"])
 
-auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
+auth_register_v1("tom@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom@yahoo.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom@icloud.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom@google.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom1@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom2@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom3@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom4@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom5@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom6@gmail.com", "hellooooo!!!", "Tom", "bite")
+auth_register_v1("tom7@gmail.com", "hellooooo!!!", "Tom", "bite")
 print(data)
-auth_login_v1("honey@outlook.com", "hellooooo!!!")
-auth_login_v1("andy@gmail.com", "hellooooo!!!")
+#auth_login_v1("honey@outlook.com", "hellooooo!!!")
+#auth_login_v1("andy@gmail.com", "hellooooo!!!")
 
