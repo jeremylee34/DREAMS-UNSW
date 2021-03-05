@@ -2,14 +2,14 @@ from src.error import InputError
 from data import data
 
 def channels_list_v1(auth_user_id):
-
+    channel_list = []
+    for channel in data['channels']:
+        member_list = channel.get('all_members')
+        for member in member_list:
+            if member == auth_user_id:
+                channel_list.append(channel)
     return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
+        'channels': channel_list
     }
 
 def channels_listall_v1(auth_user_id):
@@ -24,7 +24,7 @@ def channels_listall_v1(auth_user_id):
 
 def channels_create_v1(auth_user_id, name, is_public):
     if len(name) > 20:
-        raise InputError('There is more than 20 characters in your channel name')
+        raise InputError('Name is more than 20 characters long')
     new_channel = {
         "name": name,
         "is_public": is_public,
