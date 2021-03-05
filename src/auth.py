@@ -1,6 +1,6 @@
-from data import data
+from src.data import data
 import re
-from error import InputError
+from src.error import InputError
 
 def auth_login_v1(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
@@ -76,16 +76,15 @@ def auth_register_v1(email, password, name_first, name_last):
     else:
         raise InputError("Invalid lastname")
 
-    ####################
-    ###__add handle__###	
-    ####################
-
+    #making the handle
     #make lower case
     handle = (name_first + name_last).lower()
 
     #replace ' ' and '@' with ''
     handle = handle.replace("@", "")
     handle = handle.replace(" ", "")
+    handle = handle.replace("\t", "")
+    handle = handle.replace("\n", "")
 
     #check 20 chars; if exceed cut'em
     if len(handle) > 20:
@@ -96,8 +95,20 @@ def auth_register_v1(email, password, name_first, name_last):
         for r in data["users"]:
             last = r["Lastname"].replace("@", "")
             last = r["Lastname"].replace(" ", "")
+            last = r["Lastname"].replace("\t", "")
+            last = r["Lastname"].replace("\n", "")            
             first = r["firstname"].replace("@", "")
-            first = r["firstname"].replace(" ", "")        
+            first = r["firstname"].replace(" ", "")
+            first = r["firstname"].replace("\t", "")
+            first = r["firstname"].replace("\n", "")            
+            name_last = name_last.replace("@", "")
+            name_last = name_last.replace(" ", "")
+            name_last = name_last.replace("\t", "")
+            name_last = name_last.replace("\n", "")            
+            name_first = name_first.replace("@", "")
+            name_first = name_first.replace(" ", "")
+            name_first = name_first.replace("\t", "")
+            name_first = name_first.replace("\n", "")                                 
             if last == name_last and first == name_first:
                 repeat += 1
         
@@ -119,16 +130,28 @@ def auth_register_v1(email, password, name_first, name_last):
                 char_handle.append(chars[n])
                 n += 1
             char_handle = "".join(char_handle)
-            print(char_handle)
-        else:
-            print(handle)
+            #print(char_handle)
+        #else:
+            #print(handle)
     else:
         repeat = 0
         for r in data["users"]:
             last = r["Lastname"].replace("@", "")
             last = r["Lastname"].replace(" ", "")
+            last = r["Lastname"].replace("\t", "")
+            last = r["Lastname"].replace("\n", "")            
             first = r["firstname"].replace("@", "")
-            first = r["firstname"].replace(" ", "")        
+            first = r["firstname"].replace(" ", "")
+            first = r["firstname"].replace("\t", "")
+            first = r["firstname"].replace("\n", "")            
+            name_last = name_last.replace("@", "")
+            name_last = name_last.replace(" ", "")
+            name_last = name_last.replace("\t", "")
+            name_last = name_last.replace("\n", "")            
+            name_first = name_first.replace("@", "")
+            name_first = name_first.replace(" ", "")
+            name_first = name_first.replace("\t", "")
+            name_first = name_first.replace("\n", "")         
             if last == name_last and first == name_first:
                 repeat += 1
 
@@ -136,48 +159,20 @@ def auth_register_v1(email, password, name_first, name_last):
         if repeat >= 1:
             n = 0
             char_handle = list(handle) #[h, a, n, d, l, e]
-            #while n < num:
             char_handle.append(str(repeat))
-                #n += 1
             char_handle = "".join(char_handle)
             print(char_handle)
         else:
             print(handle)    
-
-    #check if handle repeat itself 
-    ##last_idx = -1
-    ##num_add = 0
-
-    ##for x in data:
-    ##    if data[f"user{count}"]["handle"] == handle:
-    ##        if num_add >= 10:
-    ##            last_idx -= 1
-    ##        #change to list first 
-    ##        list_handle = list(handle)
-    ##        handle[last_idx] = num_add
-    ##        num_add += 1
-    ##        
-    ##    else:
-    ##        pass
-    
     register["handle"] = handle 
-    #print(data)"""
     data["users"].append(register)
-    print(count)
     return {
         'auth_user_id' : count,
     }
 
-auth_register_v1("honey@outlook.com", "hellooooo!!!", "honey", "smith")
-#print(data)
-#print(data["users"][0]["password"])
-#print(data["user1"]["email"])
+"""auth_register_v1("honey@outlook.com", "hellooooo!!!", "honey", "smith")
 auth_register_v1("asdfy@outlook.com", "hasdfooooo!!!", "ash", "blue")
-#print(data)
-#print(data["user2"]["email"])
 auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
-#print(data["user3"]["email"])
-
 auth_register_v1("tom@gmail.com", "hellooooo!!!", "Tom", "bite")
 auth_register_v1("tom@yahoo.com", "hellooooo!!!", "Tom", "bite")
 auth_register_v1("tom@icloud.com", "hellooooo!!!", "Tom", "bite")
@@ -189,7 +184,9 @@ auth_register_v1("tom4@gmail.com", "hellooooo!!!", "Tom", "bite")
 auth_register_v1("tom5@gmail.com", "hellooooo!!!", "Tom", "bite")
 auth_register_v1("tom6@gmail.com", "hellooooo!!!", "Tom", "bite")
 auth_register_v1("tom7@gmail.com", "hellooooo!!!", "Tom", "bite")
-print(data)
-#auth_login_v1("honey@outlook.com", "hellooooo!!!")
-#auth_login_v1("andy@gmail.com", "hellooooo!!!")
+auth_register_v1("tom8@gmail.com", "hellooooo!!!", "@Tom", "bite")
+auth_register_v1("andy@gmail.com", "hellooooo!!!", "@Tom", "bite")
+
+auth_login_v1("honey@outlook.com", "hellooooo!!!")
+auth_login_v1("andy@gmail.com", "hellooooo!!!")"""
 

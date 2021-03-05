@@ -2,7 +2,7 @@ import pytest
 from src.auth import auth_login_v1
 from src.auth import auth_register_v1
 from src.error import InputError
-from src.auth_info import users
+from src.data import data
 
 #tests for auth_login
 def test_login_valid_email():
@@ -73,7 +73,7 @@ def lastname_length_test(): #if lastname < 1 or >50 is a fail
         assert auth_register_v1("honey@outlook.com", "hi", "Tim", "")
 
 #register handle
-"""def test_handle_taken():
+def test_handle_taken():
     #clear()
     user_1 = auth_register_v1("asdf@gmail.com","1234", "Tom", "Holyy")
     user_1["handle"] = "tomholyy"
@@ -98,4 +98,3 @@ def test_handle_same():
     assert (user_2["handle"] == "hellomynameisgaryth0")
     user_3 = auth_register_v1("fdsadasd@gmail.com","1234444", "hellomynameis", "garythekingpingyo")
     assert (user_3["handle"] == "hellomynameisgaryth1")
-    """
