@@ -1,2 +1,0 @@
-#dictionary in dictionary
-users = {}

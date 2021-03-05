@@ -1,15 +1,10 @@
-from auth_info import users
+from data import data
 import re
 from error import InputError
 
 def auth_login_v1(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     #checks for valid email
-    """if re.search(regex, email):
-        pass
-    else:    
-        raise InputError("Invalid email")"""
-
     try:
         re.search(regex, email)
     except:
@@ -18,21 +13,22 @@ def auth_login_v1(email, password):
     #checks if email and password is correct
     e = 0
     p = 0
-    count = 1
-    num = 0
-    for x in users:
-        if users[x]["email"] == email:
+    x = 0
+    count = 0
+    while x < len(data["users"]):
+        if data["users"][x]["email"] == email:
             e = 1
-            num = count
-        if users[x]["password"] == password:
-            p = 1
-        count += 1
+            count = x + 1
+        if data["users"][x]["password"] == password:
+            p = 1 
+        x += 1
     if e == 0:
         raise InputError("Incorrect email")
     if p == 0:
         raise InputError("Incorrect password")
+    print(count)
     return {
-        'auth_user_id': num,
+        'auth_user_id': count,
     }
 
 #HANDLES AND AUTH_USER_ID AND ASSUMPTION
@@ -41,9 +37,9 @@ def auth_register_v1(email, password, name_first, name_last):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     #getting auth_user_id
     count = 1
-    for i in users:
+    for i in data["users"]:
         count += 1
-    users[f"user{count}"] = {}
+    register = {}
 
     #checks for valid email
     if re.search(regex, email):
@@ -52,34 +48,33 @@ def auth_register_v1(email, password, name_first, name_last):
         raise InputError("Invalid email")
 
     #checks for shared email
-    if count == 1:
-        users[f"user{count}"]["email"] = email
+    check_empty = bool(data["users"])
+    if check_empty == False:
+        register["email"] = email
+    #if there are already thing in the dictionary
     else:
-        x = 1
-        while x < count:
-            if email == users[f"user{x}"]["email"]:
+        for y in data["users"]:
+            if y["email"] == email:
                 raise InputError("Email is already used")
-            x += 1
-        users[f"user{count}"]["email"] = email
-
+            else:
+                register["email"] = email
     #checks for valid password
     if len(password) >= 6:
-        users[f"user{count}"]["password"] = password
+        register["password"] = password
     else:
         raise InputError("Password too short")
 
     #checks for valid firstname
     if len(name_first) >= 1 and len(name_first) <= 50:
-        users[f"user{count}"]["firstname"] = name_first
+        register["firstname"] = name_first
     else:
         raise InputError("Invalid firstname")
 
     #checks for valid lastname
     if len(name_last) >= 1 and len(name_last) <= 50:
-        users[f"user{count}"]["Lastname"] = name_last
+        register["Lastname"] = name_last
     else:
         raise InputError("Invalid lastname")
-    print(count)
 
     ####################
     ###__add handle__###	
@@ -96,12 +91,15 @@ def auth_register_v1(email, password, name_first, name_last):
     if len(handle) > 20:
         handle = handle[:20]
 
+
+    
+
     #check if handle repeat itself 
     ##last_idx = -1
     ##num_add = 0
 
-    ##for x in users:
-    ##    if users[f"user{count}"]["handle"] == handle:
+    ##for x in data:
+    ##    if data[f"user{count}"]["handle"] == handle:
     ##        if num_add >= 10:
     ##            last_idx -= 1
     ##        #change to list first 
@@ -112,17 +110,26 @@ def auth_register_v1(email, password, name_first, name_last):
     ##    else:
     ##        pass
     
-    users[f"user{count}"]["handle"] = handle 
-    print(users)
-
+    register["handle"] = handle 
+    #print(data)"""
+    data["users"].append(register)
+    print(count)
     return {
         'auth_user_id' : count,
     }
 
 auth_register_v1("honey@outlook.com", "hellooooo!!!", "12345@@67890", "123456  7890123")
+#print(data)
+#print(data["users"][0]["password"])
+#print(data["user1"]["email"])
 auth_register_v1("asdfy@outlook.com", "hasdfooooo!!!", "12345@@67890", "123456  7890s123")
-#auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
-#auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
-#auth_login_v1("andy@gmail.com", "hellooooo!!!")
-#auth_login_v1("tom@outlook.com", "hellooooo!!!")
-#print(users)
+#print(data)
+#print(data["user2"]["email"])
+auth_register_v1("tom@outlook.com", "hellooooo!!!", "Tom", "bite")
+#print(data["user3"]["email"])
+
+auth_register_v1("andy@gmail.com", "hellooooo!!!", "Andy", "cook")
+print(data)
+auth_login_v1("honey@outlook.com", "hellooooo!!!")
+auth_login_v1("andy@gmail.com", "hellooooo!!!")
+

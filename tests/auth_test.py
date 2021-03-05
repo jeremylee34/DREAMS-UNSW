@@ -15,11 +15,11 @@ def test_login_valid_email():
     with pytest.raises(Exception):
         auth_login_v1("42542552@gmail.com", "asdasff1234@") == "user4"
 
-def test_login_invalid_email():
+"""def test_login_invalid_email():
     assert (auth_login_v1("asdfg.com", "a2sdf") == "invalid mail")
     assert (auth_login_v1("asdfg@gmailcom", "as2df") == "invalid mail")    
     assert (auth_login_v1("asdfgcom", "asdssf") == "invalid mail")    
-    assert (auth_login_v1("asdfg@com", "asaadf") == "invalid mail")        
+    assert (auth_login_v1("asdfg@com", "asaadf") == "invalid mail")   """     
 
 def test_login_email_unshared():
     pass 
@@ -31,11 +31,13 @@ def test_login_incorrect_password():
     with pytest.raises(InputError):
         assert auth_login_v1("tim@gmail.com", "1234")    
 
+
+
 def test_login_correct_password():
     auth_register_v1("tim@gmail.com", "1234hello!", "Tim", "Brown")
     auth_login_v1("tim@gmail.com", "1234hello!")
-    auth_register_v1("tom@yahoo.com", "asdfgasdg123", "Tom", "Blue")
     assert users["user1"]["password"] == "1234hello!"
+    auth_register_v1("tom@yahoo.com", "asdfgasdg123", "Tom", "Blue")
     auth_login_v1("tom@yahoo.com", "asdfgasdg123")
     assert users["user2"]["password"] == "asdfgasdg123"
 
@@ -46,6 +48,8 @@ def test_register_invalid_email():
         assert auth_register_v1("12345678", "hello!!!1", "Tim", "Oreo")
     
 def test_register_valid_email():
+    auth_register_v1("boy@gmail.com", "hello!!!1", "Tommy", "Brown")
+    assert users["user3"]["email"] == "boy@gmail.com"
     pass
     
 def test_register_email_unshared():
@@ -69,7 +73,7 @@ def lastname_length_test(): #if lastname < 1 or >50 is a fail
         assert auth_register_v1("honey@outlook.com", "hi", "Tim", "")
 
 #register handle
-def test_handle_taken():
+"""def test_handle_taken():
     #clear()
     user_1 = auth_register_v1("asdf@gmail.com","1234", "Tom", "Holyy")
     user_1["handle"] = "tomholyy"
@@ -94,3 +98,4 @@ def test_handle_same():
     assert (user_2["handle"] == "hellomynameisgaryth0")
     user_3 = auth_register_v1("fdsadasd@gmail.com","1234444", "hellomynameis", "garythekingpingyo")
     assert (user_3["handle"] == "hellomynameisgaryth1")
+    """
