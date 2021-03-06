@@ -21,7 +21,6 @@ def test_login_correct_password(clear_data):
     auth_user_id2 = auth_login_v1("hiheee@gmail.com", "1234455")
     assert auth_user_id1 == auth_user_id2
 
-
 #test for auth_register
 def test_register_valid_email(clear_data):
     auth_user_id1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
@@ -42,7 +41,6 @@ def test_register_email_shared(clear_data):
     auth_register_v1("same@gmail.com", "12344545", "Me", "Me")
     with pytest.raises(InputError):
         assert auth_register_v1("same@gmail.com", "12344545", "NotMe", "NotMe") is None
-
 
 def check_password_test(clear_data): #less than 6 characters is a fail
     with pytest.raises(InputError):
@@ -65,6 +63,7 @@ def test_handle_too_long(clear_data):
     
 def test_handle_same(clear_data):
     pass
+
 def test_handle_nospace(clear_data):
     pass
 
