@@ -69,7 +69,7 @@ def test_channels_listall_none(clear_data, auth_id):
     assert channels['channels'] == []
 # Tests if multiple channels are added to the channel list
 def test_channels_listall(clear_data, auth_id, channel_id, channel_id2, auth_id3):
-    channel_id3 = channels_create_v1(auth_id3, "Channel3", True)
+    channel_id3 = channels_create_v1(auth_id3['auth_user_id'], "Channel3", True)
     channels = channels_listall_v1(auth_id['auth_user_id'])
     assert channels['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
@@ -92,8 +92,8 @@ def test_channels_create(clear_data, channel_id, channels):
     assert channels['channels'][0]['name'] == 'Channel1'
 # Tests if multiple channels are created
 def test_channels_create_multiple_channels(clear_data, auth_id, channel_id):
-    channel_id2 = channels_create_v1(auth_id, "Channel2", True)
-    channel_id3 = channels_create_v1(auth_id, "Channel3", True)
+    channel_id2 = channels_create_v1(auth_id['auth_user_id'], "Channel2", True)
+    channel_id3 = channels_create_v1(auth_id['auth_user_id'], "Channel3", True)
     channels = channels_listall_v1(auth_id['auth_user_id'])
     assert channels['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
