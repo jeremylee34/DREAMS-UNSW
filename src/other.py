@@ -1,7 +1,9 @@
 from src.data import data
 
 def clear_v1():
-    data.clear()
+    data['users'].clear()
+    data['channels'].clear()
+    data['messages'].clear()
 
 def search_v1(auth_user_id, query_str):
     return {

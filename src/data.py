@@ -1,5 +1,6 @@
 #dictionary in dictionary
 data = {
-    'users' : [],
-    'channels' : []
+    "users" : [],
+    "channels" : [],
+    "messages" : [],
 }
