@@ -85,6 +85,7 @@ def auth_register_v1(email, password, name_first, name_last):
 
     #check if current input will be unique or not
     #and count repeated time
+    
     repeat_times = 0
     for curr in data["users"]:
         fname_in_data = (curr["firstname"].replace("@","").replace(" ","") \
@@ -158,6 +159,3 @@ def auth_register_v1(email, password, name_first, name_last):
     return {
         'auth_user_id' : count,
     }
-
-
-#print(data)
