@@ -1,1 +1,0 @@
-def auth_test
