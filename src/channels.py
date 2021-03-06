@@ -18,8 +18,11 @@ def channels_list_v1(auth_user_id):
         # Loops through all members and checks if auth_user_id is included
         for member in member_list:
             # If the user is found, the channel is added to channel_list
-            if member == auth_user_id:
-                channel_list.append(channel)
+            if member['u_id'] == auth_user_id:
+                channel_dict = {}
+                channel_dict['channel_id'] = channel['channel_id']
+                channel_dict['name'] = channel['name']
+                channel_list.append(channel_dict)
     return {
         'channels': channel_list
     }
@@ -36,7 +39,10 @@ def channels_listall_v1(auth_user_id):
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
-        channel_list.append(channel)
+        channel_dict = {}
+        channel_dict['channel_id'] = channel['channel_id']
+        channel_dict['name'] = channel['name']
+        channel_list.append(channel_dict)
     return {
         'channels': channel_list
     }
@@ -64,13 +70,25 @@ def channels_create_v1(auth_user_id, name, is_public):
         "name": name,
         "is_public": is_public,
         "channel_id": len(data['channels']),
-        "owner_members": [auth_user_id,],
-        "all_members": [],
+        "owner_members": [
+            {
+                'u_id': auth_user_id,
+                #'name_first': data['users'][]['firstname'],
+                #'name_last': data['users'][]['Lastname']
+            }
+        ],
+        "all_members": [
+            {
+                'u_id': auth_user_id,
+                #'name_first': data['users'][]['firstname'],
+                #'name_last': data['users'][]['Lastname']
+            }
+        ],
         "messages": []
     }
     id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
     return {
-        'channel_id': id,
+        'channel_id': id
     }
