@@ -1,6 +1,12 @@
+from src.error import InputError
+from src.error import AccessError
+from src.data import data
+
 def channel_invite_v1(auth_user_id, channel_id, u_id):
-    return {
-    }
+    for channel in data['channels']:
+        if channels['channel_id'] == channel_id:
+            channels['all_members'].append(u_id)        
+    return {}
 
 def channel_details_v1(auth_user_id, channel_id):
     return {
