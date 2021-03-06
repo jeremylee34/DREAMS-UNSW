@@ -75,22 +75,22 @@ def clear_data():
 #Tests when user and channel id are not valid for invite
 def test_channel_invite_v1_InputErr1(clear_data, auth_id1):
     with pytest.raises(InputError):
-        assert channel_invite_v1(auth_id1, notvalid, notvalid)
+        assert channel_invite_v1(auth_id1['auth_user_id'], notvalid, notvalid)
         
 #Tests when invited user_id is not valid for invite
 def test_channel_invite_v1_InputErr2(clear_data, channel_id1):
     with pytest.raises(InputError):
-        assert channel_invite_v1(auth_id1, channel_id1, notvalid)
+        assert channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], notvalid)
 
 #Tests when channel_id is not valid for invite       
 def test_channel_invite_v1_InputErr3(clear_data, auth_id1, auth_id2):
     with pytest.raises(InputError):
-        assert channel_invite_v1(auth_id1, notvalid, auth_id2)        
+        assert channel_invite_v1(auth_id1['auth_user_id'], notvalid, auth_id2['auth_user_id'])        
         
 #Tests when auth is not in the channel for invite
 def test_channel_invite_v1_AccessErr(clear_data, auth_id2, channel_id1):
     with pytest.raises(AccessError):
-        assert channel_invite_v1(auth_id2, channel_id1, auth_id1)
+        assert channel_invite_v1(auth_id2['auth_user_id'], channel_id1['channel_id'], auth_id1['auth_user_id'])
     
 #Tests that a single user has been added to auth's channel for invite
 def test_channel_invite_v1_Add1(clear_data, auth_id2, channel_id1, channel_list1):
@@ -116,12 +116,12 @@ def test_channel_invite_v1_AddPriv(clear_data, channel_id1_priv, auth_id2, chann
 #Tests when auth is not in the channel for details    
 def test_channel_details_v1_AccessErr(clear_data, channel_id1, auth_id2):
     with pytest.raises(AccessError):
-        assert channel_details_v1(auth_id2, channel_id1)
+        assert channel_details_v1(auth_id2['auth_user_id'], channel_id1['channel_id'])
         
 #Tests when channel_id is not valid for details
 def test_channel_details_v1_InputErr(clear_data, auth_id1):
     with pytest.raises(InputError):
-        assert channel_details_v1(auth_id1, notvalid)
+        assert channel_details_v1(auth_id1['auth_user_id'], notvalid)
         
 #Tests that correct details are provided when calling function for details
 #Only owner in channel 
