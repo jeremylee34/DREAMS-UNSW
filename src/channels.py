@@ -73,15 +73,15 @@ def channels_create_v1(auth_user_id, name, is_public):
         "owner_members": [
             {
                 'u_id': auth_user_id,
-                #'name_first': data['users'][]['firstname'],
-                #'name_last': data['users'][]['Lastname']
+                'name_first': data['users'][auth_user_id]['firstname'],
+                'name_last': data['users'][auth_user_id]['Lastname']
             }
         ],
         "all_members": [
             {
                 'u_id': auth_user_id,
-                #'name_first': data['users'][]['firstname'],
-                #'name_last': data['users'][]['Lastname']
+                'name_first': data['users'][auth_user_id]['firstname'],
+                'name_last': data['users'][auth_user_id]['Lastname']
             }
         ],
         "messages": []
