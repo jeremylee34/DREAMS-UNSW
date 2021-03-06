@@ -63,9 +63,10 @@ def channels_create_v1(auth_user_id, name, is_public):
     new_channel = {
         "name": name,
         "is_public": is_public,
-        "id": len(data['channels']),
+        "channel_id": len(data['channels']),
         "owner_members": [auth_user_id,],
         "all_members": [],
+        "messages": []
     }
     id = len(data['channels'])
     # Adds the new channel to the data list
