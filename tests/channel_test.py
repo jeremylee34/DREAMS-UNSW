@@ -40,27 +40,27 @@ def auth_id3():
     
 @pytest.fixture    
 def channel_id1(auth_id1):
-    channel_id1 = channels_create_v1(auth_id1, "Channel1", True)
+    channel_id1 = channels_create_v1(auth_id1['auth_user_id'], "Channel1", True)
     return channel_id1
     
 @pytest.fixture
 def channel_id1_priv(auth_id1):
-    channel_id1_priv = channels_create_v1(auth_id1, "PChannel1", False) 
+    channel_id1_priv = channels_create_v1(auth_id1['auth_user_id'], "PChannel1", False) 
     return channel_id1_priv
     
 @pytest.fixture
 def channel_list1(auth_id1):
-    channel_list1 = channels_list_v1(auth_id1)
+    channel_list1 = channels_list_v1(auth_id1['auth_user_id'])
     return channel_list1
         
 @pytest.fixture
 def channel_details1(channel_id1):
-    channel_details1 = channel_details_v1(auth_id1, channel_id1)
+    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
     return channel_details1
     
 @pytest.fixture
 def channel_details1_priv(channel_id1_priv):
-    channel_details1_priv = channel_details_v1(auth_id1, channel_id1_priv)
+    channel_details1_priv = channel_details_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'])
     return channel_details1_priv
     
 #Fixture for clear to prevent clearing of other fixtures
@@ -94,20 +94,20 @@ def test_channel_invite_v1_AccessErr(clear_data, auth_id2, channel_id1):
     
 #Tests that a single user has been added to auth's channel for invite
 def test_channel_invite_v1_Add1(clear_data, auth_id2, channel_id1, channel_list1):
-    channel_invite_v1(auth_id1, channel_id1, auth_id2)
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2 
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2 ['auth_user_id']
 
 #Tests that multiple users can be added to auth's channel for invite
 def test_channel_invite_v1_AddMulti(clear_data, channel_id1, channel_list1, auth_id2, auth_id3):
-    channel_invite_v1(auth_id1, channel_id1, auth_id2)
-    channel_invite_v1(auth_id1, channel_id1, auth_id2)
-    assert channel_list1[0]['all_members'][-2]['u_id'] == auth_id2
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id3
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    assert channel_list1[0]['all_members'][-2]['u_id'] == auth_id2['auth_user_id']
+    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id3['auth_user_id']
     
 #Tests that user has been added to auth's private channel for invite
 def test_channel_invite_v1_AddPriv(clear_data, channel_id1_priv, auth_id2, channel_list1):
-    channel_invite_v1(auth_id1, channel_id1_priv, auth_id2)
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'], auth_id2['auth_user_id'])
+    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
     
     
     
@@ -127,25 +127,25 @@ def test_channel_details_v1_InputErr(clear_data, auth_id1):
 #Only owner in channel 
 def test_channel_details_v1_NoInv(clear_data, channel_details1):
     assert channel_details1['name'] == 'Channel1'
-    assert channel_details1['owner_members'][0]['u_id'] == auth_id1
-    assert channel_details1['all_members'][0]['u_id'] == auth_id1
+    assert channel_details1['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
     
 #Tests that correct details are provided when calling function for details
 #After inviting one in channel 
 def test_channel_details_v1_OneInv(clear_data, channel_id1, auth_id2):
-    channel_invite_v1(auth_id1, channel_id1, auth_id2)
-    channel_details1 = channel_details_v1(auth_id1, channel_id1)
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
     assert channel_details1['name'] == 'Channel1'
-    assert channel_details1['owner_members'][0]['u_id'] == auth_id1
-    assert channel_details1['all_members'][0]['u_id'] == auth_id1
-    assert channel_details1['all_members'][1]['u_id'] == auth_id2
+    assert channel_details1['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][1]['u_id'] == auth_id2['auth_user_id']
     
 #Tests that correct details are provided when calling function for details
 #In private channel 
 def test_channel_details_v1_Priv(clear_data, channel_details1_priv):
     assert channel_details1_priv['name'] == 'PChannel1'
-    assert channel_details1_priv['owner_members'][0]['u_id'] == auth_id1
-    assert channel_details1_priv['all_members'][0]['u_id] == auth_id1
+    assert channel_details1_priv['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1_priv['all_members'][0]['u_id'] == auth_id1['auth_user_id']
     
     
     
