@@ -71,91 +71,40 @@ def auth_register_v1(email, password, name_first, name_last):
     else:
         raise InputError("Invalid lastname")
 
-    ############    
-    #__HANDLE__#
-    ############
-
-    #make handle +, lower(), replace, len
+    # making the handle
+    # make lower case
     handle = (name_first + name_last).lower()
 
+    # replace ' ' and '@' with ''
     handle = handle.replace("@", "")
     handle = handle.replace(" ", "")
     handle = handle.replace("\t", "")
     handle = handle.replace("\n", "")
 
-    #check if current input will be unique or not
-    #and count repeated time
+    #check 20 chars; if exceed cut'em
+    if len(handle) > 20:
+        handle = handle[:20]
     
-    repeat_times = 0
-    for curr in data["users"]:
-        fname_in_data = (curr["firstname"].replace("@","").replace(" ","") \
-                        .replace("\t","").replace("\n","")).lower()
-        lname_in_data = (curr["Lastname"].replace("@","").replace(" ","") \
-                        .replace("\t","").replace("\n","")).lower()
-        fname_input   = (name_first.replace("@","").replace(" ","") \
-                        .replace("\t","").replace("\n","")).lower()
-        lname_input   = (name_last.replace("@","").replace(" ","") \
-                        .replace("\t","").replace("\n","")).lower()           
-        if fname_in_data == fname_input and lname_in_data == lname_input:
-            #print(fname_in_data, fname_input, lname_in_data, lname_input) #for debug
-            repeat_times += 1    
-            #assign fname and lname
-    
-    #add when handle is unique
-    if repeat_times == 0:
-        if len(handle) > 20:
-            handle = handle[:20]
-        #print(handle) #########################FORDEBUG#######
-        register["handle"] = handle 
-    
-    elif repeat_times > 0:
-        if len(handle) > 20:
-            handle = handle[:20]
-        #start from 0
-        #repeat_times - 1; since we start from 0
-        handle += str(repeat_times - 1)  #asdf asdf0(repeat = 1, conca 0) 0,1,2,3
-        #print(handle)################FORDEBUG####
-
-        #count digit of repeated handle
-        #count is (how many digit), count from repeated time
-        if len(handle) > 20:
-            #count how many time it repeat, find digit
-            
-            #for debugging number before next digit will
-            #fall to digit-1 and give bade result
-            #e.g. 10 will become 9 but still count as 2 digits
-            count_repeated_time = repeat_times 
-            
-            #need minus one but prevent first
-            #element to bug
-            if (repeat_times > 1): 
-                count_repeated_time = repeat_times - 1
-
-            count_digit = 0
-            while(count_repeated_time != 0): #ex: 2
-                count_repeated_time //= 10
-                count_digit += 1
-
-            #print(repeat_times) #FDB
-            #print(count_digit) #FDB
-            #old length that not exceed 20    
-                
-            len_handle = len(handle) - ((count_digit) * 2)
-                        #22          -  2
-            #assert (len_handle <= 20)
-            #slice end of string digit times
-            ##handle += str(repeat_times + 1)
-            handle = handle[:len_handle]
-
-            handle += str(repeat_times - 1)
-            register["handle"] = handle     
-            print(handle)
-
-
-    #print(handle)
-    #register["handle"] = handle 
+        # finding repetitions of names
+    # repeat = 0
+    number = 0
+    i = 0
+    length = 0
+    while i in range(len(data["users"])):
+        if handle == data['users'][i]["handle"]:
+            handle.replace(str(number), "")
+            if len(handle) + len(str(number)) > 20:
+                length = len(handle) + len(str(number)) - 20
+                length = 20 - length
+                handle = handle[:length]
+            handle += str(number)
+            number += 1
+            i = 0
+        else:
+            i += 1 
+      
+    register["handle"] = handle 
     data["users"].append(register)
-     
     return {
         'auth_user_id' : count,
     }

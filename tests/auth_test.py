@@ -58,14 +58,15 @@ def lastname_length_test(clear_data): #if lastname < 1 or >50 is a fail
     
 #register handle
 def test_handle_taken(clear_data):
-    auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
-    auth_register_v1("roland1@gmail.com", "1234567", "Roland", "Lin")
+    auth_register_v1("roland@gmail.com", "12345678", "Roland", "Lin")
+    auth_register_v1("roland1@gmail.com", "12345678", "Roland", "Lin")
     assert data['users'][0]['handle'] == 'rolandlin'
     assert data['users'][1]['handle'] == 'rolandlin0'
     
 def test_handle_too_long(clear_data):
     auth_register_v1("roland@gmail.com", "1234567", "Roland", "Linisverycool123")
     assert data['users'][0]['handle'] == 'rolandlinisverycool1'
+    
 def test_handle_same(clear_data):
     pass
 def test_handle_nospace(clear_data):
