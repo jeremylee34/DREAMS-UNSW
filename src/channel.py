@@ -1,8 +1,19 @@
+"""
+First implementation of channel.py
+channel_join_v1 and channel_messages_v1 authored by Jeremy Lee
+"""
+from src.data import data
+from src.error import InputError
+from src.error import AccessError
+
 def channel_invite_v1(auth_user_id, channel_id, u_id):
     return {
     }
 
 def channel_details_v1(auth_user_id, channel_id):
+    """
+    returns channel details
+    """
     return {
         'name': 'Hayden',
         'owner_members': [
@@ -21,7 +32,11 @@ def channel_details_v1(auth_user_id, channel_id):
         ],
     }
 
+
 def channel_messages_v1(auth_user_id, channel_id, start):
+    """
+    returns channel messages
+    """
     return {
         'messages': [
             {
@@ -40,26 +55,25 @@ def channel_leave_v1(auth_user_id, channel_id):
     }
 
 def channel_join_v1(auth_user_id, channel_id):
-
-    if data['channels'][channel_id]['is_public'] == False:
+    """
+    joins a user to a channel
+    """
+    if data['channels'][channel_id['channel_id']]['is_public'] is False:
         raise AccessError
-    
     user_in_channel = False
     ## search thru all members
-    for i in range(len(data['channels'][channel_id]['all_members'])):
+    for i in range(len(data['channels'][channel_id['channel_id']]['all_members'])):
         ## if auth_user_id matches the member
-        if data['channels'][channel_id]['all_members'][i]['u_id'] == auth_user_id:
+        if data['channels'][channel_id['channel_id']]['all_members'][i]['u_id'] == auth_user_id:
             user_in_channel = True
-
-    ## if user not added, 
     if user_in_channel is False:
-        user = user_profile_v1(auth_user_id, auth_user_id)
+        ## if user not added
         user_to_append = {
             'u_id' : auth_user_id,
-            'name_first' : user['name_first'],
-            'name_last' : user['name_last'],
+            'name_first' : data['users'][auth_user_id][firstname],
+            'name_last' : data['users'][auth_user_id][Lastname],
         }
-        data['channels'][channel_id]['all_members'].append(user)
+        data['channels'][channel_id['channel_id']]['all_members'].append(user)
     else:
         pass
     return {
