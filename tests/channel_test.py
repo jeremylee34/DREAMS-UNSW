@@ -47,11 +47,6 @@ def channel_id1_priv(auth_id1):
     return channel_id1_priv
     
 @pytest.fixture
-def channel_list1(auth_id1):
-    channel_list1 = channels_list_v1(auth_id1['auth_user_id'])
-    return channel_list1
-        
-@pytest.fixture
 def channel_details1(auth_id1, channel_id1):
     channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
     return channel_details1
@@ -183,17 +178,6 @@ def test_channel_join_v1_access_error(clear_data, auth_id1):
     channel_id = new_channel['channel_id']
     with pytest.raises(AccessError):
         assert channel_join_v1(auth_id1['auth_user_id'], channel_id)
-
-def test_channel_join_v1_check_details(clear_data, auth_id1, public_channel):
-    """
-    Test if details are correctly added
-    """
-    channel_id = public_channel['channel_id']
-    channel_join_v1(auth_id1['auth_user_id'], channel_id)
-    channel_info = channel_details_v1(auth_id1['auth_user_id'], channel_id)
-    assert channel_info['all_members'][auth_id1['auth_user_id']]['u_id'] == auth_id1['auth_user_id']
-    assert channel_info['all_members'][auth_id1['auth_user_id']]['name_first'] == 'Roland'
-    assert channel_info['all_members'][auth_id1['auth_user_id']]['name_last'] == 'Lin'
 
 def test_channel_join_v1_check_details(clear_data, auth_id1, auth_id2, public_channel):
     """
