@@ -56,7 +56,7 @@ def channel_messages_v1(auth_user_id, channel_id, start):
     message_index = start
     for message in data['channels'][channel_id]['messages']:
         pass
-    
+
     return {
         'messages': [
             {
