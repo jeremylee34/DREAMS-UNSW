@@ -49,7 +49,7 @@ def test_channels_list_none(clear_data, channel_list):
 def test_channels_list(clear_data, channel_id, channel_list):
     assert channel_list['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channel_list['channels'][0]['name'] == 'Channel1'
-# Tests two different auth_ids and checks if channel_list_v1 lists the correct channel
+# Tests two different auth_ids and checks if channel_list_v1 lists only lists one of them
 def test_channels_list_two_channels(clear_data, auth_id, channel_id, channel_id2, channel_list):
     assert channel_list['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channel_list['channels'][0]['name'] == 'Channel1'
