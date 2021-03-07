@@ -95,21 +95,24 @@ def test_channel_invite_v1_AccessErr(clear_data, auth_id1, auth_id2, channel_id1
         assert channel_invite_v1(auth_id2['auth_user_id'], channel_id1['channel_id'], auth_id1['auth_user_id'])
     
 #Tests that a single user has been added to auth's channel for invite
-def test_channel_invite_v1_Add1(clear_data, auth_id1, auth_id2, channel_id1, channel_list1):
+def test_channel_invite_v1_Add1(clear_data, auth_id1, auth_id2, channel_id1):
     channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2 ['auth_user_id']
+    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
 
 #Tests that multiple users can be added to auth's channel for invite
-def test_channel_invite_v1_AddMulti(clear_data, auth_id1, channel_id1, channel_list1, auth_id2, auth_id3):
+def test_channel_invite_v1_AddMulti(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
     channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    assert channel_list1[0]['all_members'][-2]['u_id'] == auth_id2['auth_user_id']
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id3['auth_user_id']
+    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    assert channel_details1['all_members'][-2]['u_id'] == auth_id2['auth_user_id']
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id3['auth_user_id']
     
 #Tests that user has been added to auth's private channel for invite
-def test_channel_invite_v1_AddPriv(clear_data, auth_id1, channel_id1_priv, auth_id2, channel_list1):
+def test_channel_invite_v1_AddPriv(clear_data, auth_id1, channel_id1_priv, auth_id2):
     channel_invite_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'], auth_id2['auth_user_id'])
-    assert channel_list1[0]['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
+    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'])
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
     
     
     
@@ -123,7 +126,7 @@ def test_channel_details_v1_AccessErr(clear_data, channel_id1, auth_id2):
 #Tests when channel_id is not valid for details
 def test_channel_details_v1_InputErr(clear_data, auth_id1):
     with pytest.raises(InputError):
-        assert channel_details_v1(auth_id1['auth_user_id'], "Invalid")
+        assert channel_details_v1(auth_id1['auth_user_id'], "invalid")
         
 #Tests that correct details are provided when calling function for details
 #Only owner in channel 
