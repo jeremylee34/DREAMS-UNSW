@@ -91,7 +91,7 @@ def auth_register_v1(email, password, name_first, name_last):
     i = 0
     length = 0
     while i in range(len(data["users"])):
-        if handle == data['users'][i]["handle"]:
+        if handle == data['users'][i]["handle_str"]:
             handle.replace(str(number), "")
             if len(handle) + len(str(number)) > 20:
                 length = len(handle) + len(str(number)) - 20
