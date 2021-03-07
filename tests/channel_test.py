@@ -22,18 +22,18 @@ def auth_user1():
 """
 Test adding to empty channel
 """
-def test_join_empty_channel(clear_data, auth_user1):      
-    new_channel = channels_create_v1(auth_user1, "First Channel", True)
+def test_channel_join_v1_empty_channel(clear_data, auth_user1):      
+    new_channel = channels_create_v1(auth_user1, "Empty channel", True)
     channel_id = new_channel['channel_id']
     channel_join_v1(auth_user1, channel_id)
-    channel_details = channel_details_v1(auth_user1, channel_id)
-    assert channel_details["all_members"][0]['u_id'] == auth_user1
+    channel_dict = channel_details_v1(auth_user1, channel_id)
+    assert channel_dict["all_members"][0]['u_id'] == auth_user1
 
 """
 AccessError to be thrown when channel is private
 """
-def test_access_error(clear_data, auth_user1):  
-    new_channel = channels_create_v1(auth_user1, "First Channel", False)
+def test_channel_join_v1_access_error(clear_data, auth_user1):  
+    new_channel = channels_create_v1(auth_user1, "Private channel", False)
     channel_id = new_channel['channel_id']
     with pytest.raises(AccessError):
         assert channel_join_v1(auth_user1, channel_id)
@@ -41,8 +41,8 @@ def test_access_error(clear_data, auth_user1):
 """
 InputError to be thrown when channel is private
 """
-def test_input_error(clear_data, auth_user1):
-    new_channel = channels_create_v1(auth_user1, "First Channel", True)
+def test_channel_join_v1_input_error(clear_data, auth_user1):
+    new_channel = channels_create_v1(auth_user1, "Public channel", True)
     channel_id = 99999
     with pytest.raises(InputError):
         assert channel_join_v1(auth_user1, channel_id)

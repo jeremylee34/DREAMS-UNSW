@@ -5,6 +5,8 @@ channel_join_v1 and channel_messages_v1 authored by Jeremy Lee
 from src.data import data
 from src.error import InputError
 from src.error import AccessError
+from src.helper import check_valid_channel
+from src.helper import check_public_channel
 
 def channel_invite_v1(auth_user_id, channel_id, u_id):
     return {
@@ -38,6 +40,13 @@ def channel_messages_v1(auth_user_id, channel_id, start):
     returns channel messages
     """
 
+
+
+    messages = {}
+    message_index = start
+    for message in data['channels'][channel_id]['messages']:
+        pass
+
     return {
         'messages': [
             {
@@ -59,21 +68,19 @@ def channel_join_v1(auth_user_id, channel_id):
     """
     joins a user to a channel
     """
-    valid_channel = False
-    for channels in data['channels']:
-        if channels['channel_id'] == channel_id:
-            valid_channel = True
-    if valid_channel is False:
+    # Check valid channel
+    if check_valid_channel(channel_id, data) is False:
         raise InputError
 
-    if data['channels'][channel_id]['is_public'] is False:
+    # Check whether channel accesible
+    if check_public_channel(channel_id, data) is False:
         raise AccessError
 
     ## search thru all members
     user_in_channel = False
-    for i in range(len(data['channels'][channel_id]['all_members'])):
+    for member in data['channels'][channel_id]['all_members']:
         ## if auth_user_id matches the member
-        if data['channels'][channel_id]['all_members'][i]['u_id'] == auth_user_id:
+        if member['u_id'] == auth_user_id:
             user_in_channel = True
     if user_in_channel is False:
         ## if user not added
