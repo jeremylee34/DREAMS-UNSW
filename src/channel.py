@@ -99,15 +99,19 @@ def channel_messages_v1(auth_user_id, channel_id, start):
     # Check if start is greater than number of messages in channel
     if start > len(data['channels'][channel_id]['messages']):
         raise InputError("Start is greater than the total number of messages in the channel")
-
+    
     # Check if user is in channel
     if check_user_in_channel(data, channel_id, auth_user_id) is False:
         raise AccessError("Authorised user is not a member of channel with channel_id")
-
+    
     messages = {}
     message_index = start
-    for message in data['channels'][channel_id]['messages']:
-        pass
+    message_index_end = start + 50
+    while (message in data['channels'][channel_id]['messages']) and (message_index < message_index_end):
+        
+        
+        message_index += 1
+
 
     return {
         'messages': [
