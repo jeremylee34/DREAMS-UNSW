@@ -70,11 +70,11 @@ def channel_join_v1(auth_user_id, channel_id):
     """
     # Check valid channel
     if check_valid_channel(channel_id, data) is False:
-        raise InputError
+        raise InputError("Channel ID is not a valid channel")
 
     # Check whether channel accesible
     if check_public_channel(channel_id, data) is False:
-        raise AccessError
+        raise AccessError("channel_id refers to a channel that is private")
 
     ## search thru all members
     user_in_channel = False
