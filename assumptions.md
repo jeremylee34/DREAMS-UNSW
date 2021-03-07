@@ -10,6 +10,7 @@ For channel_messages_v1:
 - Assume nothing will occur after InputError2 is raised
 - Assume function will end if either error is raised
 - Assumes 'start' argument is a valid index
+
 For channel_test:
     - Assume adding two users to channel will account for multiple (more than two) in invite tesing 
     - Assume either AccessError or InputError would be raised, not both
