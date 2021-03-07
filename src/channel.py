@@ -87,10 +87,10 @@ def channel_join_v1(auth_user_id, channel_id):
         ## if user not added
         user_to_append = {
             'u_id' : auth_user_id,
-            'name_first' : data['users'][auth_user_id][firstname],
-            'name_last' : data['users'][auth_user_id][Lastname],
+            'name_first' : data['users'][auth_user_id]['firstname'],
+            'name_last' : data['users'][auth_user_id]['Lastname'],
         }
-        data['channels'][channel_id]['all_members'].append(user)
+        data['channels'][channel_id]['all_members'].append(user_to_append)
     else:
         pass
     return {

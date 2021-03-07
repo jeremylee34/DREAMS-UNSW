@@ -20,6 +20,11 @@ def auth_user1():
     return auth_id['auth_user_id']
 
 @pytest.fixture
+def auth_user2():
+    auth_id = auth_register_v1("g.liang12@gmail.com", "123456789", "Gordon", "Liang" )
+    return auth_id['auth_user_id']
+
+@pytest.fixture
 def public_channel(auth_user1):
     new_channel = channels_create_v1(auth_user1, "Public channel", True)
     return new_channel
@@ -49,3 +54,22 @@ def test_channel_join_v1_input_error(clear_data, auth_user1, public_channel):
     channel_id = 99999
     with pytest.raises(InputError):
         assert channel_join_v1(auth_user1, channel_id)
+"""
+InputError to be thrown when channel_id is invalid
+"""
+def test_channel_messages_v1_input_error1(clear_data, auth_user1, public_channel):
+    channel_id = 99999
+    start = 0
+    with pytest.raises(InputError):
+        assert channel_messages_v1(auth_user1, channel_id, start)
+
+"""
+Accessing auth_user2's messages should throw an Access Error since only
+auth_user1 is in the channel (added during public_channel function)
+"""
+def test_channel_messages_v1_access_arror(clear_data, auth_user1, auth_user2, public_channel):
+    channel_id = public_channel['channel_id']
+    start = 0
+    with pytest.raises(AccessError):
+        # check auth_user1's messages (never added to channel)
+        assert channel_messages_v1(auth_user2, channel_id, start)
