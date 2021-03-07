@@ -103,7 +103,7 @@ def auth_register_v1(email, password, name_first, name_last):
         else:
             i += 1 
       
-    register["handle"] = handle 
+    register["handle_str"] = handle 
     register['id'] = count
     data["users"].append(register)
     return {
