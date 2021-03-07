@@ -5,6 +5,7 @@ from src.channels import channels_listall_v1
 from src.channels import channels_create_v1
 from src.auth import auth_register_v1
 from src.error import InputError
+from src.error import AccessError
 from src.other import clear_v1
 
 @pytest.fixture
@@ -62,6 +63,9 @@ def test_channels_list_private_channel(clear_data, auth_id, channel_id_private):
     assert channels['channels'][0]['name'] == 'Channel1'
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
+def test_channel_list_invalid_id(clear_data, auth_id):
+    with pytest.raises(AccessError):
+        assert channels_list_v1(2)
 
 # Tests if adding no channels works properly for listall function
 def test_channels_listall_none(clear_data, auth_id):
@@ -85,6 +89,9 @@ def test_channels_listall_private_channel(clear_data, auth_id, channel_id_privat
     assert channels['channels'][0]['name'] == 'Channel1'
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
+def test_channel_listall_invalid_id(clear_data, auth_id):
+    with pytest.raises(AccessError):
+        assert channels_listall_v1(2)
 
 # Tests if a channel is created
 def test_channels_create(clear_data, channel_id, channels):
@@ -113,3 +120,6 @@ def test_channels_no_name(clear_data, auth_id, channels):
 def test_channels_create_private_channel(clear_data, channel_id_private, channels):
     assert channels['channels'][0]['channel_id'] == channel_id_private['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
+def test_channels_create_invalid_id(clear_data, auth_id):
+    with pytest.raises(AccessError):
+        assert channels_create_v1(2, "Channel1", True)
