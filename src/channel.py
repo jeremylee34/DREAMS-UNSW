@@ -6,18 +6,18 @@ def channel_invite_v1(auth_user_id, channel_id, u_id):
     errorcount = 0
     #Checks if auth is a member of channel
     #Raises AccessError if not
-    for channel in data['channels']
-        membersall = channel.get('all_members']
+    for channel in data['channels']:
+        membersall = channel.get('all_members')
         for member in membersall:
-            if member == auth_user_id:
+            if member['u_id'] == auth_user_id:
                 errorcount = errorcount + 1
-            if errorcount = 0:
-                raise AccessError('the authorised user is not already a member of the channel')
+        if errorcount == 0:
+            raise AccessError('the authorised user is not already a member of the channel')
     #Loop through users list to check if u_id is valid
     #raises InputError if not
     errorcount = 0
     for users in data['users']:
-        if users['id'] == u_id:
+        if users['u_id'] == u_id:
             errorcount = errorcount + 1
     if errorcount == 0:
         raise InputError('u_id does not refer to a valid user')                            
@@ -38,12 +38,12 @@ def channel_details_v1(auth_user_id, channel_id):
     errorcount = 0
     #Check if auth is part of channel     
     #Raises AccessError if not
-    for channel in data['channels']
-        membersall = channel.get('all_members']
+    for channel in data['channels']:
+        membersall = channel.get('all_members')
         for member in membersall:
             if member == auth_user_id:
-            errorcount = errorcount + 1
-         if errorcount = 0:
+                errorcount = errorcount + 1
+        if errorcount == 0:
             raise AccessError('Authorised user is not a member of channel with channel_id')  
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
@@ -60,7 +60,7 @@ def channel_details_v1(auth_user_id, channel_id):
         "all_members": []
     }
     #Searches for channel_id and copys info into channel_info
-    for channel in data['channels']
+    for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             channel_info['name'] = data['channels']['name']
             for owners in data['channels']['owner_members']:
