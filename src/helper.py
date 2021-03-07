@@ -2,6 +2,9 @@ from src.error import InputError
 from src.error import AccessError
 
 def check_valid_channel(data, channel_id):
+    """
+    Checks if channel_id is a valid channel
+    """
     valid_channel = False
     for channels in data['channels']:
         if channels['channel_id'] == channel_id:
@@ -11,10 +14,16 @@ def check_valid_channel(data, channel_id):
         return False
 
 def check_public_channel(data, channel_id):
+    """
+    Checks if a channel is public
+    """
     if data['channels'][channel_id]['is_public'] is False:
         return False
 
 def check_user_in_channel(data, channel_id, auth_user_id):
+    """
+    Checks whether a user is in a channel
+    """
     user_in_channel = False
     for member in data['channels'][channel_id]['all_members']:
         ## if auth_user_id matches the member
