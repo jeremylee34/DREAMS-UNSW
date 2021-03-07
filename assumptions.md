@@ -1,4 +1,3 @@
-<<<<<<< assumptions.md
 For auth.py:
 - Assumed that the auth_user_id is the placement of that particular user in the users list upon registration, ie. the first registered user has the user id of 1 as it is the first element in the list.
 - Assumed that the inputed lastname and firstname can contain any character and doesn't necessarily have to be letters, eg. the firstname can be $%^^&&* and the lastname can be (tommy)*** as long as it satisfies the length requirements.
@@ -6,7 +5,6 @@ For auth.py:
 
 
 
-=======
 For channel_join_v1:
 - Assume nothing will occur after AccessError is raised
 - Assume nothing will occur after InputError is raised
@@ -33,4 +31,3 @@ For auth.py:
 - Assumed that the inputed lastname and firstname can contain any character and doesn't necessarily have to be letters, 
   eg. the firstname can be $%^^&&* and the lastname can be (tommy)*** as long as it satisfies the length requirements.
 
->>>>>>> assumptions.md
