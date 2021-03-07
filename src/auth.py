@@ -1,6 +1,28 @@
+'''
+Implementation of auth functions which includes auth_login_v1 and
+auth_register_v1.
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 from src.data import data
 from src.error import InputError
 import re
+
+'''
+Description of function:
+    Accepts email and password to validate user login details. It returns the auth_user_id for the user logging in.
+
+Parameters:
+    email (str)
+    password (str)
+
+Exceptions:
+    InputError - when the email is not valid
+    InputError - when the email is not correct
+    InputError - when the password is not correct
+
+Returns:
+    'auth_user_id'
+'''
 def auth_login_v1(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
@@ -25,11 +47,30 @@ def auth_login_v1(email, password):
         raise InputError("Incorrect email")
     if correct_password == 0:
         raise InputError("Incorrect password")
-    print(count)
     return {
         'auth_user_id': count,
     }
 
+'''
+Description of function:
+    Stores user registration information in the data file. It returns the auth_user_id of that user.
+
+Parameters:
+    email (str)
+    password (str)
+    name_first (str) 
+    name_last (str)
+
+Exceptions:
+    InputError - when the email is not valid
+    InputError - when the email is used by another user
+    InputError - when the password is too short (smaller than 6 character)
+    InputError - when the name_first is invalid (smaller than 1 character or larger than 50 characters)    
+    InputError - when the name_last is invalid (smaller than 1 character or larger than 50 characters)
+
+Returns:
+    'auth_user_id'
+'''
 def auth_register_v1(email, password, name_first, name_last):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id

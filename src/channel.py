@@ -10,6 +10,22 @@ from src.helper import check_valid_channel
 from src.helper import check_public_channel
 from src.helper import check_user_in_channel
 
+"""
+<This function adds the user with u_id to the channel with channel_id owned by auth_user_id>
+
+Arguments:
+    <auth_user_id> (<integer>)    - <unique id used to identify a particular user, member of the channel in this case>
+    <channel_id> (<integer>)    - <unique id used to identify the particular channel the u_id is being added to>
+    <u_id> (<integer>)    - <unique id used to identify the user who is being added to the channel>
+    
+Exceptions:
+    InputError - Occurs when channel_id does not refer to a valid channel or when u_id does not refer to a valid user
+    AccessError - Occurs when the user with input auth_user_id is not in the channel with input channel_id
+    
+Return Value:
+    Returns <{}> on u_id being succesfully added to channel with channel_id
+"""
+
 def channel_invite_v1(auth_user_id, channel_id, u_id): 
     #Loop through channels list to check if channel_id is valid 
     #raises InputError if not
@@ -48,9 +64,24 @@ def channel_invite_v1(auth_user_id, channel_id, u_id):
         if channel['channel_id'] == channel_id:
             channel['all_members'].append(new_member)    
     return {}
-            
                
-   
+"""
+<This function returns details of the channel with channel_id that the user with auth_user_id is part of>
+
+Arguments:
+    <auth_user_id> (<integer>)    - <unique id used to identify a particular user, member of the channel in this case>
+    <channel_id> (<integer>)    - <unique id used to identify the particular channel that the auth_user_id is retrieving
+                                    details on> 
+    
+Exceptions:
+    InputError - Occurs when channel_id does not refer to a valid channel 
+    AccessError - Occurs when the user with input auth_user_id is not a member of the channel with input channel_id
+    
+Return Value:
+    Returns <name> on auth_user_id being part of channel with channel_id and channel_id being valid
+    Returns <owner_members> on auth_user_id being part of channel with channel_id and channel_id being valid
+    Returns <all_members> on auth_user_id being part of channel with channel_id and channel_id being valid
+"""               
 
 def channel_details_v1(auth_user_id, channel_id):
     #Loop through channels list to check if channel_id is valid
