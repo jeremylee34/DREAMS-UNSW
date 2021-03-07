@@ -6,7 +6,7 @@ This function lists all the channels that a user is in
 Arguments:
     auth_user_id (int) - id of the user
 Exceptions:
-    
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channels' 
 '''
@@ -17,7 +17,7 @@ def channels_list_v1(auth_user_id):
         if users['id'] == auth_user_id:
             valid = 1
     if valid == 0:
-        raise AccessError
+        raise AccessError('auth_user_id does not exist')
     # List of channels that user is in
     channel_list = []
     # Loops through channel list 
@@ -39,7 +39,7 @@ This function lists all the channels
 Arguments:
     auth_user_id (int) - id of the user
 Exceptions:
-    
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channels' 
 '''
@@ -50,7 +50,7 @@ def channels_listall_v1(auth_user_id):
         if users['id'] == auth_user_id:
             valid = 1
     if valid == 0:
-        raise AccessError
+        raise AccessError('auth_user_id does not exist')
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
@@ -70,6 +70,7 @@ Arguments:
 Exceptions:
     InputError - Occurs when channel name is more than 20 characters long
     InputError - Occurs when no channel name is entered
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channel_id' 
 '''
@@ -80,7 +81,7 @@ def channels_create_v1(auth_user_id, name, is_public):
         if users['id'] == auth_user_id:
             valid = 1
     if valid == 0:
-        raise AccessError
+        raise AccessError('auth_user_id does not exist')
     # Produces an error if channel name is greater than 20 characters
     if len(name) > 20:
         raise InputError('Name is more than 20 characters long')
@@ -96,14 +97,18 @@ def channels_create_v1(auth_user_id, name, is_public):
             {
                 'u_id': auth_user_id,
                 'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname']
+                'name_last': data['users'][auth_user_id]['Lastname'],
+                'email': data['users'][auth_user_id]['email'],
+                'handle_str': data['users'][auth_user_id]['handle_str']
             }
         ],
         "all_members": [
             {
                 'u_id': auth_user_id,
                 'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname']
+                'name_last': data['users'][auth_user_id]['Lastname'],
+                'email': data['users'][auth_user_id]['email'],
+                'handle_str': data['users'][auth_user_id]['handle_str']
             }
         ],
         "messages": []

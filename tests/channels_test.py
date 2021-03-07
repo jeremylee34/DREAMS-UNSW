@@ -63,7 +63,7 @@ def test_channels_list_private_channel(clear_data, auth_id, channel_id_private):
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
 
-# Tests if adding no channels works
+# Tests if adding no channels works properly for listall function
 def test_channels_listall_none(clear_data, auth_id):
     channels = channels_listall_v1(auth_id['auth_user_id'])
     assert channels['channels'] == []
