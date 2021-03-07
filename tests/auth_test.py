@@ -9,19 +9,7 @@ from src.data import data
 @pytest.fixture
 def clear_data():
     clear_v1()
-    
-def test_login_incorrect_password(clear_data):
-    auth_register_v1("hiheee@gmail.com", "1234566", "K","S")
-    with pytest.raises(InputError):
-        assert auth_login_v1("hiheee@gmail.com", "1234666")
-
-
-def test_login_correct_password(clear_data):
-    auth_user_id1 = auth_register_v1("hiheee@gmail.com", "1234455", "K","S")
-    auth_user_id2 = auth_login_v1("hiheee@gmail.com", "1234455")
-    assert auth_user_id1 == auth_user_id2
-
-#test for auth_register
+# Test for auth_register
 def test_register_valid_email(clear_data):
     auth_user_id1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_user_id2 = auth_login_v1("asdf@gmail.com", "12344545")
@@ -34,26 +22,42 @@ def test_register_invalid_email(clear_data):
 def test_register_email_unshared(clear_data):
     auth_user_id1 = auth_register_v1("same@gmail.com", "12344545", "Me", "Me")
     auth_user_id2 = auth_register_v1("Notsame@gmail.com", "12344545", "NotMe", "NotMe")
-    assert(auth_user_id1 != auth_user_id2)
+    assert auth_user_id1 != auth_user_id2
 
-#repeated
+# Repeated
 def test_register_email_shared(clear_data):
     auth_register_v1("same@gmail.com", "12344545", "Me", "Me")
     with pytest.raises(InputError):
         assert auth_register_v1("same@gmail.com", "12344545", "NotMe", "NotMe") is None
 
-def check_password_test(clear_data): #less than 6 characters is a fail
+def test_check_password(clear_data): #less than 6 characters is a fail
     with pytest.raises(InputError):
         assert auth_register_v1("honey@outlook.com", "hi", "Tim", "Oreo")
 
-def firstname_length_test(clear_data): # if firstname < 1 or >50 is a fail
+def test_firstname_length(clear_data): # if firstname < 1 or >50 is a fail
     with pytest.raises(InputError):
-        assert auth_register_v1("honey@outlook.com", "hi", "", "Oreo")   
+        assert auth_register_v1("honey@outlook.com", "12345678", "", "Oreo")   
 
-def lastname_length_test(clear_data): #if lastname < 1 or >50 is a fail
+def test_lastname_length(clear_data): #if lastname < 1 or >50 is a fail
     with pytest.raises(InputError):
-        assert auth_register_v1("honey@outlook.com", "hi", "Tim", "")
-    
+        assert auth_register_v1("honey@outlook.com", "12345678", "Tim", "")
+# Tests for login    
+def test_login_incorrect_password(clear_data):
+    auth_register_v1("hiheee@gmail.com", "1234566", "K","S")
+    with pytest.raises(InputError):
+        assert auth_login_v1("hiheee@gmail.com", "1234666")
+def test_login_correct_password(clear_data):
+    auth_user_id1 = auth_register_v1("hiheee@gmail.com", "1234455", "K","S")
+    auth_user_id2 = auth_login_v1("hiheee@gmail.com", "1234455")
+    assert auth_user_id1 == auth_user_id2
+def test_login_invalid_email(clear_data):
+    auth_register_v1("hiheee@gmail.com", "1234455", "K","S")
+    with pytest.raises(InputError):
+        assert auth_login_v1("hiheeegmail", "1234455")
+def test_login_incorrect_email(clear_data):
+    auth_register_v1("hiheee@gmail.com", "1234455", "K","S")
+    with pytest.raises(InputError):
+        assert auth_login_v1("hiheee123gmail.com", "1234455")
 #register handle
 def test_handle_taken(clear_data):
     pass 
