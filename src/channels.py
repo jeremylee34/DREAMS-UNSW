@@ -11,6 +11,13 @@ Return Value:
     Returns 'channels' 
 '''
 def channels_list_v1(auth_user_id):
+    # Checks if auth_user_id exists
+    valid = 0
+    for users in data['users']:
+        if users['id'] == auth_user_id:
+            valid = 1
+    if valid == 0:
+        raise AccessError
     # List of channels that user is in
     channel_list = []
     # Loops through channel list 
@@ -37,6 +44,13 @@ Return Value:
     Returns 'channels' 
 '''
 def channels_listall_v1(auth_user_id):
+    # Checks if auth_user_id exists
+    valid = 0
+    for users in data['users']:
+        if users['id'] == auth_user_id:
+            valid = 1
+    if valid == 0:
+        raise AccessError
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
@@ -60,6 +74,13 @@ Return Value:
     Returns 'channel_id' 
 '''
 def channels_create_v1(auth_user_id, name, is_public):
+    # Checks if auth_user_id exists
+    valid = 0
+    for users in data['users']:
+        if users['id'] == auth_user_id:
+            valid = 1
+    if valid == 0:
+        raise AccessError
     # Produces an error if channel name is greater than 20 characters
     if len(name) > 20:
         raise InputError('Name is more than 20 characters long')
