@@ -104,11 +104,11 @@ def test_channels_create_multiple_channels(clear_data, auth_id, channel_id):
 # Checks the InputError
 def test_channels_create_input_error(clear_data, auth_id, channels):
     with pytest.raises(InputError):
-        assert channels_create_v1(auth_id, "Channel1Thisismorethan20", True)
+        assert channels_create_v1(auth_id['auth_user_id'], "Channel1Thisismorethan20", True)
 # Checks if entering no name produces an input error
 def test_channels_no_name(clear_data, auth_id, channels):
     with pytest.raises(InputError):
-        assert channels_create_v1(auth_id, "", True)
+        assert channels_create_v1(auth_id['auth_user_id'], "", True)
 # Checks if a private channel is created 
 def test_channels_create_private_channel(clear_data, channel_id_private, channels):
     assert channels['channels'][0]['channel_id'] == channel_id_private['channel_id']
