@@ -4,9 +4,9 @@ import re
 def auth_login_v1(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
-    try:
-        re.search(regex, email)
-    except:
+    if re.search(regex, email):
+        pass
+    else:
         InputError("Invalid email")
         
     # Checks if email and password is correct
