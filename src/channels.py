@@ -1,4 +1,5 @@
 from src.error import InputError
+from src.error import AccessError
 from src.data import data
 ''' 
 This function lists all the channels that a user is in
