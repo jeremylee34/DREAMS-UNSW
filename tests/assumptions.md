@@ -6,3 +6,4 @@ In auth.py, it is assumed that the inputed lastname and firstname can contain an
 
 Assumption 3:
 In auth.py, it is assumed that the password can contain any character and it can be of any length as long as it's greater than or equal to 6 characters, eg. the password can be 50 characters long and can contain special characters in it as well.
+
