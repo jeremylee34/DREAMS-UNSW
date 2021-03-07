@@ -37,6 +37,7 @@ def channel_messages_v1(auth_user_id, channel_id, start):
     """
     returns channel messages
     """
+
     return {
         'messages': [
             {
@@ -58,10 +59,17 @@ def channel_join_v1(auth_user_id, channel_id):
     """
     joins a user to a channel
     """
+    valid_channel = False
+    for i in data['channels'][channel_id[i]]:
+        if data['channels'][channel_id[i]] == channel_id:
+            valid_channel = True
+    if valid_channel is False:
+        raise InputError
+
     if data['channels'][channel_id['channel_id']]['is_public'] is False:
         raise AccessError
-    user_in_channel = False
     ## search thru all members
+    user_in_channel = False
     for i in range(len(data['channels'][channel_id['channel_id']]['all_members'])):
         ## if auth_user_id matches the member
         if data['channels'][channel_id['channel_id']]['all_members'][i]['u_id'] == auth_user_id:

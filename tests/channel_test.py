@@ -6,6 +6,7 @@ from src.channel import channel_details_v1
 from src.channels import channels_create_v1
 from src.auth import auth_register_v1
 from src.error import InputError
+from src.error import AccessError
 from src.other import clear_v1
 
 @pytest.fixture
@@ -31,3 +32,5 @@ def test_access_error(clear_data, auth_user1):
         assert channel_join_v1(auth_user1, channel_id)
 
 ## def test_channel_messages_v1:
+
+## def test_input_error
