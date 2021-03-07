@@ -1,6 +1,5 @@
 data = {
-    'users' : [],
-    'channels' : [],
-    'messages': []
-    
+    "users" : [],
+    "channels" : [],
+    "messages" : [],
 }
