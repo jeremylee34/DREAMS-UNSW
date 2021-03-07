@@ -6,7 +6,7 @@ This function lists all the channels that a user is in
 Arguments:
     auth_user_id (int) - id of the user
 Exceptions:
-    
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channels' 
 '''
@@ -39,7 +39,7 @@ This function lists all the channels
 Arguments:
     auth_user_id (int) - id of the user
 Exceptions:
-    
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channels' 
 '''
@@ -70,6 +70,7 @@ Arguments:
 Exceptions:
     InputError - Occurs when channel name is more than 20 characters long
     InputError - Occurs when no channel name is entered
+    AccessError - when auth_user_id does not exist
 Return Value:
     Returns 'channel_id' 
 '''
