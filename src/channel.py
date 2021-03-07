@@ -7,6 +7,7 @@ from src.error import InputError
 from src.error import AccessError
 from src.helper import check_valid_channel
 from src.helper import check_public_channel
+from src.helper import check_user_in_channel
 
 def channel_invite_v1(auth_user_id, channel_id, u_id):
     return {
@@ -39,14 +40,18 @@ def channel_messages_v1(auth_user_id, channel_id, start):
     """
     returns channel messages
     """
+    # Check valid channel
+    if check_valid_channel(data, channel_id) is False:
+        raise InputError("Channel ID is not a valid channel")
 
-
+    if check_user_in_channel(data, channel_id, auth_user_id) is False:
+        raise AccessError("Authorised user is not a member of channel with channel_id")
 
     messages = {}
     message_index = start
     for message in data['channels'][channel_id]['messages']:
         pass
-
+    
     return {
         'messages': [
             {
@@ -69,19 +74,15 @@ def channel_join_v1(auth_user_id, channel_id):
     joins a user to a channel
     """
     # Check valid channel
-    if check_valid_channel(channel_id, data) is False:
+    if check_valid_channel(data, channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
 
     # Check whether channel accesible
-    if check_public_channel(channel_id, data) is False:
+    if check_public_channel(data, channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
 
     ## search thru all members
-    user_in_channel = False
-    for member in data['channels'][channel_id]['all_members']:
-        ## if auth_user_id matches the member
-        if member['u_id'] == auth_user_id:
-            user_in_channel = True
+    user_in_channel = check_user_in_channel(data, channel_id, auth_user_id)
     if user_in_channel is False:
         ## if user not added
         user_to_append = {
