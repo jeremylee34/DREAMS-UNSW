@@ -6,6 +6,7 @@ def check_valid_channel(data, channel_id):
     for channels in data['channels']:
         if channels['channel_id'] == channel_id:
             valid_channel = True
+            break
     if valid_channel is False:
         return False
 
@@ -19,4 +20,5 @@ def check_user_in_channel(data, channel_id, auth_user_id):
         ## if auth_user_id matches the member
         if member['u_id'] == auth_user_id:
             user_in_channel = True
+            break
     return user_in_channel
