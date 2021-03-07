@@ -1,5 +1,4 @@
 from src.data import data
-
 def clear_v1():
     data['users'].clear()
     data['channels'].clear()
