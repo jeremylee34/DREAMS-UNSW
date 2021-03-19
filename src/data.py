@@ -1,5 +1,0 @@
-data = {
-    "users" : [],
-    "channels" : [],
-    "messages" : [],
-}
