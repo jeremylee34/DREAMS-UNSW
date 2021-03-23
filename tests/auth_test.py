@@ -9,6 +9,7 @@ from src.data import data
 @pytest.fixture
 def clear_data():
     clear_v1()
+    
 # Test for auth_register
 def test_register_valid_email(clear_data):
     auth_user_id1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
