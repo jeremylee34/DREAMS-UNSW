@@ -1,3 +1,8 @@
+'''
+Implementation of channels functions which includes channels_list_v1, 
+channels_listall_v1 and channels_create_v1. 
+Written by Gordon Liang
+'''
 from src.error import InputError
 from src.error import AccessError
 from src.data import data

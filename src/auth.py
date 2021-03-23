@@ -1,3 +1,8 @@
+'''
+Implementation of auth functions which includes auth_login_v1 and
+auth_register_v1.
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 from src.data import data
 from src.error import InputError
 import re
