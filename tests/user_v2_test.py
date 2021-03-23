@@ -3,6 +3,13 @@ import json
 import requests
 from src import config
 
+"""
+    STATUS_CODE
+    200 = successful
+    403 = AccessError
+    400 = InputError
+"""
+
 #for user/profile/v2
 """
     InputError - user with u_id is not valid user
@@ -13,6 +20,9 @@ from src import config
     InputError - firstname is <1 or >50
     InputError - lastname is <1 or >50
 """
+def test_setname():
+    assert requests.post(f"{url}/user/profile/setname/v2").status_code == 404
+    
 
 #for user/profile/setemail/v2
 """
