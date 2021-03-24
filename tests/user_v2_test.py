@@ -9,6 +9,7 @@ from src import config
     403 = AccessError
     400 = InputError
 """
+def test_system():
 
 #for user/profile/v2
 """
@@ -16,25 +17,40 @@ from src import config
 """
 
 #for user/profile/setname/v2
-"""
-    InputError - firstname is <1 or >50
-    InputError - lastname is <1 or >50
-"""
-def test_setname():
-    assert requests.post(f"{url}/user/profile/setname/v2").status_code == 404
+    #InputError - firstname is <1 or >50
+    assert requests.put(config.url + 'user/profile/setname/v2', json = {
+        'token': ''
+        'name_first': '',
+        'name_last': 'harry'
+    }).status_code == 400     
+    
+    #InputError - lastname is <1 or >50
+    assert requests.put(config.url + 'user/profile/setname/v2', json = {
+        'token': ''
+        'name_first': 'tom',
+        'name_last': ''
+    }).status_code == 400 
     
 
 #for user/profile/setemail/v2
 """
-    InputError - Invalid email
     InputError - Email is already used by someone else    
 """
+    #InputError - Invalid email
+    assert requests.put(config.url + 'user/profile/setemail/v2', json = {
+        'token': ''
+        'email': 'tom_harry.com'
+    }).status_code == 400 
 
 #for user/profile/sethandle/v1
 """
-    InputError - handle_str < 3 or > 20
     InputError - handle is already used by another user
 """
+    #InputError - handle_str < 3 or > 20
+    assert requests.put(config.url + 'user/profile/sethandle/v2', json = {
+        'token': ''
+        'handle': 'to'
+    }).status_code == 400 
 
 #users/all/v1
 """
@@ -43,8 +59,13 @@ def test_setname():
 
 #search/v2
 """
-    InputError - query_str is > 1000
+    
 """
+    #InputError - query_str is > 1000
+    assert requests.get(config.url + 'search/v2', json = {
+        'token': ''
+        'query_str': ''
+    }).status_code == 400     
 
 #admin/user/remove/v1
 """
@@ -60,3 +81,12 @@ def test_setname():
     AccessError - authorised user is not an owner
 """
 
+#notifications/get/v1
+"""
+    test for successful notifications
+"""
+
+#clear/v1
+"""
+    test for successful delete
+"""
