@@ -1,21 +1,22 @@
 '''
-Implementation of channels functions which includes channels_list_v1, 
-channels_listall_v1 and channels_create_v1. 
+Implementation of channels functions which includes channels_list_v1,
+channels_listall_v1 and channels_create_v1.
 Written by Gordon Liang
 '''
 from src.error import InputError
 from src.error import AccessError
 from src.data import data
-''' 
-This function lists all the channels that a user is in
-Arguments:
-    auth_user_id (int) - id of the user
-Exceptions:
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channels' 
-'''
+
 def channels_list_v1(auth_user_id):
+    '''
+    This function lists all the channels that a user is in
+    Arguments:
+        auth_user_id (int) - id of the user
+    Exceptions:
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channels'
+    '''
     # Checks if auth_user_id exists
     valid = 0
     for users in data['users']:
@@ -25,7 +26,7 @@ def channels_list_v1(auth_user_id):
         raise AccessError('auth_user_id does not exist')
     # List of channels that user is in
     channel_list = []
-    # Loops through channel list 
+    # Loops through channel list
     for channel in data['channels']:
         member_list = channel.get('all_members')
         # Loops through all members and checks if auth_user_id is included
@@ -39,16 +40,17 @@ def channels_list_v1(auth_user_id):
     return {
         'channels': channel_list
     }
-''' 
-This function lists all the channels
-Arguments:
-    auth_user_id (int) - id of the user
-Exceptions:
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channels' 
-'''
+
 def channels_listall_v1(auth_user_id):
+    '''
+    This function lists all the channels
+    Arguments:
+        auth_user_id (int) - id of the user
+    Exceptions:
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channels'
+    '''
     # Checks if auth_user_id exists
     valid = 0
     for users in data['users']:
@@ -66,20 +68,21 @@ def channels_listall_v1(auth_user_id):
     return {
         'channels': channel_list
     }
-''' 
-This function creates a channel and adds it to the data file
-Arguments:
-    auth_user_id (int) - id of the user
-    name (string) - name of the channel
-    is_public (bool) - determines if channel is public or private
-Exceptions:
-    InputError - Occurs when channel name is more than 20 characters long
-    InputError - Occurs when no channel name is entered
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channel_id' 
-'''
+
 def channels_create_v1(auth_user_id, name, is_public):
+    '''
+    This function creates a channel and adds it to the data file
+    Arguments:
+        auth_user_id (int) - id of the user
+        name (string) - name of the channel
+        is_public (bool) - determines if channel is public or private
+    Exceptions:
+        InputError - Occurs when channel name is more than 20 characters long
+        InputError - Occurs when no channel name is entered
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channel_id'
+    '''
     # Checks if auth_user_id exists
     valid = 0
     for users in data['users']:
@@ -118,9 +121,9 @@ def channels_create_v1(auth_user_id, name, is_public):
         ],
         "messages": []
     }
-    id = len(data['channels'])
+    channel_id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
     return {
-        'channel_id': id
+        'channel_id': channel_id
     }
