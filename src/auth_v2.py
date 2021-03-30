@@ -1,8 +1,8 @@
 from json import dumps
 from flask import Flask, request
-import src.config
-from src import data
-from src.error import InputError, AccessError
+import config
+import data
+from error import InputError, AccessError
 import re
 
 app = Flask(__name__)
@@ -129,5 +129,36 @@ def logout(token):
         'is_success': '',
     })
 """
+"""@app.route('/auth/logout/v1', methods=['POST'])
+def logout(token):
+
+    return dumps({
+        'is_success': '',
+    })
+"""
+
+"""@app.route('/user/profile/v2', methods=['GET'])
+def user_profile():
+
+@app.route('/user/profile/setname/v2', methods=['PUT'])
+
+
+@app.route('/user/profile/setemail/v2', methods=['PUT'])
+
+
+@app.route('/user/profile/sethandle/v1', methods=['PUT'])
+
+
+@app.route('/users/all/v1', methods=['GET'])
+
+
+@app.route('/clear/v1', methods=['DELETE'])
+def clear():
+    data['users'].clear()
+    data['channels'].clear()
+    data['messages'].clear()  
+    return dumps({})  
+"""
+
 if __name__ == '__main__':
     app.run(port=config.port)
