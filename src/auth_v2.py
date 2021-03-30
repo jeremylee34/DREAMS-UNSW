@@ -1,7 +1,7 @@
 from json import dumps
 from flask import Flask, request
 import config
-import data
+from data import data
 from error import InputError, AccessError
 import re
 
@@ -151,14 +151,14 @@ def user_profile():
 
 @app.route('/users/all/v1', methods=['GET'])
 
-
+"""
 @app.route('/clear/v1', methods=['DELETE'])
 def clear():
     data['users'].clear()
     data['channels'].clear()
     data['messages'].clear()  
     return dumps({})  
-"""
+
 
 if __name__ == '__main__':
     app.run(port=config.port)
