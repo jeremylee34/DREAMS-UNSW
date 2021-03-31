@@ -56,12 +56,26 @@ def test_system():
 """
     test by returning all users
 """
+    r = requests.get(config.url + 'users/all/v1', json = {
+        'token':''
+    })
+    payload = r.json()
+    assert payload['users'] != ''
+    assert requests.get(config.url + 'users/all/v1', json = {
+        'token':''
+    }).status_code == 400
 
 #search/v2
 """
-    
+    return collection of messages
+    InputError - query_str is > 1000
 """
-    #InputError - query_str is > 1000
+    r = requests.get(config.url + 'search/v2', json = {
+        'token':''
+        'query_str':''
+    })
+    payload = r.json()
+    assert payload['messages'] != ''
     assert requests.get(config.url + 'search/v2', json = {
         'token': ''
         'query_str': ''
@@ -73,6 +87,16 @@ def test_system():
     InputError - user is currently the only owner
     AccessError - authorised user is not an owner
 """
+    r = requests.delete(config.url + 'admin/user/remove/v1', json = {
+        'token':''
+        'u_id':''
+    })
+    payload = r.json()
+    assert payload == {}
+    assert requests.get(config.url + 'admin/user/remove/v1', json = {
+        'token':''
+        'u_id':''
+    }).status_code == 400     
 
 #admin/userpermission/change/v1
 """
@@ -80,13 +104,35 @@ def test_system():
     InputError - permission_id does not refer to a value permission
     AccessError - authorised user is not an owner
 """
+    r = requests.post(config.url + 'admin/userpermission/change/v1', json = {
+            'token':''
+            'u_id':''
+            'permission_id':''
+        })
+        payload = r.json()
+        assert payload == {}
+        assert requests.get(config.url + 'admin/userpermission/change/v1', json = {
+            'token':''
+            'u_id':''
+            'permission_id':''
+        }).status_code == 400   
+
 
 #notifications/get/v1
 """
     test for successful notifications
 """
+    r = requests.get(config.url + 'admin/userpermission/change/v1', json = {
+            'token':''
+        })
+        payload = r.json()
+        assert payload != {}
+        assert requests.get(config.url + 'admin/userpermission/change/v1', json = {
+            'token':''
+        }).status_code == 400   
 
 #clear/v1
 """
     test for successful delete
 """
+    assert requests.delete(config.url + '/clear/v1').status_code == 400
