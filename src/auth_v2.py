@@ -145,10 +145,23 @@ def logout():
         'is_success': success,
         'status': i,
     })
-"""
+
 @app.route('/user/profile/v2', methods=['GET'])
 def user_profile():
+    input_token = request.args.get('token')
+    input_id = request.args.get('u_id')
+    profile = {}
+    for x in data["users"]:
+        if input_id == x['id'] and input_token == x['token']:
+            profile['u_id'] = x['id']
+            profile['email'] = x['email']
+            profile['name_first'] = x['name_first']
+            profile['name_last'] = x['name_last']
+            profile['handle'] = x['handle']
+    return dumps(profile)
 
+
+"""
 @app.route('/user/profile/setname/v2', methods=['PUT'])
 
 
@@ -183,4 +196,4 @@ def clear():
 
 
 if __name__ == '__main__':
-    app.run(port=8081)
+    app.run(port=port)
