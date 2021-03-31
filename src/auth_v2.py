@@ -3,6 +3,7 @@ from flask import Flask, request
 from src.config import port
 from src.data import data
 from src.error import InputError, AccessError
+import src.other
 import re
 import hashlib
 
@@ -169,30 +170,49 @@ def user_profile():
 
 
 @app.route('/user/profile/sethandle/v1', methods=['PUT'])
+"""
 
+#=============================================================
+#                       Sing's things                        =
+#=============================================================
 
 @app.route('/users/all/v1', methods=['GET'])
 def users_all():
-    
+    input_token = request.args.get('token') #what's the use of token?
+    return dumps({
+        data
+    })
 
 
 @app.route('/search/v2', methods=['GET'])
-
+def search():
+    input_token = request.args.get('token')
+    input_query_str = request.args.get('query_str')
+    return dumps({
+        other.search_v1(input_token, input_query_str)
+    })
 
 @app.route('/admin/user/remove/v1', methods=['DELETE'])
-
+def admin_user_remove():
+    return dumps({
+    })
 
 @app.route('/admin/userpermission/change/v1', methods=['POST'])
-
+def admin_userpermission_change():
+    return dumps({
+    })
 
 @app.route('/notifications/get/v1', methods=['GET'])
-"""
-"""@app.route('/clear/v1', methods=['DELETE'])
+def notifications_get():
+    return dumps({
+    })
+
+@app.route('/clear/v1', methods=['DELETE'])
 def clear():
     data['users'].clear()
     data['channels'].clear()
     data['messages'].clear()  
-    return dumps({})  """
+    return dumps({}) 
 
 
 if __name__ == '__main__':
