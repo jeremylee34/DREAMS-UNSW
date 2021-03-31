@@ -1,9 +1,10 @@
 from json import dumps
 from flask import Flask, request
-import config
-from data import data
-from error import InputError, AccessError
+from src.config import port
+from src.data import data
+from src.error import InputError, AccessError
 import re
+import hashlib
 
 app = Flask(__name__)
 
@@ -26,16 +27,18 @@ def login():
         if data["users"][i]["email"] == login_info['email']:
             correct_email = 1
             count = i
+            data["users"][count]["log_status"] = 1
         if data["users"][i]["password"] == login_info['password']:
             correct_password = 1 
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
     if correct_password == 0:
-        raise InputError("Incorrect password")    
+        raise InputError("Incorrect password") 
     return dumps({
-        'token': '',
+        'token': data["users"][count]["token"],
         'auth_user_id': count,
+        'status': data["users"][count]["log_status"]
     })
 
 
@@ -115,29 +118,35 @@ def register():
       
     register["handle_str"] = handle 
     register['id'] = count
+    #generating the token
+    token = hashlib.sha256(info['password'].encode()).hexdigest()
+    print(token)
+    register['token'] = token
+    #setting all login status to 0
+    register['log_status'] = 0
     data["users"].append(register)    
     return dumps({
-        'token': '',
+        'token': data["users"][count]["token"],
         'auth_user_id': count,
         'data.email': data['users']
     })
 
-"""@app.route('/auth/logout/v1', methods=['POST'])
-def logout(token):
-
+@app.route('/auth/logout/v1', methods=['POST'])
+def logout():
+    i = 0
+    success = False
+    user = request.get_json()
+    for x in data["users"]:
+        if x["token"] == user['token'] and x['log_status'] == 1:
+            x['log_status'] = 0
+            success = True
+            i = x['id']
     return dumps({
-        'is_success': '',
+        'is_success': success,
+        'status': i,
     })
 """
-"""@app.route('/auth/logout/v1', methods=['POST'])
-def logout(token):
-
-    return dumps({
-        'is_success': '',
-    })
-"""
-
-"""@app.route('/user/profile/v2', methods=['GET'])
+@app.route('/user/profile/v2', methods=['GET'])
 def user_profile():
 
 @app.route('/user/profile/setname/v2', methods=['PUT'])
@@ -150,15 +159,28 @@ def user_profile():
 
 
 @app.route('/users/all/v1', methods=['GET'])
+def users_all():
+    
 
+
+@app.route('/search/v2', methods=['GET'])
+
+
+@app.route('/admin/user/remove/v1', methods=['DELETE'])
+
+
+@app.route('/admin/userpermission/change/v1', methods=['POST'])
+
+
+@app.route('/notifications/get/v1', methods=['GET'])
 """
-@app.route('/clear/v1', methods=['DELETE'])
+"""@app.route('/clear/v1', methods=['DELETE'])
 def clear():
     data['users'].clear()
     data['channels'].clear()
     data['messages'].clear()  
-    return dumps({})  
+    return dumps({})  """
 
 
 if __name__ == '__main__':
-    app.run(port=config.port)
+    app.run(port=8081)
