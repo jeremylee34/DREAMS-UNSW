@@ -172,8 +172,6 @@ def user_profile():
                         profile['name_first'] = x['firstname']
                         profile['name_last'] = x['Lastname']
                         profile['handle'] = x['handle_str']   
-            else:
-                print("fail")
     return dumps(profile)
 
 
