@@ -155,21 +155,25 @@ def logout():
                 logout = True
     return dumps({
         'is_success': logout,
-        'data': data['users']
     })
 
 @app.route('/user/profile/v2', methods=['GET'])
 def user_profile():
     input_token = request.args.get('token')
-    input_id = request.args.get('u_id')
+    decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
+    input_id = int(request.args.get('u_id'))
     profile = {}
     for x in data["users"]:
-        if input_id == x['id'] and input_token == x['token']:
-            profile['u_id'] = x['id']
-            profile['email'] = x['email']
-            profile['name_first'] = x['name_first']
-            profile['name_last'] = x['name_last']
-            profile['handle'] = x['handle']
+            if input_id == x['id']:
+                for y in x["session_ids"]:
+                    if decoded_token["session_ids"] == y:
+                        profile['u_id'] = x['id']
+                        profile['email'] = x['email']
+                        profile['name_first'] = x['firstname']
+                        profile['name_last'] = x['Lastname']
+                        profile['handle'] = x['handle_str']   
+            else:
+                print("fail")
     return dumps(profile)
 
 
