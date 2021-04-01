@@ -179,10 +179,23 @@ def user_profile():
     return dumps(profile)
 
 
-"""
+
 @app.route('/user/profile/setname/v2', methods=['PUT'])
+def profile_setname():
+    user = request.get_json()
+    decoded_token = jwt.decode(user['token'], 'HELLO', algorithms=['HS256'])
+    if len(user['name_first']) < 1 or len(user['name_first']) > 50:
+        raise InputError("Invalid firstname")
+    if len(user['name_last']) < 1 or len(user['name_last']) > 50:
+        raise InputError("Invalid lastname")        
+    for x in data["users"]:
+        for y in x["session_ids"]:
+            if decoded_token["session_ids"] == y:
+                x['firstname'] = user['name_first']
+                x['Lastname'] = user['name_last'] 
+    return dumps({})    
 
-
+"""
 @app.route('/user/profile/setemail/v2', methods=['PUT'])
 
 
@@ -216,5 +229,5 @@ def clear():
 
 
 if __name__ == '__main__':
-    app.run(port=8081)
+    app.run(port=port)
     

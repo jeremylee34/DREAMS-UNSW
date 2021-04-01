@@ -25,19 +25,19 @@ def test_system():
     payload2 = r2.json()
     assert payload['auth_user_id'] == payload2['auth_user_id']
     #InputError - Invalid email
-
-    #with pytest.raises(InputError):
-    assert requests.post(config.url + 'auth/register/v2', json = {
+    r = requests.post(config.url + 'auth/register/v2', json = {
             'email': 'tomgmail.com',
             'password': 'hello1234',
             'name_first': 'tom',
             'name_last': 'brown',
-    }).status_code == 400
-
-    """   
+    })
+    assert requests.post(config.url + 'auth/login/v2', json={
+            'email': 'tomgmail.com',
+            'password': 'hello1234',
+    }).status_code == 400 
     #InputError - Email entered doesn't belong to user
-    requests.post(config.url + 'auth/register/v2', json = {
-        'email': 'tom @gmail.com.com',
+    r = requests.post(config.url + 'auth/register/v2', json = {
+        'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
@@ -46,8 +46,8 @@ def test_system():
         'email': 'timothy@gmail.com',
         'password': 'hello1234',
     }).status_code == 400 
-
-#for auth/register/v2
+    """
+    #for auth/register/v2
     #InputError - Invalid email
     assert requests.post(config.url + 'auth/register/v2', json = {
         'email': 'tom@gmail.com',
@@ -91,9 +91,10 @@ def test_system():
     }).status_code == 400  
     """
 
-#auth/logout/v1
+    #auth/logout/v1
     #tests for successful logout
-    """assert requests.post(config.url + 'auth/logout/v1', json = {
+    """
+    assert requests.post(config.url + 'auth/logout/v1', json = {
         'token': ''
     }).status_code == 200  
      """
