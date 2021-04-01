@@ -159,19 +159,23 @@ def logout():
 
 @app.route('/user/profile/v2', methods=['GET'])
 def user_profile():
+    valid = 0
     input_token = request.args.get('token')
     decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
     input_id = int(request.args.get('u_id'))
     profile = {}
     for x in data["users"]:
             if input_id == x['id']:
+                valid = 1
                 for y in x["session_ids"]:
                     if decoded_token["session_ids"] == y:
                         profile['u_id'] = x['id']
                         profile['email'] = x['email']
                         profile['name_first'] = x['firstname']
                         profile['name_last'] = x['Lastname']
-                        profile['handle'] = x['handle_str']   
+                        profile['handle'] = x['handle_str']  
+    if valid == 0:
+        raise InputError("Invalid user")
     return dumps(profile)
 
 
