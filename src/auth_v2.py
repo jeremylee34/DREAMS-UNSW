@@ -5,8 +5,19 @@ from src.data import data
 from src.error import InputError, AccessError
 import re
 import hashlib
+import jwt
+
 
 app = Flask(__name__)
+
+session_id = 0
+def create_session_id():
+    global session_id
+    session_id += 1
+    return session_id
+
+def create_token():
+    return jwt.encode({})
 
 @app.route('/auth/login/v2', methods=['POST'])
 def login():
@@ -21,24 +32,26 @@ def login():
     # Checks if email and password is correct
     correct_email = 0
     correct_password = 0
+    input_password = hashlib.sha256(login_info["password"].encode()).hexdigest()
     i = 0
     count = 0
     while i < len(data["users"]):
-        if data["users"][i]["email"] == login_info['email']:
+        if data["users"][i]["email"] == login_info['email'] and data["users"][i]["password"] == input_password:
             correct_email = 1
             count = i
-            data["users"][count]["log_status"] = 1
-        if data["users"][i]["password"] == login_info['password']:
+            data["users"][count]["session_ids"].append(create_session_id())
             correct_password = 1 
+            token = jwt.encode({'session_ids': session_id}, 'HELLO', algorithm='HS256')
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
     if correct_password == 0:
-        raise InputError("Incorrect password") 
+        raise InputError("Incorrect password")
+
     return dumps({
-        'token': data["users"][count]["token"],
+        'token': token,
         'auth_user_id': count,
-        'status': data["users"][count]["log_status"]
+        'data': data["users"]
     })
 
 
@@ -69,7 +82,7 @@ def register():
                 register["email"] = info['email']
     # Checks for valid password
     if len(info['password']) >= 6:
-        register["password"] = info['password']
+        register["password"] = hashlib.sha256(info['password'].encode()).hexdigest()
     else:
         raise InputError("Password too short")
 
@@ -118,32 +131,31 @@ def register():
       
     register["handle_str"] = handle 
     register['id'] = count
+    #creating session_id
+    register['session_ids'] = []
+    register['session_ids'].append(create_session_id())    
     #generating the token
-    token = hashlib.sha256(info['password'].encode()).hexdigest()
-    print(token)
-    register['token'] = token
-    #setting all login status to 0
-    register['log_status'] = 0
+    token = jwt.encode({'session_ids': session_id}, 'HELLO', algorithm='HS256')
     data["users"].append(register)    
     return dumps({
-        'token': data["users"][count]["token"],
+        'token': token,
         'auth_user_id': count,
         'data.email': data['users']
     })
 
 @app.route('/auth/logout/v1', methods=['POST'])
 def logout():
-    i = 0
-    success = False
+    logout = False
     user = request.get_json()
+    token = jwt.decode(user['token'], 'HELLO', algorithms=['HS256'])
     for x in data["users"]:
-        if x["token"] == user['token'] and x['log_status'] == 1:
-            x['log_status'] = 0
-            success = True
-            i = x['id']
+        for y in x["session_ids"]:
+            if token["session_ids"] == y:
+                x["session_ids"].remove(y)
+                logout = True
     return dumps({
-        'is_success': success,
-        'status': i,
+        'is_success': logout,
+        'data': data['users']
     })
 
 @app.route('/user/profile/v2', methods=['GET'])
@@ -187,13 +199,16 @@ def users_all():
 
 @app.route('/notifications/get/v1', methods=['GET'])
 """
-"""@app.route('/clear/v1', methods=['DELETE'])
+@app.route('/clear/v1', methods=['DELETE'])
 def clear():
+    for x in data["users"]:
+        x["session_ids"].clear()
     data['users'].clear()
     data['channels'].clear()
     data['messages'].clear()  
-    return dumps({})  """
+    return dumps({})
 
 
 if __name__ == '__main__':
-    app.run(port=port)
+    app.run(port=8081)
+    
