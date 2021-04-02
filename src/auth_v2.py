@@ -123,6 +123,13 @@ def register():
     token = hashlib.sha256(info['password'].encode()).hexdigest()
     print(token)
     register['token'] = token
+
+    #setting DREAMS(admin) permission
+    if (len(data['user']) < 1):
+        register['permission_id'] = '1'
+    else:
+        register['permission_id'] = '2'
+
     #setting all login status to 0
     register['log_status'] = 0
     data["users"].append(register)    
@@ -190,21 +197,83 @@ def search():
     input_query_str = request.args.get('query_str')
     return dumps({
         other.search_v1(input_token, input_query_str)
-    })
+    }) #when call if info blank make it removed suer
 
 @app.route('/admin/user/remove/v1', methods=['DELETE'])
 def admin_user_remove():
-    return dumps({
-    })
+    valid = 0
+    access = 0
+    input_token = request.args.get('token')
+    decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
+    input_id = int(request.args.get('u_id'))
+
+    #check if admin have permission 
+    for x in data['users']:    
+        if (x['session_ids'] == decoded_token['session_ids']):
+            if (x['permission_id'] == '1'):
+                access = 1
+                #approved access, start delete process
+                for y in data['users']:
+                    if (input_id == y['id']):
+                        valid = 1
+                        y.pop('email', 'password', 'firstname', 'Lastname', 
+                              'handle_str', 'session_ids')
+
+    #left with 'id' to identicate, to tell that left only 'id' return "Removed user"
+    if valid == 0:
+        raise InputError("Invalid user")
+    if access == 0:
+        raise AccessError("The authorised user is not an owner")
+
+    return dumps({})
+
+
 
 @app.route('/admin/userpermission/change/v1', methods=['POST'])
 def admin_userpermission_change():
+    valid = 0
+    input_token = request.args.get('token')
+    decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
+    input_id = int(request.args.get('u_id'))
+    input_permission = request.args.get('permission_id')
+
+    #check if admin have permission 
+    for x in data['users']:    
+        if (x['session_ids'] == decoded_token['session_ids']):
+            if (x['permission_id'] == '1'):
+                access = 1
+                #approved access, start delete process
+                for y in data['users']:
+                    if (input_id == y['id']):
+                        valid = 1
+                        y['permission_id'] = input_permission
+
+    #token is admin, u_id is user, p_id i new p_id for user
+
     return dumps({
     })
 
 @app.route('/notifications/get/v1', methods=['GET'])
 def notifications_get():
+    valid = 0
+    input_token = request.args.get('token')
+    decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
+    noti_list = []
+    all_msg = []
+
+    #find that person with token
+    for x in data['users']:
+        for y in x['session_ids']:
+            if decoded_token["session_ids"] == y:
+                #some action
+
+    #collect all message
+    for x in dict(reversed(list(noti_list.items()))): #newest noti first
+        if len(all_msg <= 20)
+            all_msg.append(x['notification_message'])
+
     return dumps({
+        all_msg
     })
 
 @app.route('/clear/v1', methods=['DELETE'])
