@@ -34,10 +34,21 @@ def user_token3():
     return user_token3
 
 @pytest.fixture
+def unadded_user_token():
+    user_token = auth_register_v1("Bolin@gmail.com", "password", "Bolin", "Ngo")
+    return user_token
+
+@pytest.fixture
 def dm_1(user_token1, user_token2, user_token3):
     u_ids = [user_token2['auth_user_id'], user_token3['auth_user_id']]  
     dm_1 = dm_create_v1(user_token1['token'], u_ids)
     return dm_1
+
+@pytest.fixture
+def dm_2(user_token1, user_token2):
+    u_ids = [user_token2['auth_user_id']]  
+    dm_2 = dm_create_v1(user_token1['token'], u_ids)
+    return dm_2
 
 #Fixture for clear to prevent clearing of other fixtures
 @pytest.fixture
@@ -79,6 +90,20 @@ def test_dm_create_v1_ownership(clear_data, user_token1):
     user_profile_dict1 = user_profile_v1(user_token1['token'], user_token1['auth_user_id'])
     user_u_id = user_profile_dict1['u_id']
     assert dm_1['owner'] == user_u_id
+    
+def test_dm_details_v1_input_error(clear_data, user_token1, dm_1):
+    """
+    InputError to be thrown when DM ID is not a valid DM
+    """
+    with pytest.raises(InputError):
+        assert dm_details_v1(user_token1['token'], 1000)
+
+def test_dm_details_v1_access_error(clear_data, user_token1, dm_1, unadded_user_token):
+    """
+    AccessError to be thrown when authorised user is not a member of this DM with dm_id
+    """
+    with pytest.raises(AccessError):
+        assert dm_details_v1(unadded_user_token['token'], dm_1['dm_id'])
 
 def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3, dm_1):
     """
@@ -95,5 +120,43 @@ def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3,
     assert dm_details['members'][0] == user_profile_dict1
     assert dm_details['members'][1] == user_profile_dict2
     assert dm_details['members'][2] == user_profile_dict3
-    
-def test_dm_details_v1_simple
+
+def test_dm_list_v1(clear_data, user_token1, dm_1, dm_2):
+    """
+    Testing whether dm_list_v1 returns the list of DMs correctly
+    """
+    dms = dm_list_v1(user_token1['token'])
+    assert dms == [
+        {
+            'dm_id': '1',
+            'name': 'godanliang, jeremylee, rolandlin'
+        }
+        {
+            'dm_id': '2',
+            'name': 'godanliang, jeremylee'
+        }
+    ]
+
+def test_dm_remove_v1_input_error(clear_data, user_token1, dm_1):
+    """
+    InputError to be thrown when dm_id does not refer to a valid DM
+    """
+    with pytest.raises(InputError):
+        assert dm_remove_v1(user_token1['token'], 1000)
+
+def test_dm_remove_v1_access_error(clear_data, unadded_user_token, dm_1):
+    """
+    AccessError to be thrown when the user is not the original DM creator
+    """
+    with pytest.raises(AccessError):
+        assert dm_remove_v1(unadded_user_token['token'], dm_1['dm_id'])
+
+def test_dm_remove_v1(clear_data, user_token1, dm_1):
+    """
+    Testing whether dm is removed. If dm is removed, dm_details_v1 should raise
+    InputError since dm is removed.
+    """
+    dm_id = dm_1['dm_id']
+    dm_remove_v1(user_token1['token'], dm_1['dm_id'])
+    with pytest.raises(InputError):
+        assert dm_details_v1(user_token1['token'], dm_id)
