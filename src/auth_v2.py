@@ -195,18 +195,50 @@ def profile_setname():
                 x['Lastname'] = user['name_last'] 
     return dumps({})    
 
-"""
-@app.route('/user/profile/setemail/v2', methods=['PUT'])
 
+@app.route('/user/profile/setemail/v2', methods=['PUT'])
+def profile_setemail():
+    user = request.get_json()
+    decoded_token = jwt.decode(user['token'], 'HELLO', algorithms=['HS256'])
+    regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
+    unshared = 0
+    # Checks for valid email
+    if re.search(regex, user['email']):
+        pass
+    else:    
+        raise InputError("Invalid email")
+    #checking for if email is already used
+    for x in data["users"]:
+        if x["email"] == user['email']:
+            raise InputError("Email is already used")
+        else:
+            for y in x["session_ids"]:
+                if y == decoded_token["session_ids"]:
+                    x['email'] = user['email']
+    return dumps({})
+        
 
 @app.route('/user/profile/sethandle/v1', methods=['PUT'])
-
+def profile_sethandle():
+    user = request.get_json()
+    decoded_token = jwt.decode(user['token'], 'HELLO', algorithms=['HS256'])
+    if len(user['handle_str']) < 3 or len(user['handle_str']) > 20:
+        raise InputError("Invalid handle")
+    for x in data['users']:
+        if x['handle_str'] == user['handle_str']:
+            raise InputError("Handle already used")
+        else:
+            for y in x["session_ids"]:
+                if y == decoded_token["session_ids"]:
+                    x['handle_str'] = user['handle_str']
+    return dumps({})
 
 @app.route('/users/all/v1', methods=['GET'])
 def users_all():
-    
+    input_token = request.args.get('token')
+    return dumps(data["users"])
 
-
+"""
 @app.route('/search/v2', methods=['GET'])
 
 
@@ -229,5 +261,5 @@ def clear():
 
 
 if __name__ == '__main__':
-    app.run(port=port)
+    app.run(port=8081)
     
