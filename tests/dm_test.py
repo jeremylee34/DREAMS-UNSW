@@ -72,7 +72,7 @@ def test_dm_create_v1_simple(clear_data, user_token1, user_token2, user_token3):
     """
     u_ids = [user_token2['auth_user_id'], user_token3['auth_user_id']]  
     dm_1 = dm_create_v1(user_token1['token'], u_ids)
-    assert dm_1['dm_id'] == 1
+    assert dm_1['dm_id'] == 0
     user_profile_dict1 = user_profile_v1(user_token1['token'], user_token1['auth_user_id'])
     handle1 = user_profile_dict1['handle_str']
     user_profile_dict2 = user_profile_v1(user_token2['token'], user_token2['auth_user_id'])
@@ -130,7 +130,7 @@ def test_dm_list_v1(clear_data, user_token1, dm_1, dm_2):
         {
             'dm_id': '1',
             'name': 'godanliang, jeremylee, rolandlin'
-        }
+        },
         {
             'dm_id': '2',
             'name': 'godanliang, jeremylee'
