@@ -31,3 +31,40 @@ def check_user_in_channel(data, channel_id, auth_user_id):
             user_in_channel = True
             break
     return user_in_channel
+
+def check_valid_user(data, u_id):
+    """
+    Checks whether a u_id refers to a valid user
+    """
+    valid_user = False
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            valid_user = True
+            break
+    return valid_user
+
+def token_to_u_id(data, token):
+    # find u_id related to token
+    session_id = jwt.decode(token, SECRET, algorithms=['HS256'])
+    for user in data['users']:
+        for session in user['session_ids']:
+            if session == session_id:
+                u_id = user['u_id']
+                break
+    return u_id
+
+def check_valid_dm(data, dm_id):
+    valid_dm = False
+    for dm in data['dms']:
+        if dm['dm_id'] == dm_id:
+            valid_dm = True
+            break
+    return valid_dm
+
+def check_user_in_dm(data, u_id, dm_id):
+    user_in_dm = False
+    for member in data['dms'][dm_id]['members']:
+        if member['u_id'] == u_id:
+            user_in_dm = True
+            break
+    return user_in_dm
