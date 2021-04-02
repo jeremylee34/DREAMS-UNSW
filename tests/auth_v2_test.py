@@ -1,16 +1,16 @@
 import pytest
-import json
 import requests
 from src import config
 import src.auth_v2
 import src.data
 from src.error import InputError, AccessError
 
-def test_system():
+@pytest.fixture
+def clear_data():
+    requests.delete(config.url + 'clear/v1')
 
-
-#for auth/login/v2
-    #Valid email
+##Tests for login
+def test_successful_login(clear_data):
     r = requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
@@ -23,78 +23,104 @@ def test_system():
             'password': 'hello1234',
         })
     payload2 = r2.json()
-    assert payload['auth_user_id'] == payload2['auth_user_id']
-    #InputError - Invalid email
-    r = requests.post(config.url + 'auth/register/v2', json = {
-            'email': 'tomgmail.com',
-            'password': 'hello1234',
-            'name_first': 'tom',
-            'name_last': 'brown',
-    })
-    assert requests.post(config.url + 'auth/login/v2', json={
-            'email': 'tomgmail.com',
-            'password': 'hello1234',
-    }).status_code == 400 
-    #InputError - Email entered doesn't belong to user
-    r = requests.post(config.url + 'auth/register/v2', json = {
+    assert payload['auth_user_id'] == payload2['auth_user_id']  
+
+def test_incorrect_email(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
     }) 
-    assert requests.post(config.url + 'auth/login/v2', json = {
-        'email': 'timothy@gmail.com',
-        'password': 'hello1234',
-    }).status_code == 400 
-    """
-    #for auth/register/v2
-    #InputError - Invalid email
-    assert requests.post(config.url + 'auth/register/v2', json = {
+    assert requests.post(config.url + 'auth/login/v2', json={
+            'email': 'tommy@gmail.com',
+            'password': 'hello1234',
+    }) .status_code == InputError.code 
+
+def test_invalid_email(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
-    }).status_code == 400  
-    #InputError - Email is already used by someone else
-    requests.post(config.url + 'auth/register/v2', json = {
+    }) 
+    assert requests.post(config.url + 'auth/login/v2', json={
+            'email': 'tomm.com',
+            'password': 'hello1234',
+    }) .status_code == InputError.code      
+
+def test_incorrect_password(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    }) 
+    assert requests.post(config.url + 'auth/login/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hlo1234',
+    }).status_code == InputError.code      
+
+
+##Tests for register
+def test_invalid_email_reg(clear_data):
+    assert requests.post(config.url + 'auth/register/v2', json={
+        'email': 'robby@gmail',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    }).status_code == InputError.code    
+
+def test_shared_email(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
     })
-    assert requests.post(config.url + 'auth/register/v2', json = {
+    assert requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
-        'password': 'hello1234',
-        'name_first': 'tim',
+        'password': 'tommy123',
+        'name_first': 'tommy',
         'name_last': 'blue',
-    }).status_code == 400          
-    #InputError - password is less than 6 characters
-    assert requests.post(config.url + 'auth/register/v2', json = {
-        'email': 'tom@gmail.com',
+    }).status_code == InputError.code
+def test_invalid_password(clear_data):
+    assert requests.post(config.url + 'auth/register/v2', json={
+        'email': 'robby@gmail',
         'password': 'hi',
-        'name_first': 'tom',
+        'name_first': 'rob',
         'name_last': 'brown',
-    }).status_code == 400         
-    #InputError - firstname is <1 or >50
-    assert requests.post(config.url + 'auth/register/v2', json = {
-        'email': 'tom@gmail.com',
-        'password': 'hello12345',
+    }).status_code == InputError.code  
+def test_invalid_firstname(clear_data):
+    assert requests.post(config.url + 'auth/register/v2', json={
+        'email': 'robby@gmail',
+        'password': 'hello1234',
         'name_first': '',
         'name_last': 'brown',
-    }).status_code == 400   
-    #InputError - lastname is <1 or >50
-    assert requests.post(config.url + 'auth/register/v2', json = {
-        'email': 'tom@gmail.com',
-        'password': 'hello12345',
-        'name_first': 'tom',
-        'name_last': ''
-    }).status_code == 400  
-    """
+    }).status_code == InputError.code 
+def test_invalid_lastname(clear_data):
+    assert requests.post(config.url + 'auth/register/v2', json={
+        'email': 'robby@gmail',
+        'password': 'hello1234',
+        'name_first': 'robby',
+        'name_last': '',
+    }).status_code == InputError.code          
 
-    #auth/logout/v1
-    #tests for successful logout
-    """
-    assert requests.post(config.url + 'auth/logout/v1', json = {
-        'token': ''
-    }).status_code == 200  
-     """
+##Test for logout
+def test_failed_logout(clear_data):    
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    }) 
+    requests.post(config.url + 'auth/login/v2', json={
+            'email': 'tom@gmail.com',
+            'password': 'hello1234',
+    })              
+    r = requests.post(config.url + 'auth/logout/v1', json = {
+        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6MX0._5wwRr3b-oWVXBKCekNK0rKMEOOSwvNzH0QPNP1K-yY'
+    })
+    payload = r.json()
+    print(payload)
+    assert payload["is_success"] == False     #MAYBE ISSUE WITH SUCCESS CASE
