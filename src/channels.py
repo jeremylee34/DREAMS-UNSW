@@ -3,27 +3,32 @@ Implementation of channels functions which includes channels_list_v1,
 channels_listall_v1 and channels_create_v1.
 Written by Gordon Liang
 '''
+import jwt
 from src.error import InputError
 from src.error import AccessError
 from src.data import data
 
-def channels_list_v1(auth_user_id):
+SECRET = 'HELLO'
+
+def channels_list_v1(token):
     '''
     This function lists all the channels that a user is in
     Arguments:
-        auth_user_id (int) - id of the user
+        token (str) - contains a session_id which is used to get user_id
     Exceptions:
         AccessError - when auth_user_id does not exist
     Return Value:
         Returns 'channels'
     '''
-    # Checks if auth_user_id exists
-    valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
-            valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data['users']:
+        for s_id in user['session_list']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
+                valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     # List of channels that user is in
     channel_list = []
     # Loops through channel list
@@ -41,23 +46,25 @@ def channels_list_v1(auth_user_id):
         'channels': channel_list
     }
 
-def channels_listall_v1(auth_user_id):
+def channels_listall_v1(token):
     '''
     This function lists all the channels
     Arguments:
-        auth_user_id (int) - id of the user
+        token (str) - contains a session_id which is used to get user_id
     Exceptions:
         AccessError - when auth_user_id does not exist
     Return Value:
         Returns 'channels'
     '''
-    # Checks if auth_user_id exists
-    valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
-            valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data['users']:
+        for s_id in user['session_list']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
+                valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
@@ -69,12 +76,12 @@ def channels_listall_v1(auth_user_id):
         'channels': channel_list
     }
 
-def channels_create_v1(auth_user_id, name, is_public):
+def channels_create_v1(token, name, is_public):
     '''
     This function creates a channel and adds it to the data file
     Arguments:
-        auth_user_id (int) - id of the user
-        name (string) - name of the channel
+        token (str) - contains a session_id which is used to get user_id
+        name (str) - name of the channel
         is_public (bool) - determines if channel is public or private
     Exceptions:
         InputError - Occurs when channel name is more than 20 characters long
@@ -83,13 +90,15 @@ def channels_create_v1(auth_user_id, name, is_public):
     Return Value:
         Returns 'channel_id'
     '''
-    # Checks if auth_user_id exists
-    valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
-            valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data['users']:
+        for s_id in user['session_list']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
+                valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     # Produces an error if channel name is greater than 20 characters
     if len(name) > 20:
         raise InputError('Name is more than 20 characters long')
