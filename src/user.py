@@ -36,8 +36,8 @@ def user_profile_setname_v2(token, name_first, name_last):
     for x in data["users"]:
         for y in x["session_ids"]:
             if decoded_token["session_ids"] == y:
-                x['firstname'] = user['name_first']
-                x['Lastname'] = user['name_last'] 
+                x['firstname'] = name_first
+                x['Lastname'] = name_last 
     return {}    
 
 

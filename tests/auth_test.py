@@ -3,6 +3,7 @@ import re
 from src.auth import auth_register_v2
 from src.auth import auth_login_v2
 from src.auth import auth_logout_v1
+from src.user import user_profile_v2
 from src.error import InputError
 from src.other import clear_v1
 from src.data import data
@@ -61,20 +62,24 @@ def test_login_incorrect_email(clear_data):
     with pytest.raises(InputError):
         assert auth_login_v2("hiheee123gmail.com", "1234455")
 #register handle
-def test_handle_taken(clear_data):
-    pass 
     
 def test_handle_too_long(clear_data):
-    pass
-    
+    register = auth_register_v2("honey@outlook.com", "hello12345", "honeybear", "beehivebears")
+    result = user_profile_v2(register['token'], 0)
+    assert len(result['handle']) <= 20
+   
 def test_handle_same(clear_data):
-    pass
+    register1 = auth_register_v2("hiheee@gmail.com", "1234455", "K","S")
+    register2 = auth_register_v2("honey@outlook.com", "12345678", "K", "S") 
+    result1 = user_profile_v2(register1['token'], 0)
+    result2 = user_profile_v2(register2['token'], 1)
+    assert result1['handle'] != result2['handle']
 
-def test_handle_nospace(clear_data):
-    pass
-
-def test_handle_concatenate(clear_data):
-    pass
+def test_handle_space(clear_data):
+    register = auth_register_v2("honey@outlook.com", "hello12345", "honey bear", "bees")
+    result = user_profile_v2(register['token'], 0)
+    check = " " in result['handle']
+    assert check == False
 
 ##Tests for logout
 def test_logout(clear_data):
