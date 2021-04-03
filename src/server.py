@@ -47,7 +47,6 @@ def logout():
 
 @APP.route('/user/profile/v2', methods=['GET'])
 def user_profile():
-    inputs = request.get_json()
     r = user.user_profile_v2()
     return dumps(r)
 

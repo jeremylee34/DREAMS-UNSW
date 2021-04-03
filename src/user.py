@@ -1,6 +1,8 @@
 from flask import request
 import jwt
-from src import data
+from src.data import data
+from src.error import InputError
+import re
 
 def user_profile_v2():
     valid = 0
