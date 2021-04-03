@@ -1,6 +1,5 @@
 from json import dumps
 from flask import Flask, request
-from src.config import port
 from src.data import data
 from src.error import InputError, AccessError
 import re

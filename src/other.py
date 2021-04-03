@@ -1,8 +1,11 @@
 from src.data import data
 def clear_v1():
+    for x in data["users"]:
+        x["session_ids"].clear()
     data['users'].clear()
     data['channels'].clear()
-    data['messages'].clear()
+    data['messages'].clear()  
+    return {}
 
 def search_v1(auth_user_id, query_str):
     return {

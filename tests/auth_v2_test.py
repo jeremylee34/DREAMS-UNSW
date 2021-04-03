@@ -35,7 +35,7 @@ def test_incorrect_email(clear_data):
     assert requests.post(config.url + 'auth/login/v2', json={
             'email': 'tommy@gmail.com',
             'password': 'hello1234',
-    }) .status_code == InputError.code 
+    }).status_code == InputError.code 
 
 def test_invalid_email(clear_data):
     requests.post(config.url + 'auth/register/v2', json={
