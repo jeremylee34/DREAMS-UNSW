@@ -4,6 +4,14 @@ from flask import Flask, request
 from flask_cors import CORS
 from src.error import InputError
 from src import config
+from src.channels import channels_list_v1
+from src.channels import channels_create_v1
+from src.channels import channels_listall_v1
+from src.message import message_remove_v1
+from src.message import message_edit_v1
+from src.message import message_send_v1
+from src.message import message_senddm_v1
+from src.message import message_share_v1
 
 def defaultHandler(err):
     response = err.get_response()
@@ -31,6 +39,48 @@ def echo():
     return dumps({
         'data': data
     })
-
+'''
+Channels server routes
+'''
+@APP.route("channels/list/v2", methods=['GET'])
+def get_list():
+    token = request.args.get('token')
+    channels = channels_list_v1(token)
+    return dumps({channels})
+@APP.route("channels/listall/v2", methods=['GET'])
+def get_listall():
+    token = request.args.get('token')
+    channels = channels_listall_v1(token)
+    return dumps({channels})
+@APP.route("channels/create/v2", methods=['POST'])
+def create_channel():
+    data = request.get_json()
+    channel_id = channels_create_v1(data['token'], data['name'], data['is_public'])
+    return dumps({channel_id})
+@APP.route("message/send/v2", methods=['POST'])
+def message_send():
+    data = request.get_json()
+    message_id = message_send_v1(data['token'], data['channel_id'], data['message'])
+    return dumps({message_id})
+@APP.route("message/edit/v2", methods=['PUT'])
+def message_edit():
+    data = request.get_json()
+    message_edit_v1(data['token'], data['message_id'], data['message'])
+    return dumps({})
+@APP.route("message/remove/v1", methods=['DELETE'])
+def message_remove():
+    data = request.get_json()
+    message_remove_v1(data['token'], data['message_id'])
+    return dumps({})
+@APP.route("message/share/v1", methods=['POST'])
+def message_share():
+    data = request.get_json()
+    shared_message_id = message_share_v1(data['token'], data['og_message_id'], data['message'], data['channel_id'], data['dm_id'])
+    return dumps({shared_message_id})
+@APP.route("message/senddm/v1", methods=['POST'])
+def message_senddm():
+    data = request.get_json()
+    message_id = message_senddm_v1(data['token'], data['dm_id'], data['message'])
+    return dumps({message_id})
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
