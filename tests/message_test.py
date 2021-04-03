@@ -132,7 +132,7 @@ def test_message_share_channel(clear_data):
     channel_id = channels_create_v1(token['token'], "Channel1", True)
     channel_id2 = channels_create_v1(token['token'], "Channel2", True)
     message_id = message_send_v1(token['token'], channel_id['channel_id'], 'Hello')
-    shared_message = message_share_v1(token['token'], message_id['message_id'], channel_id2['channel_id'], -1)
+    shared_message = message_share_v1(token['token'], message_id['message_id'], '', channel_id2['channel_id'], -1)
     messages = channel_messages_v1(token['token'], channel_id2['channel_id'], shared_message['shared_message_id'])
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_share_access_error(clear_data):
@@ -142,14 +142,14 @@ def test_message_share_access_error(clear_data):
     channel_id2 = channels_create_v1(token2['token'], "Channel2", True)
     message_id = message_send_v1(token['token'], channel_id['channel_id'], 'Hello')
     with pytest.raises(AccessError):
-        assert message_share_v1(token['token'], message_id['message_id'], channel_id2['channel_id'], -1)
+        assert message_share_v1(token['token'], message_id['message_id'], '', channel_id2['channel_id'], -1)
 def test_message_share_dm(clear_data):
     token = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     token2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dms = dm_create_v1(token['token'], [token2['auth_user_id']])
     channel_id = channels_create_v1(token['token'], "Channel1", True)
     message_id = message_send_v1(token['token'], channel_id['channel_id'], 'Hello')
-    shared_message = message_share_v1(token['token'], message_id['message_id'], -1, dms['dm_id'])
+    shared_message = message_share_v1(token['token'], message_id['message_id'], '', -1, dms['dm_id'])
     messages = dm_messages_v1(token['token'], dms['dm_id'], shared_message['shared_message_id'])
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_share_multiple(clear_data):
@@ -159,13 +159,21 @@ def test_message_share_multiple(clear_data):
     message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
     message2 = message_send_v1(user['token'], channel['channel_id'], 'Hello2')
     message3 = message_send_v1(user['token'], channel['channel_id'], 'Hello3')
-    shared_message = message_share_v1(user['token'], message['message_id'], channel2, -1)
-    shared_message2 = message_share_v1(user['token'], message2['message_id'], channel2, -1)
-    shared_message3 = message_share_v1(user['token'], message3['message_id'], channel2, -1)
+    shared_message = message_share_v1(user['token'], message['message_id'], '', channel2, -1)
+    shared_message2 = message_share_v1(user['token'], message2['message_id'], '', channel2, -1)
+    shared_message3 = message_share_v1(user['token'], message3['message_id'], '', channel2, -1)
     messages = channel_messages_v1(user['token'], channel2['channel_id'], shared_message3['shared_message_id'])
     assert messages['messages'][0]['message'] == 'Hello3'
     assert messages['messages'][1]['message'] == 'Hello2'
     assert messages['messages'][2]['message'] == 'Hello'
+def test_message_share_message_addition(clear_data):
+    user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
+    channel = channels_create_v1(user['token'], "Channel1", True)
+    channel2 = channels_create_v1(user['token'], "Channel2", True)
+    message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
+    shared_message = message_share_v1(user['token'], message['message_id'], 'Goodbye', channel2, -1)
+    messages = channel_messages_v1(user['token'], channel2['channel_id'], shared_message3['shared_message_id'])
+    assert messages['messages'][0]['message'] == 'HelloGoodbye'
 # Tests for message_senddm_v1
 def test_message_senddm_v1(clear_data):
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
