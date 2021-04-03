@@ -123,5 +123,5 @@ def test_successful_logout(clear_data):
     r = requests.post(config.url + 'auth/logout/v1', json = {
         'token': payload['token']
     })
-    payload = r.json()
-    assert payload["is_success"] == True
+    payload2 = r.json()
+    assert payload2["is_success"] == True

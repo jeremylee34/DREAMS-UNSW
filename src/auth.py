@@ -48,7 +48,6 @@ def auth_login_v2():
     return {
         'token': token,
         'auth_user_id': count,
-        'data': data["users"]
     }
 
 
@@ -137,7 +136,6 @@ def auth_register_v2():
     return {
         'token': token,
         'auth_user_id': count,
-        'data.email': data['users']
     }
 
 
