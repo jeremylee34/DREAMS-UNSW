@@ -30,47 +30,50 @@ APP.register_error_handler(Exception, defaultHandler)
 @APP.route('/auth/login/v2', methods=['POST'])
 def login():
     inputs = request.get_json()
-    r = auth.auth_login_v2()
+    r = auth.auth_login_v2(inputs['email'], inputs['password'])
     return dumps(r)
 
 @APP.route('/auth/register/v2', methods=['POST'])
 def register():
     inputs = request.get_json()
-    r = auth.auth_register_v2()
+    r = auth.auth_register_v2(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
 def logout():
     inputs = request.get_json()
-    r = auth.auth_logout_v1()
+    r = auth.auth_logout_v1(inputs['token'])
     return dumps(r)
 
 @APP.route('/user/profile/v2', methods=['GET'])
 def user_profile():
-    r = user.user_profile_v2()
+    token = request.args.get('token')
+    u_id = int(request.args.get('u_id'))
+    r = user.user_profile_v2(token, u_id)
     return dumps(r)
 
 @APP.route('/user/profile/setname/v2', methods=['PUT'])
 def profile_setname():
     inputs = request.get_json()
-    r = user.user_profile_setname_v2()
+    r = user.user_profile_setname_v2(inputs['token'], inputs['name_first'], inputs['name_last'])
     return dumps(r)
 
 @APP.route('/user/profile/setemail/v2', methods=['PUT'])
 def profile_setemail():
     inputs = request.get_json()
-    r = user.user_profile_setemail_v2()
+    r = user.user_profile_setemail_v2(inputs['token'], inputs['email'])
     return dumps(r)
 
 @APP.route('/user/profile/sethandle/v1', methods=['PUT'])
 def profile_sethandle():
     inputs = request.get_json()
-    r = user.user_profile_sethandle_v1()
+    r = user.user_profile_sethandle_v1(inputs['token'], inputs['handle_str'])
     return dumps(r)
 
 @APP.route('/users/all/v1', methods=['GET'])
 def users_all():
-    r = user.users_all_v1()
+    token = request.args.get('token')
+    r = user.users_all_v1(token)
     return dumps(r)
 
 @APP.route('/clear/v1', methods=['DELETE'])

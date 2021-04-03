@@ -17,11 +17,10 @@ def create_session_id():
     return session_id
 
 
-def auth_login_v2():
-    login_info = request.get_json()
+def auth_login_v2(email, password):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
-    if re.search(regex, login_info['email']):
+    if re.search(regex, email):
         pass
     else:
         InputError("Invalid email")
@@ -29,11 +28,11 @@ def auth_login_v2():
     # Checks if email and password is correct
     correct_email = 0
     correct_password = 0
-    input_password = hashlib.sha256(login_info["password"].encode()).hexdigest()
+    input_password = hashlib.sha256(password.encode()).hexdigest()
     i = 0
     count = 0
     while i < len(data["users"]):
-        if data["users"][i]["email"] == login_info['email'] and data["users"][i]["password"] == input_password:
+        if data["users"][i]["email"] == email and data["users"][i]["password"] == input_password:
             correct_email = 1
             count = i
             data["users"][count]["session_ids"].append(create_session_id())
@@ -52,15 +51,14 @@ def auth_login_v2():
 
 
 
-def auth_register_v2():
-    info = request.get_json()
+def auth_register_v2(email, password, name_first, name_last):
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
     count = len(data['users'])
     register = {}
 
     # Checks for valid email
-    if re.search(regex, info['email']):
+    if re.search(regex, email):
         pass
     else:    
         raise InputError("Invalid email")
@@ -68,35 +66,35 @@ def auth_register_v2():
     # Checks for shared email
     check_empty = bool(data["users"])
     if check_empty == False:
-        register["email"] = info['email']
+        register["email"] = email
     # If there are already thing in the dictionary
     else:
         for y in data["users"]:
-            if y["email"] == info['email']:
+            if y["email"] == email:
                 raise InputError("Email is already used")
             else:
-                register["email"] = info['email']
+                register["email"] = email
     # Checks for valid password
-    if len(info['password']) >= 6:
-        register["password"] = hashlib.sha256(info['password'].encode()).hexdigest()
+    if len(password) >= 6:
+        register["password"] = hashlib.sha256(password.encode()).hexdigest()
     else:
         raise InputError("Password too short")
 
     # Checks for valid firstname
-    if len(info['name_first']) >= 1 and len(info['name_first']) <= 50:
-        register["firstname"] = info['name_first']
+    if len(name_first) >= 1 and len(name_first) <= 50:
+        register["firstname"] = name_first
     else:
         raise InputError("Invalid firstname")
 
     # Checks for valid lastname
-    if len(info['name_last']) >= 1 and len(info['name_last']) <= 50:
-        register["Lastname"] = info['name_last']
+    if len(name_last) >= 1 and len(name_last) <= 50:
+        register["Lastname"] = name_last
     else:
         raise InputError("Invalid lastname")
 
     # making the handle
     # make lower case
-    handle = (info['name_first'] + info['name_last']).lower()
+    handle = (name_first + name_last).lower()
 
     # replace ' ' and '@' with ''
     handle = handle.replace("@", "")
@@ -139,13 +137,12 @@ def auth_register_v2():
     }
 
 
-def auth_logout_v1():
+def auth_logout_v1(token):
     logout = False
-    user = request.get_json()
-    token = jwt.decode(user['token'], 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
     for x in data["users"]:
         for y in x["session_ids"]:
-            if token["session_ids"] == y:
+            if decoded_token["session_ids"] == y:
                 x["session_ids"].remove(y)
                 logout = True
     return {
