@@ -10,6 +10,8 @@ SECRET = 'HELLO'
 def message_send_v1(token, channel_id, message):
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
+    if len(message) == 0:
+        raise InputError('No message given')
     valid = 0
     joined = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
@@ -128,6 +130,8 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         for message in channel['messages']:
             if message['message_id'] == og_message_id:
                 shared_message = message['message']
+    if message == '':
+        raise InputError('Deleted message cannot be shared')
     shared_message.append(message)
     message_id = len(data['message_ids'])
     current_time = datetime.now()
