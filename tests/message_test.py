@@ -172,7 +172,7 @@ def test_message_share_message_addition(clear_data):
     channel2 = channels_create_v1(user['token'], "Channel2", True)
     message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
     shared_message = message_share_v1(user['token'], message['message_id'], 'Goodbye', channel2, -1)
-    messages = channel_messages_v1(user['token'], channel2['channel_id'], shared_message3['shared_message_id'])
+    messages = channel_messages_v1(user['token'], channel2['channel_id'], shared_message['shared_message_id'])
     assert messages['messages'][0]['message'] == 'HelloGoodbye'
 # Tests for message_senddm_v1
 def test_message_senddm_v1(clear_data):
