@@ -5,6 +5,7 @@ from src.error import AccessError
 from src.helper import check_valid_user
 from src.helper import check_valid_dm
 from src.helper import token_to_u_id
+from src.helper import check_user_in_dm
 
 import jwt
 
@@ -27,13 +28,12 @@ def dm_details_v1(token, dm_id):
 
     """
     # check valid dm_id
-    if check_valid_dm(dm_id) == False:
+    if check_valid_dm(data, dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
     # check whether user is a member of the dm with dm_id
     user_id = token_to_u_id(data, token)
-    if check_user_in_channel(data, user_id, dm_id) == False:
+    if check_user_in_dm(data, user_id, dm_id) == False:
         raise AccessError("Authorised user is not a member of this DM with dm_id")
-
     return {
         'name': data['dms'][dm_id]['name'],
         'members': data['dms'][dm_id]['members']
@@ -54,10 +54,10 @@ def dm_list_v1(token):
 
     """
     dms = []
-    user_id = token_to_u_id(token)
+    user_id = token_to_u_id(data, token)
     for dm in data['dms']:
         for member in dm['members']:
-            if member['u_id'] == user_id:
+            if member['id'] == user_id:
                 new_dm_dict = {
                     'dm_id': dm['dm_id'],
                     'name': dm['name']
@@ -85,17 +85,17 @@ def dm_create_v1(token, u_ids):
     """
     # Check valid u_ids
     for u_id in u_ids:
-        if check_valid_user(u_id) == False:
+        if check_valid_user(data, u_id) == False:
             raise InputError("u_id does not refer to a valid user")
 
     owner_u_id = token_to_u_id(data, token)
-
     # create list of handles for name whilst updating member list
     handle_list = []
     member_list = []
+    u_ids.append(owner_u_id)
     for u_id in u_ids:
         for user in data['users']:
-            if user['u_id'] == u_id:
+            if user['id'] == u_id:
                 handle_list.append(user['handle_str'])
                 member_list.append(user)
                 break
@@ -133,7 +133,7 @@ def dm_remove_v1(token, dm_id):
 
     """
     # check valid dm_id
-    if check_valid_dm(dm_id) == False:
+    if check_valid_dm(data, dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
     # check if user is authorised to remove dm
     user_id = token_to_u_id(data, token)

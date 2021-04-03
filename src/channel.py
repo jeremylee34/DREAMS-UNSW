@@ -11,6 +11,8 @@ from src.helper import check_public_channel
 from src.helper import check_user_in_channel
 from src.helper import token_to_u_id
 
+GLOBAL_OWNER = 0
+OWNER_PERMISSION = 1
 
 def channel_invite_v1(token, channel_id, u_id):
     """
@@ -213,15 +215,19 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
+    u_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(data, channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
 
     # Check whether channel accesible
-    if check_public_channel(data, channel_id) is False:
+    if u_id == GLOBAL_OWNER:
+        pass
+    elif data['users'][u_id]['permission_id'] == OWNER_PERMISSION:
+        pass
+    elif check_public_channel(data, channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
 
-    u_id = token_to_u_id(token)
     ## search thru all members
     user_in_channel = check_user_in_channel(data, channel_id, u_id)
     if user_in_channel is False:

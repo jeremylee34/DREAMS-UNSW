@@ -1,6 +1,10 @@
 from src.error import InputError
 from src.error import AccessError
 
+import jwt
+
+SECRET = "HELLO"
+
 def check_valid_channel(data, channel_id):
     """
     Checks if channel_id is a valid channel
@@ -27,7 +31,7 @@ def check_user_in_channel(data, channel_id, auth_user_id):
     user_in_channel = False
     for member in data['channels'][channel_id]['all_members']:
         ## if auth_user_id matches the member
-        if member['u_id'] == auth_user_id:
+        if member['id'] == auth_user_id:
             user_in_channel = True
             break
     return user_in_channel
@@ -38,7 +42,7 @@ def check_valid_user(data, u_id):
     """
     valid_user = False
     for user in data['users']:
-        if user['u_id'] == u_id:
+        if user['id'] == u_id:
             valid_user = True
             break
     return valid_user
@@ -48,10 +52,8 @@ def token_to_u_id(data, token):
     session_id = jwt.decode(token, SECRET, algorithms=['HS256'])
     for user in data['users']:
         for session in user['session_ids']:
-            if session == session_id:
-                u_id = user['u_id']
-                break
-    return u_id
+            if session == session_id['session_ids']:
+                return user['id']
 
 def check_valid_dm(data, dm_id):
     valid_dm = False
@@ -64,7 +66,7 @@ def check_valid_dm(data, dm_id):
 def check_user_in_dm(data, u_id, dm_id):
     user_in_dm = False
     for member in data['dms'][dm_id]['members']:
-        if member['u_id'] == u_id:
+        if member['id'] == u_id:
             user_in_dm = True
             break
     return user_in_dm

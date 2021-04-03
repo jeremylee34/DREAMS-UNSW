@@ -25,7 +25,7 @@ from src.other import clear_v1
 def auth_id1():
     auth_id1 = auth_register_v1("Roland@gmail.com", "password", "Roland", "Lin")
     return auth_id1
-    
+
 @pytest.fixture
 def auth_id2():
     auth_id2 = auth_register_v1("Godan@gmail.com", "password", "Godan", "Liang")
@@ -38,27 +38,27 @@ def auth_id3():
     
 @pytest.fixture    
 def channel_id1(auth_id1):
-    channel_id1 = channels_create_v1(auth_id1['auth_user_id'], "Channel1", True)
+    channel_id1 = channels_create_v1(auth_id1['token'], "Channel1", True)
     return channel_id1
     
 @pytest.fixture
 def channel_id1_priv(auth_id1):
-    channel_id1_priv = channels_create_v1(auth_id1['auth_user_id'], "PChannel1", False) 
+    channel_id1_priv = channels_create_v1(auth_id1['token'], "PChannel1", False) 
     return channel_id1_priv
     
 @pytest.fixture
 def channel_details1(auth_id1, channel_id1):
-    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
     return channel_details1
     
 @pytest.fixture
 def channel_details1_priv(auth_id1, channel_id1_priv):
-    channel_details1_priv = channel_details_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'])
+    channel_details1_priv = channel_details_v1(auth_id1['token'], channel_id1_priv['channel_id'])
     return channel_details1_priv
     
 @pytest.fixture
 def public_channel(auth_id1):
-    new_channel = channels_create_v1(auth_id1['auth_user_id'], "Public channel", True)
+    new_channel = channels_create_v1(auth_id1['token'], "Public channel", True)
     return new_channel
 
 #Fixture for clear to prevent clearing of other fixtures
@@ -157,8 +157,8 @@ def test_channel_join_v1_empty_channel(clear_data, auth_id1, public_channel):
     Test adding to empty channel
     """      
     channel_id = public_channel['channel_id']
-    channel_join_v1(auth_id1['auth_user_id'], channel_id)
-    channel_dict = channel_details_v1(auth_id1['auth_user_id'], channel_id)
+    channel_join_v1(auth_id1['token'], channel_id)
+    channel_dict = channel_details_v1(auth_id1['token'], channel_id)
     assert channel_dict["all_members"][0]['u_id'] == auth_id1['auth_user_id']
 
 def test_channel_join_v1_input_error(clear_data, auth_id1, public_channel):
@@ -167,26 +167,26 @@ def test_channel_join_v1_input_error(clear_data, auth_id1, public_channel):
     """
     channel_id = 99999
     with pytest.raises(InputError):
-        assert channel_join_v1(auth_id1['auth_user_id'], channel_id)
+        assert channel_join_v1(auth_id1['token'], channel_id)
 
 
 def test_channel_join_v1_access_error(clear_data, auth_id1):
     """
     AccessError to be thrown when channel is private
     """
-    new_channel = channels_create_v1(auth_id1['auth_user_id'], "Private channel", False)
+    new_channel = channels_create_v1(auth_id1['token'], "Private channel", False)
     channel_id = new_channel['channel_id']
     with pytest.raises(AccessError):
-        assert channel_join_v1(auth_id1['auth_user_id'], channel_id)
+        assert channel_join_v1(auth_id1['token'], channel_id)
 
 def test_channel_join_v1_check_details(clear_data, auth_id1, auth_id2, public_channel):
     """
     Test if details are correctly added when adding more than one user
     """
     channel_id = public_channel['channel_id']
-    channel_join_v1(auth_id1['auth_user_id'], channel_id)
-    channel_join_v1(auth_id2['auth_user_id'], channel_id)
-    channel_info = channel_details_v1(auth_id1['auth_user_id'], channel_id)
+    channel_join_v1(auth_id1['token'], channel_id)
+    channel_join_v1(auth_id2['token'], channel_id)
+    channel_info = channel_details_v1(auth_id1['token'], channel_id)
     assert channel_info['all_members'][auth_id1['auth_user_id']]['u_id'] == auth_id1['auth_user_id']
     assert channel_info['all_members'][auth_id1['auth_user_id']]['name_first'] == 'Roland'
     assert channel_info['all_members'][auth_id1['auth_user_id']]['name_last'] == 'Lin'
@@ -201,17 +201,18 @@ def test_channel_messages_v1_input_error1(clear_data, auth_id1, public_channel):
     channel_id = 99999
     start = 0
     with pytest.raises(InputError):
-        assert channel_messages_v1(auth_id1['auth_user_id'], channel_id, start)
+        assert channel_messages_v1(auth_id1['token'], channel_id, start)
 
-# """
-# InputError2 to be thrown when start is greater than number of messages in channel
-# """
-# def test_channel_messages_v1_input_error2(clear_data, auth_id1, public_channel):
-#     channel_id = public_channel['channel_id']
-#     start = 10
-#     message_id = message_send(auth_id1, channel_id, "Hello")
-#     with pytest.raises(InputError):
-#         assert channel_messages_v1(auth_id1, channel_id, start)
+
+def test_channel_messages_v1_input_error2(clear_data, auth_id1, public_channel):
+    """
+    InputError2 to be thrown when start is greater than number of messages in channel
+    """
+    channel_id = public_channel['channel_id']
+    start = 10
+    message_id = message_send(auth_id1, channel_id, "Hello")
+    with pytest.raises(InputError):
+        assert channel_messages_v1(auth_id1, channel_id, start)
 
 def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public_channel):
     """
@@ -222,4 +223,4 @@ def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public
     start = 0
     with pytest.raises(AccessError):
         # check auth_id1's messages (never added to channel)
-        assert channel_messages_v1(auth_id2['auth_user_id'], channel_id, start)
+        assert channel_messages_v1(auth_id2['token'], channel_id, start)
