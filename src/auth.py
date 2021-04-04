@@ -102,13 +102,13 @@ def auth_register_v1(email, password, name_first, name_last):
 
     # Checks for valid firstname
     if len(name_first) >= 1 and len(name_first) <= 50:
-        register["firstname"] = name_first
+        register["name_first"] = name_first
     else:
         raise InputError("Invalid firstname")
 
     # Checks for valid lastname
     if len(name_last) >= 1 and len(name_last) <= 50:
-        register["Lastname"] = name_last
+        register["name_last"] = name_last
     else:
         raise InputError("Invalid lastname")
 
@@ -143,11 +143,22 @@ def auth_register_v1(email, password, name_first, name_last):
             i = 0
         else:
             i += 1 
-      
+            
+    #setting DREAMS(admin) permission
+    if (len(data['user']) < 1):
+        register['permission_id'] = '1'
+    else:
+        register['permission_id'] = '2'
+
     register["handle_str"] = handle 
-    register['id'] = count
+    register['session_ids'] = []
+    register['session_ids'].append(create_session_id())    
+    token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+    data['token_list'].append(token)
     data["users"].append(register)
     return {
-        'auth_user_id' : count,
+        'token': token,
+        'auth_user_id': count,
     }
+
     
