@@ -116,8 +116,8 @@ def channels_create_v1(token, name, is_public):
         "owner_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname'],
+                'name_first': data['users'][auth_user_id]['name_first'],
+                'name_last': data['users'][auth_user_id]['name_last'],
                 'email': data['users'][auth_user_id]['email'],
                 'handle_str': data['users'][auth_user_id]['handle_str']
             }
@@ -125,8 +125,8 @@ def channels_create_v1(token, name, is_public):
         "all_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname'],
+                'name_first': data['users'][auth_user_id]['name_first'],
+                'name_last': data['users'][auth_user_id]['name_last'],
                 'email': data['users'][auth_user_id]['email'],
                 'handle_str': data['users'][auth_user_id]['handle_str']
             }
