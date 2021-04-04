@@ -6,11 +6,12 @@ chanel_invite_v1 and channel_details authored by Roland Lin
 from src.data import data
 from src.error import InputError
 from src.error import AccessError
+from src.user import user_profile_v1
 from src.helper import check_valid_channel
 from src.helper import check_public_channel
 from src.helper import check_user_in_channel
 from src.helper import token_to_u_id
-from src.helper import check_owner
+from src.helper import check_owner_perm
 
 GLOBAL_OWNER = 0
 DREAMS_OWNER = 0
@@ -253,7 +254,7 @@ def channel_join_v1(token, channel_id):
     # Check whether channel accesible
     if u_id == DREAMS_OWNER:
         pass
-    elif check_owner(u_id) == True:
+    elif check_owner_perm(u_id) == True:
         pass
     elif check_public_channel(channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
@@ -277,6 +278,26 @@ def channel_addowner_v1(token, channel_id, u_id):
     """
     asdasd
     """
+    author_id = token_to_u_id(token)
+    # Check valid channel
+    if check_valid_channel(channel_id) is False:
+        raise InputError("Channel ID is not a valid channel")
+    # Check if u_id is already owner
+    if check_if_owner(u_id, channel_id) is True:
+        raise InputError("user with user id u_id is already an owner of the channel")
+        
+    # Check if person with token is dreams owner or owner of channel
+    if author_id == DREAMS_OWNER:
+        pass
+    elif check_if_owner(author_id, channel_id) is False:
+        raise AccessError("The authorised user is not an owner of the **Dreams**, or an owner of this channel")
+    s_id = data['users'][u_id]['session_ids'][0]
+    s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
+    profile = user_profile_v1(s_token, u_id)
+    data['channels'][channel_id]['owner_members'].append(profile)
+    
+    if check_user_in_channel(channel_id, u_id) == False:
+        data['channels'][channel_id]['all_members'].append(profile)
     return {
     }
 
@@ -284,5 +305,24 @@ def channel_removeowner_v1(token, channel_id, u_id):
     """
     asdasd
     """
+    author_id = token_to_u_id(token)
+    # Check valid channel
+    if check_valid_channel(channel_id) is False:
+        raise InputError("Channel ID is not a valid channel")
+    # Check if user with u_id is an owner in the first place
+    if check_if_owner(u_id, channel_id) is False:
+        raise InputError("user with user id u_id is not an owner of the channel.")
+    # Check if user is the only owner
+    if len(data['channels'][channel_id]['owner_members']) == 1:
+        raise InputError("User is currently the only owner")\
+    # Check if person with token is dreams owner or owner of channel
+    if author_id == DREAMS_OWNER:
+        pass
+    elif check_if_owner(author_id, channel_id) is False:
+        raise AccessError("The authorised user is not an owner of the **Dreams**, or an owner of this channel")
+
+    for owner_member in data['channels'][channel_id]['owner_members']:
+        data['channels'][channel_id]['owner_members'].remove(owner_member)
+
     return {
     }
