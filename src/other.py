@@ -1,5 +1,15 @@
 from src.data import data
 def clear_v1():
+    """
+    Description of function:
+        Removes all existing users and their information
+    Parameters:
+        None
+    Exceptions:
+        None
+    Returns:
+        Empty dictionary
+    """           
     for x in data["users"]:
         x["session_ids"].clear()
     data['users'].clear()
