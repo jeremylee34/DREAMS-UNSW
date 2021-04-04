@@ -37,7 +37,7 @@ def channel_invite_v1(token, channel_id, u_id):
     Return Value:
         Returns <{}> on u_id being succesfully added to channel with channel_id
     """
-    u_id = token_to_u_id(token)
+    owner_u_id = token_to_u_id(token)
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
     errorcount = 0
@@ -60,7 +60,7 @@ def channel_invite_v1(token, channel_id, u_id):
     for channel in data['channels']:
         if channel['channel_id'] == channel_id:
             for idcheck in channel['all_members']:
-                if idcheck['u_id'] == u_id:
+                if idcheck['u_id'] == owner_u_id:
                     errorcount = errorcount + 1
     if errorcount == 0:
         raise AccessError('the authorised user is not already a member of the channel')
@@ -162,7 +162,7 @@ def channel_messages_v1(token, channel_id, start):
         raise InputError("Channel ID is not a valid channel")
 
     # Check if start is greater than number of messages in channel
-    if start > len(data['channels'][channel_id]['messages']):
+    if start > (len(data['channels'][channel_id]['messages']) - 1):
         raise InputError("Start is greater than the total number of messages in the channel")
     u_id = token_to_u_id(token)
     # Check if user is in channel

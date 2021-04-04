@@ -215,7 +215,7 @@ def test_channel_messages_v1_input_error2(clear_data, auth_id1, public_channel):
     InputError2 to be thrown when start is greater than number of messages in channel
     """
     channel_id = public_channel['channel_id']
-    start = 10
+    start = 1
     message_id = message_send_v1(auth_id1['token'], channel_id, "Hello")
     with pytest.raises(InputError):
         assert channel_messages_v1(auth_id1['token'], channel_id, start)
@@ -226,6 +226,7 @@ def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public
     auth_id1 is in the channel (added during public_channel function)
     """
     channel_id = public_channel['channel_id']
+    message_id = message_send_v1(auth_id1['token'], channel_id, "Hello")
     start = 0
     with pytest.raises(AccessError):
         # check auth_id1's messages (never added to channel)
