@@ -5,6 +5,7 @@ from src.data import data
 import jwt
 
 SECRET = "HELLO"
+OWNER_PERMISSION = 1
 
 def check_valid_channel(channel_id):
     """
@@ -71,3 +72,21 @@ def check_user_in_dm(u_id, dm_id):
             user_in_dm = True
             break
     return user_in_dm
+
+def check_valid_token(token):
+    valid_token = False
+    for token_hash in data['token_list']:
+        if token_hash == token:
+            valid_token = True
+            break
+    return valid_token
+
+def check_dreams_owner(u_id):
+    dreams_owner = False
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            if user['permission_id'] == OWNER_PERMISSION:
+                dreams_owner = True
+                break
+    return dreams_owner
+
