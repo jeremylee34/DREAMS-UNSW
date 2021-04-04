@@ -30,7 +30,7 @@ def test_profile_success(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert user_profile_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 0)    
 
@@ -57,7 +57,7 @@ def test_profile_setname_success(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_setname(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert user_profile_setname_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'tim', 'blue') 
 
@@ -85,7 +85,7 @@ def test_profile_email_success(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_setemail(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert user_profile_setemail_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'tim@gmail.com') 
             
@@ -114,7 +114,7 @@ def test_profile_sethandle_success(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_sethandle(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert user_profile_sethandle_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'honeybear') 
             
@@ -128,7 +128,7 @@ def test_all_users(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert users_all_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE') 
         
