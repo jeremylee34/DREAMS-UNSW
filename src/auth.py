@@ -10,6 +10,8 @@ import jwt
 import hashlib
 from flask import request
 
+SECRET = 'HELLO'
+
 session_id = 0
 def create_session_id():
     """
@@ -61,7 +63,7 @@ def auth_login_v2(email, password):
             count = i
             data["users"][count]["session_ids"].append(create_session_id())
             correct_password = 1 
-            token = jwt.encode({'session_ids': session_id}, 'HELLO', algorithm='HS256')
+            token = jwt.encode({'session_ids': session_id}, SECRET, algorithm='HS256')
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
@@ -171,7 +173,7 @@ def auth_register_v2(email, password, name_first, name_last):
     register['session_ids'] = []
     register['session_ids'].append(create_session_id())    
     #generating the token
-    token = jwt.encode({'session_ids': session_id}, 'HELLO', algorithm='HS256')
+    token = jwt.encode({'session_ids': session_id}, SECRET, algorithm='HS256')
     data["users"].append(register)    
     return {
         'token': token,
@@ -192,7 +194,7 @@ def auth_logout_v1(token):
         Dictionary containing 'is_success'
     """    
     logout = False
-    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     for x in data["users"]:
         for y in x["session_ids"]:
             if decoded_token["session_ids"] == y:

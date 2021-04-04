@@ -4,6 +4,8 @@ from src.data import data
 from src.error import InputError
 import re
 
+SECRET = 'HELLO'
+
 def user_profile_v2(token, u_id):
     """
     Description of function:
@@ -18,7 +20,7 @@ def user_profile_v2(token, u_id):
     """    
     valid = 0
     #input_token = request.args.get('token')
-    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     #input_id = int(request.args.get('u_id'))
     profile = {}
     for x in data["users"]:
@@ -30,7 +32,7 @@ def user_profile_v2(token, u_id):
                         profile['email'] = x['email']
                         profile['name_first'] = x['name_first']
                         profile['name_last'] = x['name_last']
-                        profile['handle'] = x['handle_str']  
+                        profile['handle_str'] = x['handle_str']  
     if valid == 0:
         raise InputError("Invalid user")
     return profile
@@ -49,7 +51,7 @@ def user_profile_setname_v2(token, name_first, name_last):
     Returns:
         Empty dictionary
     """       
-    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     if len(name_first) < 1 or len(name_first) > 50:
         raise InputError("Invalid firstname")
     if len(name_last) < 1 or len(name_last) > 50:
@@ -74,7 +76,7 @@ def user_profile_setemail_v2(token, email):
     Returns:
         Empty dictionary
     """           
-    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     unshared = 0
     # Checks for valid email
@@ -106,7 +108,7 @@ def user_profile_sethandle_v1(token, handle_str):
     Returns:
         Empty dictionary
     """           
-    decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     if len(handle_str) < 3 or len(handle_str) > 20:
         raise InputError("Invalid handle")
     for x in data['users']:
