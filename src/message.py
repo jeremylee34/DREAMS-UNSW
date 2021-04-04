@@ -17,7 +17,7 @@ def message_send_v1(token, channel_id, message):
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
@@ -49,14 +49,14 @@ def message_remove_v1(token, message_id):
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
     if valid != 1:
         raise AccessError('User does not exist')
     for channel in data['channels']:
-        for message in channel['message']:
+        for message in channel['messages']:
             if message['message_id'] == message_id:
                 u_id = message['u_id']
                 current_channel = channel
@@ -81,7 +81,7 @@ def message_edit_v1(token, message_id, message):
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
@@ -108,7 +108,7 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
@@ -121,18 +121,16 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         if joined != 1:
             raise AccessError('User has not joined channel')
     else:
-        for member in data['dm'][dm_id]['members']:
+        for member in data['dms'][dm_id]['members']:
             if member['u_id'] == auth_user_id:
                 joined = 1
         if joined != 1:
             raise AccessError('User has not joined channel')
     for channel in data['channels']:
-        for message in channel['messages']:
-            if message['message_id'] == og_message_id:
-                shared_message = message['message']
-    if message == '':
-        raise InputError('Deleted message cannot be shared')
-    shared_message.append(message)
+        for message2 in channel['messages']:
+            if message2['message_id'] == og_message_id:
+                shared_message = message2['message']
+    shared_message += message
     message_id = len(data['message_ids'])
     current_time = datetime.now()
     timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
@@ -153,7 +151,7 @@ def message_senddm_v1(token, dm_id, message):
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
