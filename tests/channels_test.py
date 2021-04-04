@@ -89,24 +89,33 @@ def test_channels_list_two_channels(clear, auth_id, channel_id, channel_id2, cha
     assert channel_list['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channel_list['channels'][0]['name'] == 'Channel1'
     assert len(channel_list['channels']) == 1
-# Tests to see if private channel is included
 def test_channels_list_private_channel(clear, auth_id, channel_id_private):
+    '''
+    Tests to see if private channel is included
+    '''
     channel_id2 = channels_create_v1(auth_id['token'], "Channel2", True)
     channels = channels_list_v1(auth_id['token'])
     assert channels['channels'][0]['channel_id'] == channel_id_private['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
-def test_channel_list_invalid_id(clear, auth_id):
+def test_channel_list_invalid_token(clear, auth_id):
+    '''
+    Tests if entering an invalid token will produce an access error
+    '''
     with pytest.raises(AccessError):
         assert channels_list_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo0fQ.UWh4yaDf6lPdmJroKBXfBZURXskoLULjM7Es_xZSK6U')
 
-# Tests if adding no channels works properly for listall function
 def test_channels_listall_none(clear, auth_id):
+    '''
+    Tests if adding no channels works properly for listall function
+    '''
     channels = channels_listall_v1(auth_id['token'])
     assert channels['channels'] == []
-# Tests if multiple channels are added to the channel list
 def test_channels_listall(clear, auth_id, channel_id, channel_id2, auth_id3):
+    '''
+    Tests if multiple channels are added to the channel list
+    '''
     channel_id3 = channels_create_v1(auth_id3['token'], "Channel3", True)
     channels = channels_listall_v1(auth_id['token'])
     assert channels['channels'][0]['channel_id'] == channel_id['channel_id']
@@ -114,25 +123,33 @@ def test_channels_listall(clear, auth_id, channel_id, channel_id2, auth_id3):
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
     assert channels['channels'][2]['channel_id'] == channel_id3['channel_id']
-    assert channels['channels'][2]['name'] == 'Channel3'
-# Tests if private channels are included in the list
+    assert channels['channels'][2]['name'] == 'Channel3' 
 def test_channels_listall_private_channel(clear, auth_id, channel_id_private):
+    '''
+    Tests if private channels are included in the list
+    '''
     channel_id2 = channels_create_v1(auth_id['token'], "Channel2", True)
     channels = channels_listall_v1(auth_id['token'])
     assert channels['channels'][0]['channel_id'] == channel_id_private['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
     assert channels['channels'][1]['channel_id'] == channel_id2['channel_id']
     assert channels['channels'][1]['name'] == 'Channel2'
-def test_channel_listall_invalid_id(clear, auth_id):
+def test_channel_listall_invalid_token(clear, auth_id):
+    '''
+    Tests if inputting an invalid token will produce an AccessError
+    '''
     with pytest.raises(AccessError):
         assert channels_listall_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo0fQ.UWh4yaDf6lPdmJroKBXfBZURXskoLULjM7Es_xZSK6U')
-
-# Tests if a channel is created
 def test_channels_create(clear, channel_id, channels):
+    '''
+    Tests if a channel is created
+    '''
     assert channels['channels'][0]['channel_id'] == channel_id['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
-# Tests if multiple channels are created
 def test_channels_create_multiple_channels(clear, auth_id, channel_id):
+    '''
+    Tests if multiple channels are created
+    '''
     channel_id2 = channels_create_v1(auth_id['token'], "Channel2", True)
     channel_id3 = channels_create_v1(auth_id['token'], "Channel3", True)
     channels = channels_listall_v1(auth_id['token'])
@@ -142,18 +159,27 @@ def test_channels_create_multiple_channels(clear, auth_id, channel_id):
     assert channels['channels'][1]['name'] == 'Channel2'
     assert channels['channels'][2]['channel_id'] == channel_id3['channel_id']
     assert channels['channels'][2]['name'] == 'Channel3'
-# Checks the InputError
 def test_channels_create_input_error(clear, auth_id, channels):
+    '''
+    Checks for InputError where channel name is greater than 20 characters
+    '''
     with pytest.raises(InputError):
         assert channels_create_v1(auth_id['token'], "Channel1Thisismorethan20", True)
-# Checks if entering no name produces an input error
 def test_channels_no_name(clear, auth_id, channels):
+    '''
+    Checks if entering no name produces an input error
+    '''
     with pytest.raises(InputError):
         assert channels_create_v1(auth_id['token'], "", True)
-# Checks if a private channel is created
 def test_channels_create_private_channel(clear, channel_id_private, channels):
+    '''
+    Checks if a private channel is created
+    '''
     assert channels['channels'][0]['channel_id'] == channel_id_private['channel_id']
     assert channels['channels'][0]['name'] == 'Channel1'
-def test_channels_create_invalid_id(clear, auth_id):
+def test_channels_create_invalid_token(clear, auth_id):
+    '''
+    Checks if token returns AccessError when given an invalid token
+    '''
     with pytest.raises(AccessError):
         assert channels_create_v1(2, "Channel1", True)
