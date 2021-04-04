@@ -25,21 +25,23 @@ def message_send_v1(token, channel_id, message):
     Return Value:
         {message_id}
     '''
+    valid = 0
+    joined = 0
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
     if len(message) == 0:
         raise InputError('No message given')
-    valid = 0
-    joined = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
     for user in data['channels'][channel_id]['all_members']:
         if user['u_id'] == auth_user_id:
             joined = 1
@@ -75,15 +77,18 @@ def message_remove_v1(token, message_id):
     '''
     valid = 0
     validuser = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
+
     for dm in data['dms']:
         for dm_message in dm['messages']:
             if dm_message['message_id'] == message_id:
@@ -128,6 +133,11 @@ def message_edit_v1(token, message_id, message):
         {}
     '''
     validuser = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
@@ -136,10 +146,6 @@ def message_edit_v1(token, message_id, message):
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
-    
     for dm in data['dms']:
         for dm_message in dm['messages']:
             if dm_message['message_id'] == message_id:
@@ -185,6 +191,11 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     Return Value:
         {shared_message_id} - returns id of the shared message
     '''
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     if len(message) > 1000:
         raise InputError('Message is over 1000 characters')
     joined = 0
@@ -194,9 +205,6 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
     if channel_id != -1:
         for member in data['channels'][channel_id]['all_members']:
             if member['u_id'] == auth_user_id:
@@ -242,6 +250,11 @@ def message_senddm_v1(token, dm_id, message):
         {message_id} - returns the id of the message
     '''
     exists = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
@@ -250,9 +263,6 @@ def message_senddm_v1(token, dm_id, message):
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
     for member in data['dms'][dm_id]['members']:
         if auth_user_id == member['u_id']:
             exists = 1
