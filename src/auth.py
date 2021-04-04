@@ -64,7 +64,7 @@ def auth_login_v1(email, password):
             data["users"][count]["session_ids"].append(create_session_id())
             correct_password = 1 
             token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
-            token_list.append(token)
+            data['token_list'].append(token)
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
@@ -175,7 +175,7 @@ def auth_register_v1(email, password, name_first, name_last):
     register['session_ids'].append(create_session_id())    
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
-    token_list.append(token)
+    data['token_list'].append(token)
     data["users"].append(register)    
     return {
         'token': token,
@@ -204,7 +204,7 @@ def auth_logout_v1(token):
                 logout = True
     for t in data["token_list"]:
         if token == t:
-            token_list.remove(token)
+            data['token_list'].remove(token)
     return {
         'is_success': logout,
     }
