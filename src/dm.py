@@ -29,11 +29,11 @@ def dm_details_v1(token, dm_id):
 
     """
     # check valid dm_id
-    if check_valid_dm(data, dm_id) == False:
+    if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
     # check whether user is a member of the dm with dm_id
-    user_id = token_to_u_id(data, token)
-    if check_user_in_dm(data, user_id, dm_id) == False:
+    user_id = token_to_u_id(token)
+    if check_user_in_dm(user_id, dm_id) == False:
         raise AccessError("Authorised user is not a member of this DM with dm_id")
     return {
         'name': data['dms'][dm_id]['name'],
@@ -55,7 +55,7 @@ def dm_list_v1(token):
 
     """
     dms = []
-    user_id = token_to_u_id(data, token)
+    user_id = token_to_u_id(token)
     for dm in data['dms']:
         for member in dm['members']:
             if member['u_id'] == user_id:
@@ -86,10 +86,10 @@ def dm_create_v1(token, u_ids):
     """
     # Check valid u_ids
     for u_id in u_ids:
-        if check_valid_user(data, u_id) == False:
+        if check_valid_user(u_id) == False:
             raise InputError("u_id does not refer to a valid user")
 
-    owner_u_id = token_to_u_id(data, token)
+    owner_u_id = token_to_u_id(token)
     # create list of handles for name whilst updating member list
     handle_list = []
     member_list = []
@@ -140,10 +140,10 @@ def dm_remove_v1(token, dm_id):
 
     """
     # check valid dm_id
-    if check_valid_dm(data, dm_id) == False:
+    if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
     # check if user is authorised to remove dm
-    user_id = token_to_u_id(data, token)
+    user_id = token_to_u_id(token)
 
     if data['dms'][dm_id]['owner'] == user_id:
         empty_dict = {}
