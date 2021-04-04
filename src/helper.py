@@ -82,11 +82,11 @@ def check_valid_token(token):
     return valid_token
 
 def check_owner(u_id):
-    dreams_owner = False
+    is_owner = False
     for user in data['users']:
         if user['u_id'] == u_id:
             if user['permission_id'] == OWNER_PERMISSION:
-                dreams_owner = True
+                is_owner = True
                 break
-    return dreams_owner
+    return is_owner
 
