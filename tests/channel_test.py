@@ -6,9 +6,10 @@ from src.channel import channel_invite_v1
 from src.channel import channel_details_v1
 from src.channel import channel_messages_v1
 from src.channel import channel_join_v1
-from src.auth import auth_register_v1
+from src.auth import auth_register_v2
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
+from src.message import message_send_v1
 
 #Import error from src
 from src.error import InputError
@@ -23,17 +24,17 @@ from src.other import clear_v1
 #Make fixtures
 @pytest.fixture
 def auth_id1():
-    auth_id1 = auth_register_v1("Roland@gmail.com", "password", "Roland", "Lin")
+    auth_id1 = auth_register_v2("Roland@gmail.com", "password", "Roland", "Lin")
     return auth_id1
 
 @pytest.fixture
-def auth_id2():
-    auth_id2 = auth_register_v1("Godan@gmail.com", "password", "Godan", "Liang")
+def auth_id2(auth_id1):
+    auth_id2 = auth_register_v2("Godan@gmail.com", "password", "Godan", "Liang")
     return auth_id2
     
 @pytest.fixture
-def auth_id3():
-    auth_id3 = auth_register_v1("Jeremy@gmail.com", "password", "Jeremy", "Lee")
+def auth_id3(auth_id1, auth_id2):
+    auth_id3 = auth_register_v2("Jeremy@gmail.com", "password", "Jeremy", "Lee")
     return auth_id3
     
 @pytest.fixture    
@@ -75,52 +76,52 @@ def clear_data():
 #Tests when user and channel id are not valid for invite
 def test_channel_invite_v1_InputErr1(clear_data, auth_id1):
     with pytest.raises(InputError):
-        channel_invite_v1(auth_id1['auth_user_id'], "Invalid", "Invalid")
+        channel_invite_v1(auth_id1['token'], "Invalid", "Invalid")
         
 #Tests when invited user_id is not valid for invite
 def test_channel_invite_v1_InputErr2(clear_data, auth_id1, channel_id1):
     with pytest.raises(InputError):
-        channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], "Invalid")
+        channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], "Invalid")
 
 #Tests when channel_id is not valid for invite       
 def test_channel_invite_v1_InputErr3(clear_data, auth_id1, auth_id2):
     with pytest.raises(InputError):
-        channel_invite_v1(auth_id1['auth_user_id'], "Invalid", auth_id2['auth_user_id'])        
+        channel_invite_v1(auth_id1['token'], "Invalid", auth_id2['auth_user_id'])        
         
 #Tests when auth is not in the channel for invite
 def test_channel_invite_v1_AccessErr(clear_data, auth_id1, auth_id2, channel_id1):
     with pytest.raises(AccessError):
-        assert channel_invite_v1(auth_id2['auth_user_id'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+        assert channel_invite_v1(auth_id2['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
     
 #Tests that a single user has been added to auth's channel for invite
 def test_channel_invite_v1_Add1(clear_data, auth_id1, auth_id2, channel_id1):
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
     assert channel_details1['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
 
 #Tests that multiple users can be added to auth's channel for invite
 def test_channel_invite_v1_AddMulti(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id3['auth_user_id'])
-    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
     assert channel_details1['all_members'][-2]['u_id'] == auth_id2['auth_user_id']
     assert channel_details1['all_members'][-1]['u_id'] == auth_id3['auth_user_id']
     
 #Tests that user has been added to auth's private channel for invite
 def test_channel_invite_v1_AddPriv(clear_data, auth_id1, channel_id1_priv, auth_id2):
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'], auth_id2['auth_user_id'])
-    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1_priv['channel_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1_priv['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1_priv['channel_id'])
     assert channel_details1['all_members'][-1]['u_id'] == auth_id2['auth_user_id']
     
 #Tests when auth is not in the channel for details    
 def test_channel_details_v1_AccessErr(clear_data, channel_id1, auth_id2):
     with pytest.raises(AccessError):
-        assert channel_details_v1(auth_id2['auth_user_id'], channel_id1['channel_id'])
+        assert channel_details_v1(auth_id2['token'], channel_id1['channel_id'])
         
 #Tests when channel_id is not valid for details
 def test_channel_details_v1_InputErr(clear_data, auth_id1):
     with pytest.raises(InputError):
-        assert channel_details_v1(auth_id1['auth_user_id'], "invalid")
+        assert channel_details_v1(auth_id1['token'], "invalid")
         
 #Tests that correct details are provided when calling function for details
 #Only owner in channel 
@@ -132,8 +133,8 @@ def test_channel_details_v1_NoInv(clear_data, auth_id1, channel_details1):
 #Tests that correct details are provided when calling function for details
 #After inviting one in channel 
 def test_channel_details_v1_OneInv(clear_data, auth_id1, channel_id1, auth_id2):
-    channel_invite_v1(auth_id1['auth_user_id'], channel_id1['channel_id'], auth_id2['auth_user_id'])
-    channel_details1 = channel_details_v1(auth_id1['auth_user_id'], channel_id1['channel_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
     assert channel_details1['name'] == 'Channel1'
     assert channel_details1['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
@@ -170,14 +171,16 @@ def test_channel_join_v1_input_error(clear_data, auth_id1, public_channel):
         assert channel_join_v1(auth_id1['token'], channel_id)
 
 
-def test_channel_join_v1_access_error(clear_data, auth_id1):
+def test_channel_join_v1_access_error(clear_data, auth_id1, auth_id2):
     """
     AccessError to be thrown when channel is private
     """
-    new_channel = channels_create_v1(auth_id1['token'], "Private channel", False)
+
+    new_channel = channels_create_v1(auth_id2['token'], "Private channel", False)
+    
     channel_id = new_channel['channel_id']
     with pytest.raises(AccessError):
-        assert channel_join_v1(auth_id1['token'], channel_id)
+        assert channel_join_v1(auth_id2['token'], channel_id)
 
 def test_channel_join_v1_check_details(clear_data, auth_id1, auth_id2, public_channel):
     """
@@ -210,9 +213,9 @@ def test_channel_messages_v1_input_error2(clear_data, auth_id1, public_channel):
     """
     channel_id = public_channel['channel_id']
     start = 10
-    message_id = message_send(auth_id1, channel_id, "Hello")
+    message_id = message_send_v1(auth_id1['token'], channel_id, "Hello")
     with pytest.raises(InputError):
-        assert channel_messages_v1(auth_id1, channel_id, start)
+        assert channel_messages_v1(auth_id1['token'], channel_id, start)
 
 def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public_channel):
     """
