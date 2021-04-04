@@ -10,6 +10,12 @@ from src.error import InputError
 def clear():
     clear_v1()
 def test_empty_list(clear):
+    register_info = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'gordon@gmail.com',
+        'password': '12345678',
+        'name_first': 'Gordon',
+        'name_last': 'Liang'
+    })
     channels = requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
     })
