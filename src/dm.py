@@ -94,7 +94,8 @@ def dm_create_v1(token, u_ids):
     # create list of handles for name whilst updating member list
     handle_list = []
     member_list = []
-    u_ids.append(owner_u_id)
+    # u_ids.append(owner_u_id)
+    u_ids.insert(0, owner_u_id,)
     for u_id in u_ids:
         for user in data['users']:
             if user['u_id'] == u_id:
