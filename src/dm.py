@@ -97,14 +97,12 @@ def dm_create_v1(token, u_ids):
     # u_ids.append(owner_u_id)
     u_ids.insert(0, owner_u_id,)
     for u_id in u_ids:
-        for user in data['users']:
-            if user['u_id'] == u_id:
-                handle_list.append(user['handle_str'])
-                s_id = user['session_ids'][0]
-                s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
-                profile = user_profile_v1(s_token, u_id)
-                member_list.append(profile)
-                break
+        handle_list.append(data['users'][u_id]['handle_str'])
+        s_id = data['users'][u_id]['session_ids'][0]
+        s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
+        profile = user_profile_v1(s_token, u_id)
+        member_list.append(profile)
+
     # sort and concatenate
     handle_list.sort()
     handle_list_str = ', '.join(map(str, handle_list))
@@ -183,20 +181,16 @@ def dm_invite_v1(token, dm_id, u_id):
         raise AccessError("the authorised user is not a member of this DM")
     #Look for corresponding dm through dm_id then append invited user to members list
     #Also update the name of the dm by adding new handle and re-sorting 
-    for dm in data['dms']:
-        if dm['dm_id'] == dm_id:
-            for users in data['users']:
-                if users['u_id'] ==  u_id:
-                    s_id = users['session_ids'][0]
-                    s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
-                    profile = user_profile_v1(s_token, u_id)
-                    dm['members'].append(profile)
-                    handlelist = dm['name'].split(", ")
-                    handlelist.append(users['handle_str'])
-                    break 
-            handlelist.sort()
-            handlelist_string = ', '.join(map(str, handlelist))
-            dm['name'] = handlelist_string                
+    s_id = data['users'][u_id]['session_ids'][0]
+    s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
+    profile = user_profile_v1(s_token, u_id)
+    data['dms'][dm_id]['members'].append(profile)
+    handlelist = data['dms'][dm_id]['name'].split(", ")
+    handlelist.append(data['users'][u_id]['handle_str'])
+
+    handlelist.sort()
+    handlelist_string = ', '.join(map(str, handlelist))
+    data['dms'][dm_id]['name'] = handlelist_string                
     return {}
        
        
@@ -223,21 +217,19 @@ def dm_leave_v1(token, dm_id):
         raise AccessError("the authorised user is not a member of this DM")
     #Look for corresponding dm through dm_id then remove token user from members list
     #Also remove the token users handle from name 
-    for dm in data['dms']:
-        if dm['dm_id'] == dm_id:
-            for users in data['users']:
-                if users['u_id'] == user:
-                    s_id = users['session_ids'][0]
-                    s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
-                    profile = user_profile_v1(s_token, user)
-                    dm['members'].remove(profile)
-                    stringU = users['handle_str']                   
-                    handlelist = dm['name'].split(", ")
-                    handlelist.remove(stringU)
-                    break
-            handlelist.sort()
-            handlelist_string = ', '.join(map(str, handlelist))
-            dm['name'] = handlelist_string        
+    for users in data['users']:
+        if users['u_id'] == user:
+            s_id = users['session_ids'][0]
+            s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
+            profile = user_profile_v1(s_token, user)
+            data['dms'][dm_id]['members'].remove(profile)
+            stringU = users['handle_str']                   
+            handlelist = data['dms'][dm_id]['name'].split(", ")
+            handlelist.remove(stringU)
+            break
+    handlelist.sort()
+    handlelist_string = ', '.join(map(str, handlelist))
+    data['dms'][dm_id]['name'] = handlelist_string        
     return{}
     
     
@@ -266,13 +258,8 @@ def dm_messages_v1(token, dm_id, start):
         raise InputError("dm_id does not refer to an existing dm")
     #Check if start is greater tham total messages in the DM
     #Raise InputError if it is 
-    # for dm in data['dms']:
-    #     if dm['dm_id'] == dm_id:
-    #         if start > len(dm['messages']):
-    #             raise InputError("Start is greater tham total messages in the DM")
     if start > (len(data['dms'][dm_id]['messages']) - 1):
         raise InputError("Start is greater tham total messages in the DM")
-
 
     user = token_to_u_id(token)
     #Check if token user is a member of the specified dm, raise AccessError if not
@@ -286,19 +273,17 @@ def dm_messages_v1(token, dm_id, start):
     #Find particular dm that dm_id refers to 
     #Record components of each message while appending to messages list
     #End loop once start index matches end index or last message is reached
-    for dm in data['dms']:
-        if dm['dm_id'] == dm_id:
-            for msgs in dm['messages']:
-                tempmsg = {
-                    'message_id': msgs['message_id'],
-                    'u_id': msgs['u_id'],
-                    'message': msgs['message'],
-                    'time_created': msgs['time_created']
-                }
-                messages.append(tempmsg)
-                message_start = message_start + 1
-                if message_start == message_end:
-                    break
+    for msgs in data['dms'][dm_id]['messages']:
+        tempmsg = {
+            'message_id': msgs['message_id'],
+            'u_id': msgs['u_id'],
+            'message': msgs['message'],
+            'time_created': msgs['time_created']
+        }
+        messages.append(tempmsg)
+        message_start = message_start + 1
+        if message_start == message_end:
+            break
     #Check to see if end index is within the total number of messages
     #If not, set to -1 to indicate no more can be returned
     if message_start < message_end:
