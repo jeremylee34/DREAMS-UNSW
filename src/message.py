@@ -115,6 +115,17 @@ def message_remove_v1(token, message_id):
 def message_edit_v1(token, message_id, message):
     '''
     This function edits a message in a channel or dm
+    Arguments:
+        token (str) - contains session_id
+        message_id (int) - message_id for message that needs to be edited
+        message (str) - message that replaces the current message
+    Exceptions:
+        InputError - when message is over 1000 characters or when message is
+                     is already deleted
+        AccessError - when the token is invalid or when the user is not an owner
+                      and the message was not sent by the user
+    Return Value:
+        {}
     '''
     validuser = 0
     if len(message) > 1000:
@@ -157,6 +168,25 @@ def message_edit_v1(token, message_id, message):
     return {
     }
 def message_share_v1(token, og_message_id, message, channel_id, dm_id):
+    '''
+    This function shares a message to a channel or dm
+    Arguments:
+        token (str) - contains session_id
+        og_message_id (int) - message_id of the message that is being shared
+        message (str) - optional message that can be included with message
+                        being shared
+        channel_id (int) - id of the channel that will have shared message. -1 
+                           if being sent to dm
+        dm_id (int) - id of the dm that the message is being shared to. -1 if
+                      message is sent to channel
+    Exceptions:
+        InputError - when message is over 1000 characters
+        AccessError - when token is invalid and user has not joined the channel
+    Return Value:
+        {shared_message_id} - returns id of the shared message
+    '''
+    if len(message) > 1000:
+        raise InputError('Message is over 1000 characters')
     joined = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
@@ -199,6 +229,18 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         'shared_message_id': message_id
     }
 def message_senddm_v1(token, dm_id, message):
+    '''
+    This function sends messages to dm
+    Arguments:
+        token (str) - contains session_id
+        dm_id (int) - id of the dm that the message is being sent to
+        message (str) - message that is being sent to dm
+    Exceptions:
+        InputError - when the message is over 1000 characters
+        AccessError - when there is an invalid token or user is not part of dm
+    Return Value:
+        {message_id} - returns the id of the message
+    '''
     exists = 0
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
