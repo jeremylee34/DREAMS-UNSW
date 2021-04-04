@@ -20,10 +20,11 @@ def channels_list_v1(token):
     Return Value:
         Returns 'channels'
     '''
+    valid = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
@@ -56,10 +57,11 @@ def channels_listall_v1(token):
     Return Value:
         Returns 'channels'
     '''
+    valid = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
@@ -90,10 +92,11 @@ def channels_create_v1(token, name, is_public):
     Return Value:
         Returns 'channel_id'
     '''
+    valid = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
-        for s_id in user['session_list']:
+        for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
                 valid = 1
