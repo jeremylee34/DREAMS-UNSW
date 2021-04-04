@@ -10,8 +10,10 @@ from src.helper import check_valid_channel
 from src.helper import check_public_channel
 from src.helper import check_user_in_channel
 from src.helper import token_to_u_id
+from src.helper import check_owner
 
 GLOBAL_OWNER = 0
+DREAMS_OWNER = 0
 OWNER_PERMISSION = 1
 
 def channel_invite_v1(token, channel_id, u_id):
@@ -194,8 +196,36 @@ def channel_messages_v1(token, channel_id, start):
 
 def channel_leave_v1(token, channel_id):
     """
-    asdasd
+    Given a channel ID, user is removed as a member of this channel. 
+
+    Arguments:
+        token (string)    - an encoded session_id used to identify a user's session
+        channel_id (dict)    - unique id attributeed to a particular channel
+
+    Exceptions:
+        InputError  - Occurs when channel_id is not a valid channel
+        AccessError - Occurs when authorised user is not a member of channel with channel_id
+
+    Return Value:
+        Returns nothing on all cases
     """
+    # Check valid channel
+    if check_valid_channel(channel_id) is False:
+        raise InputError("Channel ID is not a valid channel")
+    # Check if user is in channel
+    if check_user_in_channel(channel_id, u_id) is False:
+        raise AccessError("Authorised user is not a member of channel with channel_id")
+    
+    u_id = token_to_u_id(token)
+    for user in data['channels'][channel_id]['owner_members']:
+        if user['u_id'] == u_id:
+            if len(data['channels'][channel_id]['owner_members']) > 1:
+                data['channels'][channel_id]['owner_members'].remove(user)  
+
+    for user in data['channels'][channel_id]['all_members']:
+        if user['u_id'] == u_id:
+            data['channels'][channel_id]['all_members'].remove(user)
+
     return {
     }
 
@@ -221,10 +251,10 @@ def channel_join_v1(token, channel_id):
         raise InputError("Channel ID is not a valid channel")
 
     # Check whether channel accesible
-    if u_id == GLOBAL_OWNER:
+    if u_id == DREAMS_OWNER:
         pass
-    # elif data['users'][u_id]['permission_id'] == OWNER_PERMISSION:
-    #     pass
+    elif check_owner(u_id) == True:
+        pass
     elif check_public_channel(channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
 

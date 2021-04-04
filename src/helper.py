@@ -81,7 +81,7 @@ def check_valid_token(token):
             break
     return valid_token
 
-def check_dreams_owner(u_id):
+def check_owner(u_id):
     dreams_owner = False
     for user in data['users']:
         if user['u_id'] == u_id:
