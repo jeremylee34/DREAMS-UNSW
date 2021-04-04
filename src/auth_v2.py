@@ -6,6 +6,7 @@ from src.error import InputError, AccessError
 import src.other
 import re
 import hashlib
+import jwt
 
 app = Flask(__name__)
 
@@ -220,6 +221,7 @@ def admin_user_remove():
                               'handle_str', 'session_ids')
 
     #left with 'id' to identicate, to tell that left only 'id' return "Removed user"
+    #check in search func, to modify it to relate with this approach
     if valid == 0:
         raise InputError("Invalid user")
     if access == 0:
@@ -258,23 +260,27 @@ def notifications_get():
     valid = 0
     input_token = request.args.get('token')
     decoded_token = jwt.decode(input_token, 'HELLO', algorithms=['HS256'])
-    noti_list = []
+    get_notification = {"notification" : []}
     all_msg = []
+
 
     #find that person with token
     for x in data['users']:
         for y in x['session_ids']:
             if decoded_token["session_ids"] == y:
-                #some action
+                #some actionsss
+                #search all msg in channel/dm
+                #collect, print20
+                #change all funcs to other file and do apply func in server
 
     #collect all message
     for x in dict(reversed(list(noti_list.items()))): #newest noti first
         if len(all_msg <= 20)
             all_msg.append(x['notification_message'])
 
-    return dumps({
-        all_msg
-    })
+    return dumps(
+        get_notification["notification"]['notification_message']
+    )
 
 @app.route('/clear/v1', methods=['DELETE'])
 def clear():
