@@ -81,7 +81,7 @@ def check_valid_token(token):
             break
     return valid_token
 
-def check_owner(u_id):
+def check_owner_perm(u_id):
     is_owner = False
     for user in data['users']:
         if user['u_id'] == u_id:
@@ -90,3 +90,10 @@ def check_owner(u_id):
                 break
     return is_owner
 
+def check_if_owner(u_id, channel_id):
+    is_owner = False
+    for user in data['channels'][channel_id]['owner_members']:
+        if user['u_id'] == u_id:
+            is_owner = True
+            break
+    return is_owner

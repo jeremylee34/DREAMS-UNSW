@@ -6,7 +6,10 @@ from src.channel import channel_invite_v1
 from src.channel import channel_details_v1
 from src.channel import channel_messages_v1
 from src.channel import channel_join_v1
-from src.auth import auth_register_v2
+from src.channel import channel_leave_v1
+from src.channel import channel_addowner_v1
+from src.channel import channel_removeowner_v1
+from src.auth import auth_register_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.message import message_send_v1
@@ -24,17 +27,17 @@ from src.other import clear_v1
 #Make fixtures
 @pytest.fixture
 def auth_id1():
-    auth_id1 = auth_register_v2("Roland@gmail.com", "password", "Roland", "Lin")
+    auth_id1 = auth_register_v1("Roland@gmail.com", "password", "Roland", "Lin")
     return auth_id1
 
 @pytest.fixture
 def auth_id2(auth_id1):
-    auth_id2 = auth_register_v2("Godan@gmail.com", "password", "Godan", "Liang")
+    auth_id2 = auth_register_v1("Godan@gmail.com", "password", "Godan", "Liang")
     return auth_id2
     
 @pytest.fixture
 def auth_id3(auth_id1, auth_id2):
-    auth_id3 = auth_register_v2("Jeremy@gmail.com", "password", "Jeremy", "Lee")
+    auth_id3 = auth_register_v1("Jeremy@gmail.com", "password", "Jeremy", "Lee")
     return auth_id3
     
 @pytest.fixture    
@@ -227,3 +230,4 @@ def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public
     with pytest.raises(AccessError):
         # check auth_id1's messages (never added to channel)
         assert channel_messages_v1(auth_id2['token'], channel_id, start)
+    
