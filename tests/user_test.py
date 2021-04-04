@@ -39,7 +39,7 @@ def test_invalid_lastname(clear_data):
 def test_profile_setname_success(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     result1 = user_profile_v1(register['token'], 0)
-    setname = user_profile_setname_v1(register['token'], 'timothy', 'smith')
+    user_profile_setname_v1(register['token'], 'timothy', 'smith')
     result2 = user_profile_v1(register['token'], 0)
     assert result1['name_first'] != result2['name_first'] and result1['name_last'] != result2['name_last']
 
@@ -51,14 +51,14 @@ def test_invalid_email(clear_data):
 
 def test_shared_email(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    register2 = auth_register_v1("fish@gmail.com", "12344545", "fish","sea")
+    auth_register_v1("fish@gmail.com", "12344545", "fish","sea")
     with pytest.raises(InputError):
         assert user_profile_setemail_v1(register1['token'], 'fish@gmail.com') 
 
 def test_profile_email_success(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     result1 = user_profile_v1(register['token'], 0)
-    setemail = user_profile_setemail_v1(register['token'], 'tom@gmail.com')
+    user_profile_setemail_v1(register['token'], 'tom@gmail.com')
     result2 = user_profile_v1(register['token'], 0)
     assert result1['email'] != result2['email']
 
@@ -70,20 +70,20 @@ def test_invalid_handle(clear_data):
 
 def test_shared_handle(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    register2 = auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
+    auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
     with pytest.raises(InputError):
         assert user_profile_sethandle_v1(register1['token'], 'honeybear')  
 
 def test_profile_sethandle_success(clear_data):    
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     result1 = user_profile_v1(register['token'], 0)
-    sethandle = user_profile_sethandle_v1(register['token'], 'hello')
+    user_profile_sethandle_v1(register['token'], 'hello')
     result2 = user_profile_v1(register['token'], 0)
     assert result1['handle_str'] != result2['handle_str']
 
 ##Tests for users_all_v1
 def test_all_users(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    register2 = auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
+    auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
     user_result = users_all_v1(register1['token'])
     assert len(user_result) == 2    

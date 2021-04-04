@@ -86,11 +86,11 @@ def test_handle_space(clear_data):
 ##Tests for logout
 def test_logout(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    login = auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
     result = auth_logout_v1(register['token'])
     assert result['is_success'] == True 
 
 def test_invalid_token(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert auth_logout_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE')

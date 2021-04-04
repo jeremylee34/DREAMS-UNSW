@@ -95,7 +95,6 @@ def user_profile_setemail_v1(token, email):
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
-        unshared = 0
         # Checks for valid email
         if re.search(regex, email):
             pass
