@@ -1,5 +1,5 @@
-import pytest
 import requests
+import pytest
 from src import config
 import src.auth
 import src.user
