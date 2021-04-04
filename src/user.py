@@ -6,7 +6,7 @@ import re
 
 SECRET = 'HELLO'
 
-def user_profile_v2(token, u_id):
+def user_profile_v1(token, u_id):
     """
     Description of function:
         Provides basic information of a user
@@ -27,7 +27,7 @@ def user_profile_v2(token, u_id):
             if u_id == x['u_id']:
                 valid = 1
                 for y in x["session_ids"]:
-                    if decoded_token["session_ids"] == y:
+                    if decoded_token["session_id"] == y:
                         profile['u_id'] = x['u_id']
                         profile['email'] = x['email']
                         profile['name_first'] = x['name_first']
@@ -37,7 +37,7 @@ def user_profile_v2(token, u_id):
         raise InputError("Invalid user")
     return profile
 
-def user_profile_setname_v2(token, name_first, name_last):
+def user_profile_setname_v1(token, name_first, name_last):
     """
     Description of function:
         Changes firstname and lastname of a user
@@ -58,12 +58,12 @@ def user_profile_setname_v2(token, name_first, name_last):
         raise InputError("Invalid lastname")        
     for x in data["users"]:
         for y in x["session_ids"]:
-            if decoded_token["session_ids"] == y:
+            if decoded_token["session_id"] == y:
                 x['name_first'] = name_first
                 x['name_last'] = name_last 
     return {}    
 
-def user_profile_setemail_v2(token, email):
+def user_profile_setemail_v1(token, email):
     """
     Description of function:
         Changes email of a user
@@ -90,7 +90,7 @@ def user_profile_setemail_v2(token, email):
             raise InputError("Email is already used")
         else:
             for y in x["session_ids"]:
-                if y == decoded_token["session_ids"]:
+                if y == decoded_token["session_id"]:
                     x['email'] = email
     return {}
         
@@ -116,7 +116,7 @@ def user_profile_sethandle_v1(token, handle_str):
             raise InputError("Handle already used")
         else:
             for y in x["session_ids"]:
-                if y == decoded_token["session_ids"]:
+                if y == decoded_token["session_id"]:
                     x['handle_str'] = handle_str
     return {}
 

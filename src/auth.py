@@ -1,6 +1,6 @@
 '''
-Implementation of auth functions which includes auth_login_v2,
-auth_register_v2.
+Implementation of auth functions which includes auth_login_v1,
+auth_register_v1.
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
@@ -29,7 +29,7 @@ def create_session_id():
     return session_id
 
 
-def auth_login_v2(email, password):
+def auth_login_v1(email, password):
     """
     Description of function:
         Accepts email and password to validate user login details.
@@ -63,7 +63,8 @@ def auth_login_v2(email, password):
             count = i
             data["users"][count]["session_ids"].append(create_session_id())
             correct_password = 1 
-            token = jwt.encode({'session_ids': session_id}, SECRET, algorithm='HS256')
+            token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+            token_list.append(token)
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
@@ -77,7 +78,7 @@ def auth_login_v2(email, password):
 
 
 
-def auth_register_v2(email, password, name_first, name_last):
+def auth_register_v1(email, password, name_first, name_last):
     """
     Description of function:
         Stores user registration information in the data file
@@ -173,7 +174,8 @@ def auth_register_v2(email, password, name_first, name_last):
     register['session_ids'] = []
     register['session_ids'].append(create_session_id())    
     #generating the token
-    token = jwt.encode({'session_ids': session_id}, SECRET, algorithm='HS256')
+    token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+    token_list.append(token)
     data["users"].append(register)    
     return {
         'token': token,
@@ -197,12 +199,17 @@ def auth_logout_v1(token):
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     for x in data["users"]:
         for y in x["session_ids"]:
-            if decoded_token["session_ids"] == y:
+            if decoded_token["session_id"] == y:
                 x["session_ids"].remove(y)
                 logout = True
+    for t in data["token_list"]:
+        if token == t:
+            token_list.remove(token)
     return {
         'is_success': logout,
     }
+
+
 
 
 
