@@ -74,11 +74,11 @@ def test_dm_create_v1_simple(clear_data, user_token1, user_token2, user_token3):
     dm_1 = dm_create_v1(user_token1['token'], u_ids)
     assert dm_1['dm_id'] == 0
     user_profile_dict1 = user_profile_v2(user_token1['token'], user_token1['auth_user_id'])
-    handle1 = user_profile_dict1['handle']
+    handle1 = user_profile_dict1['handle_str']
     user_profile_dict2 = user_profile_v2(user_token2['token'], user_token2['auth_user_id'])
-    handle2 = user_profile_dict2['handle']
+    handle2 = user_profile_dict2['handle_str']
     user_profile_dict3 = user_profile_v2(user_token3['token'], user_token3['auth_user_id'])
-    handle3 = user_profile_dict3['handle']
+    handle3 = user_profile_dict3['handle_str']
     assert dm_1['dm_name'] == f"{handle1}, {handle2}, {handle3}"
 
 # def test_dm_create_v1_ownership(clear_data, user_token1, user_token2, user_token3):
@@ -111,18 +111,15 @@ def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3,
     """
     dm_details = dm_details_v1(user_token1['token'], dm_1['dm_id'])
     user_profile_dict1 = user_profile_v2(user_token1['token'], user_token1['auth_user_id'])
-    handle1 = user_profile_dict1['handle']
+    handle1 = user_profile_dict1['handle_str']
     user_profile_dict2 = user_profile_v2(user_token2['token'], user_token2['auth_user_id'])
-    handle2 = user_profile_dict2['handle']
+    handle2 = user_profile_dict2['handle_str']
     user_profile_dict3 = user_profile_v2(user_token3['token'], user_token3['auth_user_id'])
-    handle3 = user_profile_dict3['handle']
+    handle3 = user_profile_dict3['handle_str']
     assert dm_details['name'] == f"{handle1}, {handle2}, {handle3}"
     assert user_profile_dict1 in dm_details['members']
     assert user_profile_dict2 in dm_details['members']
     assert user_profile_dict3 in dm_details['members']
-    # assert dm_details['members'][2] == user_profile_dict1
-    # assert dm_details['members'][3] == user_profile_dict2
-    # assert dm_details['members'][1] == user_profile_dict3
 
 def test_dm_list_v1(clear_data, user_token1, dm_1, dm_2):
     """

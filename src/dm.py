@@ -6,6 +6,7 @@ from src.helper import check_valid_user
 from src.helper import check_valid_dm
 from src.helper import token_to_u_id
 from src.helper import check_user_in_dm
+from src.user import user_profile_v2
 
 import jwt
 
@@ -57,7 +58,7 @@ def dm_list_v1(token):
     user_id = token_to_u_id(data, token)
     for dm in data['dms']:
         for member in dm['members']:
-            if member['id'] == user_id:
+            if member['u_id'] == user_id:
                 new_dm_dict = {
                     'dm_id': dm['dm_id'],
                     'name': dm['name']
@@ -95,9 +96,15 @@ def dm_create_v1(token, u_ids):
     u_ids.append(owner_u_id)
     for u_id in u_ids:
         for user in data['users']:
-            if user['id'] == u_id:
+            if user['u_id'] == u_id:
                 handle_list.append(user['handle_str'])
-                member_list.append(user)
+                
+                
+                s_id = user['session_ids'][0]
+                s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
+                profile = user_profile_v2(s_token, u_id)
+                member_list.append(profile)
+
                 break
     # sort and concatenate
     handle_list.sort()

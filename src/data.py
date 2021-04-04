@@ -1,6 +1,6 @@
 data = {
     "users" : [],
     "channels" : [],
-    "messages" : [],
+    "message_ids" : [],
     "dms": []
 }
