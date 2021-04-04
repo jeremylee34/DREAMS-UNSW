@@ -4,7 +4,7 @@ from src.auth import auth_register_v1
 from src.auth import auth_login_v1
 from src.auth import auth_logout_v1
 from src.user import user_profile_v1
-from src.error import InputError
+from src.error import InputError, AccessError
 from src.other import clear_v1
 from src.data import data
 
@@ -88,4 +88,9 @@ def test_logout(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     login = auth_login_v1("asdf@gmail.com", "12344545")
     result = auth_logout_v1(register['token'])
-    assert result['is_success'] == True    
+    assert result['is_success'] == True 
+
+def test_invalid_token(clear_data):
+    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    with pytest.raises(AccessError):
+        assert auth_logout_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE')

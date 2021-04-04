@@ -14,7 +14,9 @@ def clear_v1():
         x["session_ids"].clear()
     data['users'].clear()
     data['channels'].clear()
-    data['messages'].clear()  
+    data['dms'].clear() 
+    data['message_ids'].clear() 
+    data['token_list'].clear()
     return {}
 
 def search_v1(auth_user_id, query_str):

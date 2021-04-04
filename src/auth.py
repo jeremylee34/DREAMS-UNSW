@@ -4,7 +4,7 @@ auth_register_v1.
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
-from src.error import InputError
+from src.error import InputError, AccessError
 import re
 import jwt
 import hashlib
@@ -180,7 +180,6 @@ def auth_register_v1(email, password, name_first, name_last):
     return {
         'token': token,
         'auth_user_id': count,
-        'data': data['users']
     }
 
 
@@ -196,15 +195,20 @@ def auth_logout_v1(token):
         Dictionary containing 'is_success'
     """    
     logout = False
+    valid_token = 0
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    for x in data["users"]:
-        for y in x["session_ids"]:
-            if decoded_token["session_id"] == y:
-                x["session_ids"].remove(y)
-                logout = True
     for t in data["token_list"]:
         if token == t:
-            data['token_list'].remove(token)
+            valid_token = 1
+            data['token_list'].remove(token) 
+    if valid_token == 1:
+        for x in data["users"]:
+            for y in x["session_ids"]:
+                if decoded_token["session_id"] == y:
+                    x["session_ids"].remove(y)
+                    logout = True
+    else:
+        raise AccessError("Invalid token")
     return {
         'is_success': logout,
     }

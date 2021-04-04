@@ -1,7 +1,7 @@
 from flask import request
 import jwt
 from src.data import data
-from src.error import InputError
+from src.error import InputError, AccessError
 import re
 
 SECRET = 'HELLO'
@@ -19,22 +19,27 @@ def user_profile_v1(token, u_id):
         Dictionary 'profile' containing u_id, email, name_first, name_last and handle
     """    
     valid = 0
-    #input_token = request.args.get('token')
-    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    #input_id = int(request.args.get('u_id'))
-    profile = {}
-    for x in data["users"]:
-            if u_id == x['u_id']:
-                valid = 1
-                for y in x["session_ids"]:
-                    if decoded_token["session_id"] == y:
-                        profile['u_id'] = x['u_id']
-                        profile['email'] = x['email']
-                        profile['name_first'] = x['name_first']
-                        profile['name_last'] = x['name_last']
-                        profile['handle_str'] = x['handle_str']  
-    if valid == 0:
-        raise InputError("Invalid user")
+    valid_token = 0
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1
+    if valid_token == 1:
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        profile = {}
+        for x in data["users"]:
+                if u_id == x['u_id']:
+                    valid = 1
+                    for y in x["session_ids"]:
+                        if decoded_token["session_id"] == y:
+                            profile['u_id'] = x['u_id']
+                            profile['email'] = x['email']
+                            profile['name_first'] = x['name_first']
+                            profile['name_last'] = x['name_last']
+                            profile['handle_str'] = x['handle_str']  
+        if valid == 0:
+            raise InputError("Invalid user")
+    else:
+        raise AccessError("Invalid token")
     return profile
 
 def user_profile_setname_v1(token, name_first, name_last):
@@ -51,16 +56,23 @@ def user_profile_setname_v1(token, name_first, name_last):
     Returns:
         Empty dictionary
     """       
-    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    if len(name_first) < 1 or len(name_first) > 50:
-        raise InputError("Invalid firstname")
-    if len(name_last) < 1 or len(name_last) > 50:
-        raise InputError("Invalid lastname")        
-    for x in data["users"]:
-        for y in x["session_ids"]:
-            if decoded_token["session_id"] == y:
-                x['name_first'] = name_first
-                x['name_last'] = name_last 
+    valid_token = 0
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1    
+    if valid_token == 1:
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        if len(name_first) < 1 or len(name_first) > 50:
+            raise InputError("Invalid firstname")
+        if len(name_last) < 1 or len(name_last) > 50:
+            raise InputError("Invalid lastname")        
+        for x in data["users"]:
+            for y in x["session_ids"]:
+                if decoded_token["session_id"] == y:
+                    x['name_first'] = name_first
+                    x['name_last'] = name_last 
+    else:
+        raise AccessError("Invalid token")
     return {}    
 
 def user_profile_setemail_v1(token, email):
@@ -76,22 +88,29 @@ def user_profile_setemail_v1(token, email):
     Returns:
         Empty dictionary
     """           
-    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
-    unshared = 0
-    # Checks for valid email
-    if re.search(regex, email):
-        pass
-    else:    
-        raise InputError("Invalid email")
-    #checking for if email is already used
-    for x in data["users"]:
-        if x["email"] == email:
-            raise InputError("Email is already used")
-        else:
-            for y in x["session_ids"]:
-                if y == decoded_token["session_id"]:
-                    x['email'] = email
+    valid_token = 0
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1
+    if valid_token == 1:
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
+        unshared = 0
+        # Checks for valid email
+        if re.search(regex, email):
+            pass
+        else:    
+            raise InputError("Invalid email")
+        #checking for if email is already used
+        for x in data["users"]:
+            if x["email"] == email:
+                raise InputError("Email is already used")
+            else:
+                for y in x["session_ids"]:
+                    if y == decoded_token["session_id"]:
+                        x['email'] = email
+    else:
+        raise AccessError("Invalid token")
     return {}
         
 
@@ -108,16 +127,23 @@ def user_profile_sethandle_v1(token, handle_str):
     Returns:
         Empty dictionary
     """           
-    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    if len(handle_str) < 3 or len(handle_str) > 20:
-        raise InputError("Invalid handle")
-    for x in data['users']:
-        if x['handle_str'] == handle_str:
-            raise InputError("Handle already used")
-        else:
-            for y in x["session_ids"]:
-                if y == decoded_token["session_id"]:
-                    x['handle_str'] = handle_str
+    valid_token = 0
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1
+    if valid_token == 1:
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        if len(handle_str) < 3 or len(handle_str) > 20:
+            raise InputError("Invalid handle")
+        for x in data['users']:
+            if x['handle_str'] == handle_str:
+                raise InputError("Handle already used")
+            else:
+                for y in x["session_ids"]:
+                    if y == decoded_token["session_id"]:
+                        x['handle_str'] = handle_str
+    else:
+        raise AccessError("Invalid token")
     return {}
 
 
@@ -131,5 +157,21 @@ def users_all_v1(token):
         None
     Returns:
         A list containig all of the users and their information
-    """           
-    return data["users"]
+    """
+    valid_token = 0
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1
+    if valid_token == 1:
+        all_users = []
+        info = {}
+        for x in data["users"]:
+            info['u_id'] = x['u_id']
+            info['email'] = x['email']
+            info['name_first'] = x['name_first']
+            info['name_last'] = x['name_last']
+            info['handle_str'] = x['handle_str'] 
+            all_users.append(info)
+    else:
+        raise AccessError("Invalid token")
+    return all_users
