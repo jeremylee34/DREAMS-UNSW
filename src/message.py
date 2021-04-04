@@ -1,3 +1,8 @@
+'''
+Implementation of message functions that includes message_send_v1,
+message_edit_v1, message_remove_v1, message_share_v1, message_senddm_v1.
+Written by Gordon Liang
+'''
 import jwt
 from src.error import InputError
 from src.error import AccessError
@@ -8,6 +13,18 @@ from datetime import timezone
 SECRET = 'HELLO'
 
 def message_send_v1(token, channel_id, message):
+    '''
+    This function sends a given message to a given channel
+    Arguments:
+        token (str) - contains the session_id
+        channel_id (int) - refers to an existing channel in the channels list
+        message (str) - message given that is sent to the messages list in the channel
+    Exceptions:
+        InputError - when the message is more than 1000 characters and no message is given
+        AccessError - If the token is invalid or the user has not joined the channel
+    Return Value:
+        {message_id}
+    '''
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
     if len(message) == 0:
@@ -44,6 +61,18 @@ def message_send_v1(token, channel_id, message):
     }
 
 def message_remove_v1(token, message_id):
+    '''
+    This function removes a message from a channel or dm
+    Arguments:
+        token (int) - contains session_id
+        message_id (int) - message_id for message that needs to be removed
+    Exceptions:
+        InputError - when message is already removed
+        AccessError - when token is invalid or message was not sent by user
+                      and user is not owner of channel
+    Return Value:
+        {}
+    '''
     valid = 0
     validuser = 0
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
@@ -55,6 +84,11 @@ def message_remove_v1(token, message_id):
                 valid = 1
     if valid != 1:
         raise AccessError('User does not exist')
+    for dm in data['dms']:
+        for dm_message in dm['messages']:
+            if dm_message['message_id'] == message_id:
+                if dm_message['message'] == '':
+                    raise InputError('Message does not exist')
     for channel in data['channels']:
         for message in channel['messages']:
             if message['message_id'] == message_id:
@@ -62,21 +96,26 @@ def message_remove_v1(token, message_id):
                     raise InputError('Message does not exist')
                 u_id = message['u_id']
                 current_channel = channel
-                channel_id = channel['channel_id']
                 for member in current_channel['owner_members']:
                     if member['u_id'] == auth_user_id and auth_user_id == u_id:
                         validuser = 1
     if validuser != 1:
         raise AccessError('Message was not sent by user and user is not an owner of the channel')
-    for message2 in data['channels'][channel_id]['messages']:
-        if message2['message_id'] == message_id:
-            message2['message'] = ''
-    # messages = [i for i in current_channel['messages'] if not (i['message_id'] == auth_user)]
-    # data['channels'][channel_id]['messages'] = messages
+    for channel2 in data['channels']:
+        for message2 in channel2['messages']:
+            if message2['message_id'] == message_id:
+                message2['message'] = ''
+    for dm2 in data['dms']:
+        for dm_message2 in dm2['messages']:
+            if dm_message2['message_id'] == message_id:
+                dm_message2['message'] = ''
     return {
     }
 
 def message_edit_v1(token, message_id, message):
+    '''
+    This function edits a message in a channel or dm
+    '''
     validuser = 0
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
@@ -89,6 +128,12 @@ def message_edit_v1(token, message_id, message):
                 valid = 1
     if valid != 1:
         raise AccessError('User does not exist')
+    
+    for dm in data['dms']:
+        for dm_message in dm['messages']:
+            if dm_message['message_id'] == message_id:
+                if dm_message['message'] == '':
+                    raise InputError('Message has been deleted')
     for channel in data['channels']:
         for message2 in channel['messages']:
             if message2['message_id'] == message_id:
@@ -96,15 +141,19 @@ def message_edit_v1(token, message_id, message):
                 current_channel = channel
                 if message2['message'] == '':
                     raise InputError('Message has been deleted')
-    for member in current_channel['owner_members']:
-        if member['u_id'] == auth_user_id and auth_user_id == u_id:
-            validuser = 1
-    if validuser != 1:
-        raise AccessError('Message was not sent by user and user is not an owner of the channel')
+            for member in current_channel['owner_members']:
+                if member['u_id'] == auth_user_id and auth_user_id == u_id:
+                    validuser = 1
+            if validuser != 1:
+                raise AccessError('Message was not sent by user and user is not an owner of the channel')
     for channel2 in data['channels']:
         for message3 in channel2['messages']:
             if message3['message_id'] == message_id:
                 message3['message'] = message
+    for dms in data['dms']:
+        for dmmessage in dms['messages']:
+            if dmmessage['message_id'] == message_id:
+                dmmessage['message'] = message
     return {
     }
 def message_share_v1(token, og_message_id, message, channel_id, dm_id):
