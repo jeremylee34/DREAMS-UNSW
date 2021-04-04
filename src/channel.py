@@ -34,7 +34,7 @@ def channel_invite_v1(token, channel_id, u_id):
     Return Value:
         Returns <{}> on u_id being succesfully added to channel with channel_id
     """
-    u_id = token_to_u_id(data, token)
+    u_id = token_to_u_id(token)
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
     errorcount = 0
@@ -97,7 +97,7 @@ def channel_details_v1(token, channel_id):
         Returns <all_members> on u_id being part of channel with
         channel_id and channel_id being valid
     """
-    u_id = token_to_u_id(data, token)
+    u_id = token_to_u_id(token)
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
     errorcount = 0
@@ -155,15 +155,15 @@ def channel_messages_v1(token, channel_id, start):
         if reached end of all messages in channel
     """
     # Check valid channel
-    if check_valid_channel(data, channel_id) is False:
+    if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
 
     # Check if start is greater than number of messages in channel
     if start > len(data['channels'][channel_id]['messages']):
         raise InputError("Start is greater than the total number of messages in the channel")
-    u_id = token_to_u_id(data, token)
+    u_id = token_to_u_id(token)
     # Check if user is in channel
-    if check_user_in_channel(data, channel_id, u_id) is False:
+    if check_user_in_channel(channel_id, u_id) is False:
         raise AccessError("Authorised user is not a member of channel with channel_id")
 
     messages = []
@@ -215,9 +215,9 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    u_id = token_to_u_id(data, token)
+    u_id = token_to_u_id(token)
     # Check valid channel
-    if check_valid_channel(data, channel_id) is False:
+    if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
 
     # Check whether channel accesible
@@ -225,11 +225,11 @@ def channel_join_v1(token, channel_id):
         pass
     # elif data['users'][u_id]['permission_id'] == OWNER_PERMISSION:
     #     pass
-    elif check_public_channel(data, channel_id) is False:
+    elif check_public_channel(channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
 
     ## search thru all members
-    user_in_channel = check_user_in_channel(data, channel_id, u_id)
+    user_in_channel = check_user_in_channel(channel_id, u_id)
     if user_in_channel is False:
         ## if user not added
         user_to_append = {
