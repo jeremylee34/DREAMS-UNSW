@@ -322,7 +322,8 @@ def channel_removeowner_v1(token, channel_id, u_id):
         raise AccessError("The authorised user is not an owner of the **Dreams**, or an owner of this channel")
 
     for owner_member in data['channels'][channel_id]['owner_members']:
-        data['channels'][channel_id]['owner_members'].remove(owner_member)
+        if owner_member['u_id'] == u_id:
+            data['channels'][channel_id]['owner_members'].remove(owner_member)
 
     return {
     }
