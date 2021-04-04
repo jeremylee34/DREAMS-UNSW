@@ -157,7 +157,7 @@ def test_message_share_dm(clear):
     channel_id = channels_create_v1(token['token'], "Channel1", True)
     message_id = message_send_v1(token['token'], channel_id['channel_id'], 'Hello')
     shared_message = message_share_v1(token['token'], message_id['message_id'], '', -1, dms['dm_id'])
-    messages = dm_messages_v1(token['token'], dms['dm_id'], shared_message['shared_message_id'])
+    messages = dm_messages_v1(token['token'], dms['dm_id'], 0)
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_share_multiple(clear):
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
@@ -187,7 +187,7 @@ def test_message_senddm_v1(clear):
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dms = dm_create_v1(user['token'], [user2['auth_user_id']])
     message = message_senddm_v1(user['token'], dms['dm_id'], 'Hello')
-    messages = dm_messages_v1(user['token'], dms['dm_id'], message['message_id'])
+    messages = dm_messages_v1(user['token'], dms['dm_id'], 0)
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_senddm_input_error(clear):
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
