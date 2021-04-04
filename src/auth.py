@@ -1,6 +1,6 @@
 '''
-Implementation of auth functions which includes auth_login_v2,
-auth_register_v2.
+Implementation of auth functions which includes auth_login_v1,
+auth_register_v1.
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
@@ -29,7 +29,7 @@ def create_session_id():
     return session_id
 
 
-def auth_login_v2(email, password):
+def auth_login_v1(email, password):
     """
     Description of function:
         Accepts email and password to validate user login details.
@@ -64,6 +64,7 @@ def auth_login_v2(email, password):
             data["users"][count]["session_ids"].append(create_session_id())
             correct_password = 1 
             token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+            data['token_list'].append(token)
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
@@ -77,7 +78,7 @@ def auth_login_v2(email, password):
 
 
 
-def auth_register_v2(email, password, name_first, name_last):
+def auth_register_v1(email, password, name_first, name_last):
     """
     Description of function:
         Stores user registration information in the data file
@@ -166,7 +167,13 @@ def auth_register_v2(email, password, name_first, name_last):
             i = 0
         else:
             i += 1 
-      
+    #setting DREAMS(admin) permission
+    if (len(data['users']) < 1):
+        register['permission_id'] = '1'
+    else:
+        register['permission_id'] = '2'
+
+
     register["handle_str"] = handle 
     
     #creating session_id
@@ -174,6 +181,7 @@ def auth_register_v2(email, password, name_first, name_last):
     register['session_ids'].append(create_session_id())    
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+    data['token_list'].append(token)
     data["users"].append(register)    
     return {
         'token': token,
@@ -200,8 +208,22 @@ def auth_logout_v1(token):
             if decoded_token["session_id"] == y:
                 x["session_ids"].remove(y)
                 logout = True
+    for t in data["token_list"]:
+        if token == t:
+            valid_token = 1
+            data['token_list'].remove(token) 
+    if valid_token == 1:
+        for x in data["users"]:
+            for y in x["session_ids"]:
+                if decoded_token["session_id"] == y:
+                    x["session_ids"].remove(y)
+                    logout = True
+    else:
+        raise AccessError("Invalid token")
     return {
         'is_success': logout,
     }
+
+
 
 
