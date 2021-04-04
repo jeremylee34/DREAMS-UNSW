@@ -15,6 +15,21 @@ SECRET = "HELLO"
 
 
 def dm_invite_v1(token, dm_id, u_id):
+    """
+    <Function is called by user refered by token to add u_id to DM>
+    
+    Arguments:
+        <token> (<string>)  - encoded id that identifies user session
+        <dm_id> (<integer>) - Identifier for particular DM 
+        <u_id> (<integer>)  - Identifier for particular user 
+        
+    Exceptions:
+        InputError  - Occurs when dm_id does not refer to an exising dm and u_id
+                      does not refer to a valid user   
+        AccessError  - Occurs when authorised user is not a member of the DM       
+        
+    Return Value: {} 
+    """
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")
@@ -45,6 +60,19 @@ def dm_invite_v1(token, dm_id, u_id):
        
        
 def dm_leave_v1(token, dm_id):
+    """
+    <Function is called by user refered by token to leave DM>
+    
+    Arguments:
+        <token> (<string>)  - encoded id that identifies user session
+        <dm_id> (<integer>) - Identifier for particular DM 
+        
+    Exceptions:
+        InputError  - Occurs when dm_id does not refer to an exising dm   
+        AccessError  - Occurs when authorised user is not a member of the DM       
+        
+    Return Value: {} 
+    """
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")
@@ -73,6 +101,25 @@ def dm_leave_v1(token, dm_id):
     
     
 def dm_messages_v1(token, dm_id, start):
+    """
+    <Function is called by user to return up to 50 messages from DM>
+    
+    Arguments:
+        <token> (<string>)  - encoded id that identifies user session
+        <dm_id> (<integer>) - Identifier for particular DM 
+        <start> (<integer>)  - First index of messages to be returned
+        
+    Exceptions:
+        InputError  - Occurs when dm_id does not refer to an exising dm and start
+                      is greater than the total number of messages in DM  
+        AccessError  - Occurs when authorised user is not a member of the DM       
+        
+    Return Value: 
+        messages  - List of dictionaries descibing each message 
+        start  - First index of messages returned
+        end  - Final index of messages returned, usually start + 50 but will be 
+               set to -1 if start + 50 surpasses the bound of messages in DM 
+    """
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")
