@@ -156,4 +156,4 @@ def test_channels_create_private_channel(clear, channel_id_private, channels):
     assert channels['channels'][0]['name'] == 'Channel1'
 def test_channels_create_invalid_id(clear, auth_id):
     with pytest.raises(AccessError):
-        assert channels_create_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo0fQ.UWh4yaDf6lPdmJroKBXfBZURXskoLULjM7Es_xZSK6U', "Channel1", True)
+        assert channels_create_v1(2, "Channel1", True)
