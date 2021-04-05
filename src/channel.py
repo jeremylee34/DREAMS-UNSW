@@ -310,8 +310,9 @@ def channel_addowner_v1(token, channel_id, u_id):
     profile = user_profile_v1(s_token, u_id)
     data['channels'][channel_id]['owner_members'].append(profile)
 
-    if check_user_in_channel(channel_id, u_id) == False:
+    if check_user_in_channel(channel_id, u_id) is False:
         data['channels'][channel_id]['all_members'].append(profile)
+        
     return {
     }
 

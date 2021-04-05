@@ -21,15 +21,19 @@ def channels_list_v1(token):
         Returns 'channels'
     '''
     valid = 0
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
+    # Getting auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
     # List of channels that user is in
     channel_list = []
     # Loops through channel list
@@ -58,13 +62,10 @@ def channels_listall_v1(token):
         Returns 'channels'
     '''
     valid = 0
-    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
-    session_id = payload['session_id']
-    for user in data['users']:
-        for s_id in user['session_ids']:
-            if s_id == session_id:
-                auth_user_id = user['u_id']
-                valid = 1
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
     if valid != 1:
         raise AccessError('User does not exist')
     channel_list = []
@@ -93,15 +94,19 @@ def channels_create_v1(token, name, is_public):
         Returns 'channel_id'
     '''
     valid = 0
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid = 1
+    if valid != 1:
+        raise AccessError('User does not exist')
+    # Gets auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
     for user in data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-                valid = 1
-    if valid != 1:
-        raise AccessError('User does not exist')
     # Produces an error if channel name is greater than 20 characters
     if len(name) > 20:
         raise InputError('Name is more than 20 characters long')

@@ -4,7 +4,7 @@ auth_register_v1.
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
-from src.error import InputError
+from src.error import InputError, AccessError
 import re
 import jwt
 import hashlib
@@ -58,19 +58,21 @@ def auth_login_v1(email, password):
     i = 0
     count = 0
     while i < len(data["users"]):
-        if data["users"][i]["email"] == email and data["users"][i]["password"] == input_password:
+        if data["users"][i]["email"] == email:
             correct_email = 1
-            count = i
-            data["users"][count]["session_ids"].append(create_session_id())
-            correct_password = 1 
-            token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
-            data['token_list'].append(token)
+            count = i   
+        if data["users"][i]["password"] == input_password:
+            correct_password = 1
         i += 1
     if correct_email == 0:
         raise InputError("Incorrect email")
     if correct_password == 0:
         raise InputError("Incorrect password")
-
+    #Generating a new session_id
+    data["users"][count]["session_ids"].append(create_session_id())
+    #Generating new token
+    token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
+    data['token_list'].append(token)
     return {
         'token': token,
         'auth_user_id': count,
@@ -167,26 +169,23 @@ def auth_register_v1(email, password, name_first, name_last):
             i = 0
         else:
             i += 1 
+      
+    register["handle_str"] = handle 
     #setting DREAMS(admin) permission
     if (len(data['users']) < 1):
-        register['permission_id'] = '1'
+        register['permission_id'] = 1
     else:
-        register['permission_id'] = '2'
-
-
-    register["handle_str"] = handle 
-    
-    #creating session_id
+        register['permission_id'] = 2
+    #creating session_id list for user
     register['session_ids'] = []
     register['session_ids'].append(create_session_id())    
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
-    data["users"].append(register)    
+    data['users'].append(register)    
     return {
         'token': token,
         'auth_user_id': count,
-        'data': data['users']
     }
 
 
@@ -202,16 +201,15 @@ def auth_logout_v1(token):
         Dictionary containing 'is_success'
     """    
     logout = False
+    valid_token = 0
+    #Decodes the token
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    for x in data["users"]:
-        for y in x["session_ids"]:
-            if decoded_token["session_id"] == y:
-                x["session_ids"].remove(y)
-                logout = True
+    #Removes token from token_list if it exists
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
             data['token_list'].remove(token) 
+    #If the token is valid, then particular session_id is removed, otherwise AccessError is raised
     if valid_token == 1:
         for x in data["users"]:
             for y in x["session_ids"]:
@@ -223,7 +221,3 @@ def auth_logout_v1(token):
     return {
         'is_success': logout,
     }
-
-
-
-

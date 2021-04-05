@@ -3,5 +3,6 @@ data = {
     "channels" : [],
     "dms": [],
     "message_ids" : [],
+    "notifications" : [],
     "token_list": []
 }
