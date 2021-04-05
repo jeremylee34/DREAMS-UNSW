@@ -1,6 +1,6 @@
 '''
 Implementation of http tests for auth functions and routes
-Written by Kanit Srihakorth and Tharushi Gunawardana
+Written by Kanit Srihakorth and Tharushi Gunawardana 
 '''
 import requests
 import pytest
