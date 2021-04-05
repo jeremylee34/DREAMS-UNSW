@@ -130,7 +130,7 @@ def message_remove_v1(token, message_id):
                     if member['u_id'] == auth_user_id and auth_user_id == u_id:
                         validuser = 1
                 if auth_user_id == u_id and data['users'][auth_user_id]['permission_id'] == 1:
-                        validuser = 1
+                    validuser = 1
                 # Raises AccessError if message is not sent by user given and user
                 # is not an owner of the channel
                 if validuser != 1:
@@ -195,7 +195,7 @@ def message_edit_v1(token, message_id, message):
                     if member['u_id'] == auth_user_id and auth_user_id == u_id:
                         validuser = 1
                 if auth_user_id == u_id and data['users'][auth_user_id]['permission_id'] == 1:
-                        validuser = 1
+                    validuser = 1
                 # Raises AccessError if message is not sent by user given and user
                 # is not an owner of the channel
                 if validuser != 1:
