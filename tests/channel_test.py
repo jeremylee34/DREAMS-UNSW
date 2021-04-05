@@ -40,6 +40,11 @@ def auth_id3(auth_id1, auth_id2):
     auth_id3 = auth_register_v1("Jeremy@gmail.com", "password", "Jeremy", "Lee")
     return auth_id3
     
+@pytest.fixture
+def unadded_user_token(auth_id1, auth_id2, auth_id3):
+    user_token = auth_register_v1("Bolin@gmail.com", "password", "Bolin", "Ngo")
+    return user_token
+
 @pytest.fixture    
 def channel_id1(auth_id1):
     channel_id1 = channels_create_v1(auth_id1['token'], "Channel1", True)
@@ -73,7 +78,7 @@ def clear_data():
 #Tests when user and channel id are not valid for invite
 def test_channel_invite_v1_InputErr1(clear_data, auth_id1):
     with pytest.raises(InputError):
-        channel_invite_v1(auth_id1['token'], "Invalid", "Invalid")
+        channel_invite_v1(auth_id1['token'], "Invalid", auth_id1['auth_user_id'])
         
 #Tests when invited user_id is not valid for invite
 def test_channel_invite_v1_InputErr2(clear_data, auth_id1, channel_id1):
@@ -220,6 +225,21 @@ def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public
         # check auth_id1's messages (never added to channel)
         assert channel_messages_v1(auth_id2['token'], channel_id, start)
 
+def test_channel_messages_v1_simple(clear_data, auth_id1, auth_id2, public_channel):
+    channel_id = public_channel['channel_id']
+    message_id = message_send_v1(auth_id1['token'], channel_id, "Hello")
+    start = 0
+    messages = channel_messages_v1(auth_id1['token'], channel_id, start)
+    assert messages['end'] == -1
+
+def test_channel_messages_v1_many(clear_data, auth_id1, auth_id2, public_channel):
+    channel_id = public_channel['channel_id']
+    for i in range(0, 50):
+        message_id = message_send_v1(auth_id1['token'], channel_id, "Hello")
+    start = 0
+    messages = channel_messages_v1(auth_id1['token'], channel_id, start)
+    assert messages['end'] == 50
+
 def test_channel_addowner_v1_InputError1(clear_data, auth_id1, auth_id2):
     """
     InputError happens when Channel ID is not a valid channel
@@ -266,7 +286,17 @@ def test_channel_addowner_v1_AddMulti(clear_data, auth_id1, channel_id1, auth_id
     assert channel_details1['owner_members'][-1]['u_id'] == auth_id3['auth_user_id']
     assert channel_details1['owner_members'][-2]['u_id'] == auth_id2['auth_user_id'] 
     
-    
+def test_channel_addowner_v1_add_unadded_user(clear_data, auth_id1, channel_id1, unadded_user_token):
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], unadded_user_token['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == unadded_user_token['auth_user_id']
+    assert channel_details1['all_members'][-1]['u_id'] == unadded_user_token['auth_user_id']
+
+def test_channel_addowner_v1_add_added_user(clear_data, auth_id1, auth_id2, channel_id1):
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id2['auth_user_id']
 
 def test_channel_removeowner_v1_InputError1(clear_data, auth_id1, channel_id1, auth_id2):
     """
@@ -371,3 +401,8 @@ def test_channel_leave_v1_LeaveOwner(clear_data, auth_id1, channel_id1, auth_id2
     assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
     assert channel_details1['owner_members'][-1]['u_id'] == auth_id1['auth_user_id']
     assert channel_details1['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
+
+def test_channel_leave_v1_last_owner(clear_data, auth_id1, channel_id1):
+    channel_leave_v1(auth_id1['token'], channel_id1['channel_id'])
+    channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id1['auth_user_id']

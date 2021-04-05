@@ -65,7 +65,6 @@ def dm_list_v1(token):
                     'name': dm['name']
                 }
                 dms.append(new_dm_dict)
-                break
     return {
         'dms': dms
     }
@@ -226,7 +225,7 @@ def dm_leave_v1(token, dm_id):
             stringU = users['handle_str']                   
             handlelist = data['dms'][dm_id]['name'].split(", ")
             handlelist.remove(stringU)
-            break
+
     handlelist.sort()
     handlelist_string = ', '.join(map(str, handlelist))
     data['dms'][dm_id]['name'] = handlelist_string        
