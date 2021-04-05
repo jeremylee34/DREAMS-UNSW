@@ -17,6 +17,7 @@ def clear_v1():
     data['dms'].clear() 
     data['message_ids'].clear() 
     data['token_list'].clear()
+    data['notifications'].clear()
     return {}
 
 def search_v1(auth_user_id, query_str):
