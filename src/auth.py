@@ -173,9 +173,9 @@ def auth_register_v1(email, password, name_first, name_last):
     register["handle_str"] = handle 
     #setting DREAMS(admin) permission
     if (len(data['users']) < 1):
-        register['permission_id'] = '1'
+        register['permission_id'] = 1
     else:
-        register['permission_id'] = '2'
+        register['permission_id'] = 2
     #creating session_id list for user
     register['session_ids'] = []
     register['session_ids'].append(create_session_id())    
