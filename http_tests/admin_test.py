@@ -9,9 +9,15 @@ from src.data import data
 
 @pytest.fixture
 def clear_data():
+    '''
+    Clears data in data file
+    '''
     requests.delete(config.url + 'clear/v1')
 
 def test_successful_admin_user_remove(clear_data):
+    '''
+    Basic test for functionality of admin_user_remove function
+    '''
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -47,6 +53,9 @@ def test_successful_admin_user_remove(clear_data):
 
 
 def test_invalid_token_successful_admin_user_remove(clear_data):
+    '''
+    Test if admin_user_remove function token is invalid
+    '''
     requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -66,6 +75,9 @@ def test_invalid_token_successful_admin_user_remove(clear_data):
     }).status_code == AccessError.code
     
 def test_invalid_uid_admin_user_remove(clear_data):
+    '''
+    Test if admin_user_remove function u_id is invalid
+    '''
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -85,8 +97,10 @@ def test_invalid_uid_admin_user_remove(clear_data):
         'u_id': 99,
     }).status_code == InputError.code
 
-#user permission
 def test_successful_admin_userpermission_change_v1(clear_data):
+    '''
+    Basic test for admin_userpermission_change functionality
+    '''
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -101,14 +115,16 @@ def test_successful_admin_userpermission_change_v1(clear_data):
     })
     payload1 = user1.json()
     payload2 = user2.json()
-    remove = requests.post(config.url + 'admin/userpermission/change/v1', json = {
+    assert requests.post(config.url + 'admin/userpermission/change/v1', json = {
         'token' : payload1['token'],
         'u_id' : payload2['auth_user_id'],
         'permission_id' : 1,
-    })
-    remove == {}
+    }).status_code == 200
 
 def test_invalid_token_admin_userpermission_change_v1(clear_data):
+    '''
+    Test if admin_userpermission_change function token is invalid
+    '''
     requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -130,6 +146,9 @@ def test_invalid_token_admin_userpermission_change_v1(clear_data):
     
 
 def test_invalid_u_id_admin_userpermission_change_v1(clear_data):
+    '''
+    Test if admin_userpermission_change function u_id is invalid
+    '''
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
@@ -150,6 +169,9 @@ def test_invalid_u_id_admin_userpermission_change_v1(clear_data):
     }).status_code == InputError.code
 
 def test_invalid_permissin_id_admin_userpermission_change_v1(clear_data):
+    '''
+    Test if admin_userpermission_change function permissin_id is invalid
+    '''
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
