@@ -1,3 +1,8 @@
+
+################################################################################
+#########################         IMPORTS          #############################
+################################################################################
+
 import pytest
 import requests
 from src.config import url
@@ -5,9 +10,17 @@ from src.other import clear_v1
 from src.error import InputError
 from src.error import AccessError
 
+################################################################################
+#########################     GLOBAL VARIABLES     #############################
+################################################################################
+
 INPUT_ERROR = 400
 ACCESS_ERROR = 403
 INVALID_ID = 9999
+
+################################################################################
+#########################         FIXTURES         #############################
+################################################################################
 
 @pytest.fixture
 def clear():
@@ -72,9 +85,8 @@ def dm_2(user_token1, user_token2):
     return dm
 
 ################################################################################
+#########################      dm_details tests    #############################
 ################################################################################
-################################################################################
-
 
 def test_dm_details_v1_input_error(clear, user_token1):
     """
@@ -122,6 +134,10 @@ def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3,
     assert user_profile_dict2 in dm_details['members']
     assert user_profile_dict3 in dm_details['members']
 
+################################################################################
+#########################       dm_list tests      #############################
+################################################################################
+
 def test_dm_list_v1_simple(clear_data, user_token1, dm_1, dm_2):
     """
     Testing whether dm_list_v1 returns the list of DMs correctly
@@ -142,6 +158,10 @@ def test_dm_list_v1_simple(clear_data, user_token1, dm_1, dm_2):
         ]
     }
     assert dms == expected_dm
+
+################################################################################
+#########################      dm_create tests     #############################
+################################################################################
 
 def test_dm_create_v1_input_error(clear_data, user_token1):
     """
@@ -179,6 +199,10 @@ def test_dm_create_v1_simple(clear_data, user_token1, user_token2, user_token3):
     handle3 = user_profile_dict3['handle_str']
     assert dm_1['dm_name'] == f"{handle1}, {handle2}, {handle3}"
 
+################################################################################
+#########################      dm_remove tests     #############################
+################################################################################
+
 def test_dm_remove_v1_input_error(clear_data, user_token1):
     """
     InputError to be thrown when dm_id does not refer to a valid DM
@@ -212,9 +236,8 @@ def test_dm_remove_v1(clear_data, user_token1, dm_1):
     }).status_code == INPUT_ERROR
 
 ################################################################################
+#########################      dm_invite tests     #############################
 ################################################################################
-################################################################################
-
 
 def test_dm_invite_v1_InputError1(clear):
     """
@@ -457,7 +480,9 @@ def test_dm_invite_v1_Invite2(clear):
     assert dm_details['members'][-2]['u_id'] == reg_info3['auth_user_id']
     assert dm_details['members'][-1]['u_id'] == reg_info4['auth_user_id']
 
-
+################################################################################
+#########################      dm_leave tests      #############################
+################################################################################
 
 def test_dm_leave_v1_InputError(clear):
     """
@@ -619,7 +644,9 @@ def test_dm_leave_v1_LeaveALL(clear):
         'dm_id': dm_2['dm_id']
     }).status_code == 403
     
-    
+################################################################################
+#########################     dm_messages tests    #############################
+################################################################################
     
 def test_dm_messages_v1_InputError1(clear):
     """
