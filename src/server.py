@@ -46,12 +46,6 @@ def echo():
 Channels server routes
 '''
 
-@APP.route('/auth/register/v2', methods=['POST'])
-def register():
-    inputs = request.get_json()
-    r = auth.auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
-    return dumps(r)
-
 @APP.route('/search/v2', methods=['GET'])
 def search():
     inputs = request.get_json()
@@ -76,47 +70,6 @@ def notifications_get():
     r = other.notifications_get_v1(token['token'])
     print(r)
     return dumps(r)
-
-@APP.route('/clear/v1', methods=['DELETE'])
-def clear():   
-    r = other.clear_v1()
-    return dumps(r)
-
-@APP.route('/users/all/v1', methods=['GET'])
-def users_all():     
-    token = request.args.get('token')
-    r = user.users_all_v1(token)
-    return dumps(r)
-
-@APP.route("/channels/create/v2", methods=['POST'])
-def create_channel():
-    data = request.get_json()
-    channel_id = channels.channels_create_v1(data['token'], data['name'], data['is_public'])
-    return dumps(channel_id)
-
-@APP.route("/message/send/v2", methods=['POST'])
-def message_send():
-    data = request.get_json()
-    message_id = message.message_send_v1(data['token'], data['channel_id'], data['message'])
-    return dumps(message_id)
-
-@APP.route("/message/senddm/v1", methods=['POST'])
-def message_senddm():
-    data = request.get_json()
-    message_id = message.message_senddm_v1(data['token'], data['dm_id'], data['message'])
-    return dumps(message_id)
-
-@APP.route("/channel/invite/v2", methods=['POST'])
-def channel_invite():
-    data = request.get_json()
-    channel_invite = channel.channel_invite_v1(data['token'], data['channel_id'], data['u_id'])
-    return dumps(channel_invite)
-
-@APP.route("/dm/create/v1", methods=['POST'])
-def dm_create():
-    data = request.get_json()
-    dm_create = dm.dm_create_v1(data['token'], data['u_ids'])
-    return dumps(dm_create)
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
