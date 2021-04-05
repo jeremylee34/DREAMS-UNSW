@@ -58,7 +58,7 @@ def test_lastname_length(clear_data):
 def test_login_incorrect_password(clear_data):
     auth_register_v1("hiheee@gmail.com", "1234566", "K","S")
     with pytest.raises(InputError):
-        assert auth_login_v1("hiheee@gmail.com", "1234666")
+        assert auth_login_v1("hiheee@gmail.com", "hello1234")
 
 #Tests whether password is correct (successful implementation)
 def test_login_correct_password(clear_data):
@@ -99,12 +99,21 @@ def test_handle_space(clear_data):
     check = " " in result['handle_str']
     assert check == False
 
+#Tests when handle is too long and is shared (successful implementation)
+def test_handle_too_long_and_shared(clear_data):
+    auth_register_v1("honey@outlook.com", "hello12345", "honeybear", "beehivebears")
+    register = auth_register_v1("tommy@outlook.com", "tommy12345", "honeybear", "beehivebears")
+    result = user_profile_v1(register['token'], 1)
+    assert len(result['handle_str']) <= 20
+
 ##Tests for logout
 #Tests whether logout is successful (successful implementation)
 def test_logout(clear_data):
-    register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_login_v1("asdf@gmail.com", "12344545")
-    result = auth_logout_v1(register['token'])
+    login = auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
+    result = auth_logout_v1(login['token'])
     assert result['is_success'] == True 
 
 #Tests whether input error is raised for invalid token

@@ -23,9 +23,11 @@ def user_profile_v1(token, u_id):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
+    #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         profile = {}
+        #Getting information for user profile
         for x in data["users"]:
                 if u_id == x['u_id']:
                     valid = 1
@@ -36,6 +38,7 @@ def user_profile_v1(token, u_id):
                             profile['name_first'] = x['name_first']
                             profile['name_last'] = x['name_last']
                             profile['handle_str'] = x['handle_str']  
+        #If u_id is not valid
         if valid == 0:
             raise InputError("Invalid user")
     else:
@@ -60,12 +63,16 @@ def user_profile_setname_v1(token, name_first, name_last):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1    
+    #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        #Checks if name_first is valid
         if len(name_first) < 1 or len(name_first) > 50:
             raise InputError("Invalid firstname")
+        #Checks if name_last is valid
         if len(name_last) < 1 or len(name_last) > 50:
             raise InputError("Invalid lastname")        
+        #Updating user firstname and lastname
         for x in data["users"]:
             for y in x["session_ids"]:
                 if decoded_token["session_id"] == y:
@@ -92,6 +99,7 @@ def user_profile_setemail_v1(token, email):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
+    #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
@@ -105,6 +113,7 @@ def user_profile_setemail_v1(token, email):
             if x["email"] == email:
                 raise InputError("Email is already used")
             else:
+                #Updating user email
                 for y in x["session_ids"]:
                     if y == decoded_token["session_id"]:
                         x['email'] = email
@@ -130,14 +139,18 @@ def user_profile_sethandle_v1(token, handle_str):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
+    #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        #Checks if handle_str is valid
         if len(handle_str) < 3 or len(handle_str) > 20:
             raise InputError("Invalid handle")
         for x in data['users']:
+            #Checks if handle is already used
             if x['handle_str'] == handle_str:
                 raise InputError("Handle already used")
             else:
+                #Updates user handle
                 for y in x["session_ids"]:
                     if y == decoded_token["session_id"]:
                         x['handle_str'] = handle_str
@@ -161,15 +174,18 @@ def users_all_v1(token):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
+    #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         all_users = []
         info = {}
+        #Gets the user profile information
         for x in data["users"]:
             info['u_id'] = x['u_id']
             info['email'] = x['email']
             info['name_first'] = x['name_first']
             info['name_last'] = x['name_last']
-            info['handle_str'] = x['handle_str'] 
+            info['handle_str'] = x['handle_str']
+            info['permission_id'] = x['permission_id']
             all_users.append(info)
     else:
         raise AccessError("Invalid token")

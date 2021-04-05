@@ -1,6 +1,7 @@
 import pytest
 import re
 from src.auth import auth_register_v1
+from src.auth import auth_login_v1
 from src.user import user_profile_v1
 from src.user import user_profile_setname_v1
 from src.user import user_profile_setemail_v1
@@ -25,7 +26,9 @@ def test_invalid_uid(clear_data):
 #Tests whether correct user is looked at (successful implementation)
 def test_profile_success(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    profile = user_profile_v1(register['token'], 0)
+    login = auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
+    profile = user_profile_v1(login['token'], 0)
     assert register['auth_user_id'] == profile['u_id']
 
 #Tests whether access error is raised for invalid token
@@ -50,6 +53,8 @@ def test_invalid_lastname(clear_data):
 #Tests whether user lastname and firstname has been changed (successful implementation)
 def test_profile_setname_success(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
     result1 = user_profile_v1(register['token'], 0)
     user_profile_setname_v1(register['token'], 'timothy', 'smith')
     result2 = user_profile_v1(register['token'], 0)
@@ -78,6 +83,8 @@ def test_shared_email(clear_data):
 #Tests whether email has been changed (successful implementation)
 def test_profile_email_success(clear_data):
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
     result1 = user_profile_v1(register['token'], 0)
     user_profile_setemail_v1(register['token'], 'tom@gmail.com')
     result2 = user_profile_v1(register['token'], 0)
@@ -107,6 +114,8 @@ def test_shared_handle(clear_data):
 #Tests whether handle has been changed (successful implementation)
 def test_profile_sethandle_success(clear_data):    
     register = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_login_v1("asdf@gmail.com", "12344545")
+    auth_login_v1("asdf@gmail.com", "12344545")
     result1 = user_profile_v1(register['token'], 0)
     user_profile_sethandle_v1(register['token'], 'hello')
     result2 = user_profile_v1(register['token'], 0)
@@ -120,6 +129,7 @@ def test_invalid_token_sethandle(clear_data):
             
 
 ##Tests for users_all_v1
+#Tests whether all users are returned (successful implementation)
 def test_all_users(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
