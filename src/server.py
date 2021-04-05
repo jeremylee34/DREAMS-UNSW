@@ -14,10 +14,6 @@ from src import user
 from src import other
 from src.data import data
 
-def reading_json():
-    with open("store.json", "r") as fp:
-        data = loads(fp.read())
-
 def writing_json():    
     with open("store.json", "w") as fp:
         fp.write(dumps(data))
@@ -33,7 +29,6 @@ def defaultHandler(err):
     response.content_type = 'APPlication/json'
     return response
 
-reading_json() 
 
 APP = Flask(__name__)
 CORS(APP)
