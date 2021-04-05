@@ -1,16 +1,18 @@
 import sys
-from json import dumps, loads
+from json import dumps, loads, dump
 from flask import Flask, request
 from flask_cors import CORS
 from src.error import InputError
 from src import config
+from src.auth import auth_register_v1
 from src import auth
 from src import user
 from src import other
 from src.data import data
 
-with open('store.json', 'w') as fp:
-    data = loads(fp.read())
+with open('store.json', 'r') as fp:
+   global data
+   data = loads(fp.read())
 
 def defaultHandler(err):
     response = err.get_response()
@@ -61,9 +63,9 @@ def register():
         Returns the result of the auth_register_v1 function in json
     """       
     inputs = request.get_json()
-    r = auth.auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
+    r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
     with open('store.json', 'w') as fp:
-        fp.write(dumps(data))    
+        fp.write(dumps(data))
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])

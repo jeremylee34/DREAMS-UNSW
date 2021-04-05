@@ -182,7 +182,7 @@ def auth_register_v1(email, password, name_first, name_last):
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
-    data["users"].append(register)    
+    data['users'].append(register)    
     return {
         'token': token,
         'auth_user_id': count,
