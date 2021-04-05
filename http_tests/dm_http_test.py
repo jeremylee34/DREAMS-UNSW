@@ -132,6 +132,9 @@ def test_dm_details_v1_simple(clear, user_token1, user_token2, user_token3, dm_1
         'u_id': user_token3['auth_user_id']
     }).json()
     handle3 = user_profile_dict3['handle_str']
+    # handle1 = dm_details['members'][0]['handle_str']
+    # handle2 = dm_details['members'][1]['handle_str']
+    # handle3= dm_details['members'][2]['handle_str']
     assert dm_details['name'] == f"{handle1}, {handle2}, {handle3}"
     assert user_profile_dict1 in dm_details['members']
     assert user_profile_dict2 in dm_details['members']
@@ -781,7 +784,8 @@ def test_dm_messages_v1_simple(clear):
         'start': 0
     })
     messages = messages.json()
-    assert messages['end'] == -1
+    print(messages)
+    assert messages["end"] == -1
 
 def test_dm_messages_v1_many_messages(clear):
     """
@@ -809,9 +813,9 @@ def test_dm_messages_v1_many_messages(clear):
     dm_2 = dm_2.json()
     for i in range(0, 50):
         message_id = requests.post(f"{url}/message/senddm/v1", json={
-        'token': reg_info1['token'],
-        'dm_id': dm_2['dm_id'],
-        'message': 'hi'
+            'token': reg_info1['token'],
+            'dm_id': dm_2['dm_id'],
+            'message': 'hi'
         })
         message_id = message_id.json()
     messages = requests.get(f"{url}/dm/messages/v1", json={
@@ -819,6 +823,5 @@ def test_dm_messages_v1_many_messages(clear):
         'dm_id': dm_2['dm_id'],
         'start': 0
     })
-    messages = messages.json()
-    assert messages['end'] == 50
-        
+    messages = messages.json()   
+    assert messages["end"] == 50

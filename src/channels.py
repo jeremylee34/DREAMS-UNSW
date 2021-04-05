@@ -26,7 +26,7 @@ def channels_list_v1(token):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Getting auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
@@ -67,7 +67,7 @@ def channels_listall_v1(token):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
@@ -99,7 +99,7 @@ def channels_create_v1(token, name, is_public):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Gets auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']

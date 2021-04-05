@@ -1,32 +1,41 @@
 import sys
-from json import dumps, loads, dump
 from flask import Flask, request
 from flask_cors import CORS
-from src.error import InputError
-from src import config
-from src.auth import auth_register_v1
+from json import dumps, loads, dump
 from src import auth
-from src import user
+from src import config
 from src import other
-from src.data import data
-from src.channels import channels_list_v1
-from src.channels import channels_create_v1
-from src.channels import channels_listall_v1
-from src.channel import channel_invite_v1
-from src.channel import channel_details_v1
-from src.channel import channel_messages_v1
-from src.channel import channel_join_v1
+from src import user
+from src.admin import admin_user_remove_v1
+from src.admin import admin_userpermission_change_v1
+from src.auth import auth_register_v1
 from src.channel import channel_addowner_v1
-from src.channel import channel_removeowner_v1
+from src.channel import channel_details_v1
+from src.channel import channel_invite_v1
+from src.channel import channel_join_v1
 from src.channel import channel_leave_v1
+from src.channel import channel_messages_v1
+from src.channel import channel_removeowner_v1
+from src.channels import channels_create_v1
+from src.channels import channels_list_v1
+from src.channels import channels_listall_v1
+from src.data import data
+from src.dm import dm_create_v1
+from src.dm import dm_details_v1
 from src.dm import dm_invite_v1
 from src.dm import dm_leave_v1
+from src.dm import dm_list_v1
 from src.dm import dm_messages_v1
-from src.message import message_remove_v1
+from src.dm import dm_remove_v1
+from src.error import InputError
 from src.message import message_edit_v1
+from src.message import message_remove_v1
 from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
+from src.other import clear_v1
+from src.other import notifications_get_v1
+from src.other import search_v1
 
 # with open('store.json', 'r') as fp:
 #    global data
@@ -58,6 +67,30 @@ def echo():
     return dumps({
         'data': data
     })
+
+@APP.route('/search/v2', methods=['GET'])
+def search():
+    inputs = request.get_json()
+    r = search_v1(inputs['token'], inputs['query_str'])
+    return dumps(r)
+
+@APP.route('/admin/user/remove/v1', methods=['DELETE'])
+def admin_user_remove():
+    inputs = request.get_json()
+    r = admin_user_remove_v1(inputs['token'], inputs['u_id'])
+    return dumps(r)
+
+@APP.route('/admin/userpermission/change/v1', methods=['POST'])
+def admin_userpermission_change():
+    inputs = request.get_json()
+    r = admin_userpermission_change_v1(inputs['token'], inputs['u_id'], inputs['permission_id'])
+    return dumps(r)
+
+@APP.route('/notifications/get/v1', methods=['GET'])
+def notifications_get():
+    token = request.get_json()
+    r = notifications_get_v1(token['token'])
+    return dumps(r)
 
 ################################################################################
 #####################           AUTH ROUTES            #########################
@@ -133,11 +166,8 @@ def user_profile():
     Returns:
         Returns the result of the user_profile_v1 function in json
     """       
-    token = request.args.get('token')
-    u_id = int(request.args.get('u_id'))
-    r = user.user_profile_v1(token, u_id)
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))    
+    data = request.get_json()
+    r = user.user_profile_v1(data['token'], data['u_id'])
     return dumps(r)
 
 @APP.route('/user/profile/setname/v2', methods=['PUT'])
@@ -233,11 +263,6 @@ def clear():
         fp.write(dumps(data))    
     return dumps(r)
 
-@APP.route('/search/v2', methods=['GET'])
-def search():
-    inputs = request.get_json()
-    r = other.search_v1(inputs['token'], inputs['query_str'])
-    return dumps(r)
 
 ################################################################################
 #####################         CHANNELS ROUTES          #########################
@@ -245,14 +270,14 @@ def search():
 
 @APP.route("/channels/list/v2", methods=['GET'])
 def get_list():
-    token = request.args.get('token')
-    channels = channels_list_v1(token)
+    token = request.get_json()
+    channels = channels_list_v1(token['token'])
     return dumps(channels)
 
 @APP.route("/channels/listall/v2", methods=['GET'])
 def get_listall():
-    token = request.args.get('token')
-    channels = channels_listall_v1(token)
+    token = request.get_json()
+    channels = channels_listall_v1(token['token'])
     return dumps(channels)
 
 @APP.route("/channels/create/v2", methods=['POST'])
@@ -361,7 +386,7 @@ def messages_dm():
 def message_send():
     data = request.get_json()
     message_id = message_send_v1(data['token'], data['channel_id'], data['message'])
-    return dumps({message_id})
+    return dumps(message_id)
 
 @APP.route("/message/edit/v2", methods=['PUT'])
 def message_edit():
@@ -385,7 +410,7 @@ def message_share():
 def message_senddm():
     data = request.get_json()
     message_id = message_senddm_v1(data['token'], data['dm_id'], data['message'])
-    return dumps({message_id})
+    return dumps(message_id)
 
 ################################################################################
 #####################           MAIN APP.RUN           #########################
