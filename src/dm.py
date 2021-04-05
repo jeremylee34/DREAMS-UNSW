@@ -121,6 +121,13 @@ def dm_create_v1(token, u_ids):
         "messages" : []
     }
     data['dms'].append(new_dm)
+    new_notification = {
+        "u_id": owner_u_id,
+        "message": "",
+        "channel_id": -1,
+        "dm_id": dm_id
+    }
+    data['notifications'].append(new_notification)
     return {
         'dm_id': dm_id,
         'dm_name': handle_list_str
@@ -185,6 +192,9 @@ def dm_invite_v1(token, dm_id, u_id):
     #Check if u_id refers to a valid user, raise InputError if not 
     if check_valid_user(u_id) == False:
         raise InputError("u_id does not refer to a valid user")
+    # Check if u_id is already in the dm
+    if check_user_in_dm(u_id, dm_id) == True:
+        raise InputError("User with u_id is already in the dm")
     user = token_to_u_id(token)
     #Check if token user is a member of the specified dm, raise AccessError if not
     if check_user_in_dm(user, dm_id) == False:
