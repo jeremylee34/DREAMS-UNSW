@@ -1,3 +1,9 @@
+
+'''
+Implementation of other functions which includes clear_v1,
+search_v1, notifications_get_v1
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 import requests
 import jwt
 from src.data import data
