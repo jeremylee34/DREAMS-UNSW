@@ -331,6 +331,13 @@ def message_senddm_v1(token, dm_id, message):
         'message': message,
         'time_created': timestamp
     }
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'dm': dm_id,
+            'u_id': auth_user_id
+        }
+        data['notifications'].append(new_notification)
     # Inserts message into dms
     data['dms'][dm_id]['messages'].insert(0, new_message)
     return {
