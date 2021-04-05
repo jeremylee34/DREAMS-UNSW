@@ -397,7 +397,7 @@ def test_channel_details_invalid_token(clear):
 #####################      channel_messages tests      #########################
 ################################################################################
 
-def test_channel_messages_v1_input_error1(clear_data, user_token1, public_channel):
+def test_channel_messages_v1_input_error1(clear, user_token1, public_channel):
     """
     InputError to be thrown when channel_id is invalid
     """
@@ -408,7 +408,7 @@ def test_channel_messages_v1_input_error1(clear_data, user_token1, public_channe
         'start': start
     }).status_code == INPUT_ERROR
 
-def test_channel_messages_v1_input_error2(clear_data, user_token1, public_channel):
+def test_channel_messages_v1_input_error2(clear, user_token1, public_channel):
     """
     InputError2 to be thrown when start is greater than number of messages in channel
     """
@@ -425,7 +425,7 @@ def test_channel_messages_v1_input_error2(clear_data, user_token1, public_channe
         'start': start
     }).status_code == INPUT_ERROR
 
-def test_channel_messages_v1_access_error(clear_data, user_token1, user_token2, public_channel):
+def test_channel_messages_v1_access_error(clear, user_token1, user_token2, public_channel):
     """
     Accessing auth_user2's messages should throw an Access Error since only
     user_token1 is in the channel (added during public_channel function)
@@ -443,7 +443,7 @@ def test_channel_messages_v1_access_error(clear_data, user_token1, user_token2, 
         'start': start
     }).status_code == ACCESS_ERROR
 
-def test_channel_messages_v1_simple(clear_data, user_token1, user_token2, public_channel):
+def test_channel_messages_v1_simple(clear, user_token1, user_token2, public_channel):
     channel_id = public_channel['channel_id']
     message_id = requests.post(f"{url}/message/send/v2", json={
         'token': user_token1['token'],
@@ -458,7 +458,7 @@ def test_channel_messages_v1_simple(clear_data, user_token1, user_token2, public
     }).json()
     assert messages['end'] == -1
 
-def test_channel_messages_v1_many(clear_data, user_token1, user_token2, public_channel):
+def test_channel_messages_v1_many(clear, user_token1, user_token2, public_channel):
     channel_id = public_channel['channel_id']
     for i in range(0, 50):
         message_id = requests.post(f"{url}/message/send/v2", json={
@@ -474,7 +474,7 @@ def test_channel_messages_v1_many(clear_data, user_token1, user_token2, public_c
     }).json()
     assert messages['end'] == 50
 
-def test_channel_messages_invalid_token(clear_data, channel_id1):
+def test_channel_messages_invalid_token(clear, channel_id1):
     assert requests.get(f"{url}/channel/messages/v2", json={
         'token': INVALID_TOKEN,
         'channel_id': channel_id['channel_id'],
@@ -485,7 +485,7 @@ def test_channel_messages_invalid_token(clear_data, channel_id1):
 #####################        channel_join tests        #########################
 ################################################################################
 
-def test_channel_join_v1_empty_channel(clear_data, user_token1, public_channel):
+def test_channel_join_v1_empty_channel(clear, user_token1, public_channel):
     """
     Test adding to empty channel
     """      
@@ -500,7 +500,7 @@ def test_channel_join_v1_empty_channel(clear_data, user_token1, public_channel):
     }).json()
     assert channel_dict["all_members"][0]['u_id'] == user_token1['auth_user_id']
 
-def test_channel_join_v1_input_error(clear_data, user_token1, public_channel):
+def test_channel_join_v1_input_error(clear, user_token1, public_channel):
     """
     InputError to be thrown when channel_id is invalid
     """
@@ -509,7 +509,7 @@ def test_channel_join_v1_input_error(clear_data, user_token1, public_channel):
         'channel_id': INVALID_ID
     }).status_code == INPUT_ERROR
 
-def test_channel_join_v1_access_error(clear_data, user_token1, user_token2, user_token3):
+def test_channel_join_v1_access_error(clear, user_token1, user_token2, user_token3):
     """
     AccessError to be thrown when channel is private
     """
@@ -524,7 +524,7 @@ def test_channel_join_v1_access_error(clear_data, user_token1, user_token2, user
         'channel_id': channel_id
     }).status_code == ACCESS_ERROR
 
-def test_channel_join_v1_check_details(clear_data, user_token1, user_token2, public_channel):
+def test_channel_join_v1_check_details(clear, user_token1, user_token2, public_channel):
     """
     Test if details are correctly added when adding more than one user
     """
@@ -548,13 +548,13 @@ def test_channel_join_v1_check_details(clear_data, user_token1, user_token2, pub
     assert channel_info['all_members'][user_token2['auth_user_id']]['name_first'] == 'Godan'
     assert channel_info['all_members'][user_token2['auth_user_id']]['name_last'] == 'Liang'
 
-def test_channel_join_invalid_token(clear_data, channel_id1):
+def test_channel_join_invalid_token(clear, channel_id1):
     assert requests.post(f"{url}/channel/join/v2", json={
         'token': INVALID_TOKEN,
         'channel_id': channel_id['channel_id']
     }).status_code == INPUT_ERROR
 
-def test_channel_join_owner_perm(clear_data):
+def test_channel_join_owner_perm(clear):
     user_id1 = requests.post(f"{url}/auth/register/v2", json={
         'email': 'Godan@gmail.com',
         'password': 'password',
@@ -1000,7 +1000,7 @@ def test_channel_removeowner_invalid_token(clear):
 #####################        channel_leave tests       #########################
 ################################################################################
 
-def test_channel_leave_v1_InputError1(clear_data, user_token1):
+def test_channel_leave_v1_InputError1(clear, user_token1):
     """
     InputError happens when Channel ID is not a valid channel 
     """
@@ -1009,7 +1009,7 @@ def test_channel_leave_v1_InputError1(clear_data, user_token1):
         'channel_id': INVALID_ID
     }).status_code == INPUT_ERROR
 
-def test_channel_leave_v1_AccessError1(clear_data, channel_id1, user_token2):
+def test_channel_leave_v1_AccessError1(clear, channel_id1, user_token2):
     """
     AccessError happens when authorised user is not a member of the channel with
     channel_id 
@@ -1019,7 +1019,7 @@ def test_channel_leave_v1_AccessError1(clear_data, channel_id1, user_token2):
         'channel_id': channel_id1['channel_id']
     }).status_code == ACCESS_ERROR
 
-def test_channel_leave_v1_Leave1(clear_data, user_token1, channel_id1, user_token2):
+def test_channel_leave_v1_Leave1(clear, user_token1, channel_id1, user_token2):
     """
     Test whether a normal member can leave the channel properly
     """
@@ -1039,7 +1039,7 @@ def test_channel_leave_v1_Leave1(clear_data, user_token1, channel_id1, user_toke
     assert channel_details1['all_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
 
-def test_channel_leave_v1_LeaveMulti(clear_data, user_token1, channel_id1, user_token2, user_token3):
+def test_channel_leave_v1_LeaveMulti(clear, user_token1, channel_id1, user_token2, user_token3):
     """
     Test whether multiple members can leave the channel properly
     """
@@ -1068,7 +1068,7 @@ def test_channel_leave_v1_LeaveMulti(clear_data, user_token1, channel_id1, user_
     assert channel_details1['all_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
 
-def test_channel_leave_v1_LeaveOwner(clear_data, user_token1, channel_id1, user_token2):
+def test_channel_leave_v1_LeaveOwner(clear, user_token1, channel_id1, user_token2):
     """
     Test whether a owner can leave the channel properly (not the last owner)
     They must be removed from all_members and owner_members
@@ -1091,7 +1091,7 @@ def test_channel_leave_v1_LeaveOwner(clear_data, user_token1, channel_id1, user_
     assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['owner_members'][0]['u_id'] == user_token1['auth_user_id']
 
-def test_channel_leave_v1_last_owner(clear_data, user_token1, channel_id1):
+def test_channel_leave_v1_last_owner(clear, user_token1, channel_id1):
     requests.post(f"{url}/channel/leave/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id']
@@ -1102,7 +1102,7 @@ def test_channel_leave_v1_last_owner(clear_data, user_token1, channel_id1):
     }).json()
     assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
     
-def test_channel_leave_invalid_token(clear_data, channel_id1):
+def test_channel_leave_invalid_token(clear, channel_id1):
     assert requests.post(f"{url}/channel/leave/v1", json={
         'token': INVALID_TOKEN,
         'channel_id': channel_id1['channel_id']

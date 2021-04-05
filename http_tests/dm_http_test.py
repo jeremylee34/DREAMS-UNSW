@@ -109,7 +109,7 @@ def test_dm_details_v1_access_error(clear, unadded_user_token, dm_1):
         'dm_id': dm_1['dm_id']
     }).status_code == ACCESS_ERROR
 
-def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3, dm_1):
+def test_dm_details_v1_simple(clear, user_token1, user_token2, user_token3, dm_1):
     """
     Testing whether dm_details_v1 returns the correct name and members
     """
@@ -141,7 +141,7 @@ def test_dm_details_v1_simple(clear_data, user_token1, user_token2, user_token3,
 #########################       dm_list tests      #############################
 ################################################################################
 
-def test_dm_list_v1_simple(clear_data, user_token1, dm_1, dm_2):
+def test_dm_list_v1_simple(clear, user_token1, dm_1, dm_2):
     """
     Testing whether dm_list_v1 returns the list of DMs correctly
     """
@@ -166,7 +166,7 @@ def test_dm_list_v1_simple(clear_data, user_token1, dm_1, dm_2):
 #########################      dm_create tests     #############################
 ################################################################################
 
-def test_dm_create_v1_input_error(clear_data, user_token1):
+def test_dm_create_v1_input_error(clear, user_token1):
     """
     InputError to be thrown when u_id does not refer to valid user
     """
@@ -175,7 +175,7 @@ def test_dm_create_v1_input_error(clear_data, user_token1):
         'u_ids': [INVALID_ID]
     }).status_code == INPUT_ERROR
 
-def test_dm_create_v1_simple(clear_data, user_token1, user_token2, user_token3):
+def test_dm_create_v1_simple(clear, user_token1, user_token2, user_token3):
     """
     Testing whether dm_create_v1 returns the correct dm_id and dm_name
     """
@@ -206,7 +206,7 @@ def test_dm_create_v1_simple(clear_data, user_token1, user_token2, user_token3):
 #########################      dm_remove tests     #############################
 ################################################################################
 
-def test_dm_remove_v1_input_error(clear_data, user_token1):
+def test_dm_remove_v1_input_error(clear, user_token1):
     """
     InputError to be thrown when dm_id does not refer to a valid DM
     """
@@ -215,7 +215,7 @@ def test_dm_remove_v1_input_error(clear_data, user_token1):
         'dm_id': INVALID_ID
     }).status_code == INPUT_ERROR
     
-def test_dm_remove_v1_access_error(clear_data, unadded_user_token, dm_1):
+def test_dm_remove_v1_access_error(clear, unadded_user_token, dm_1):
     """
     AccessError to be thrown when the user is not the original DM creator
     """
@@ -224,7 +224,7 @@ def test_dm_remove_v1_access_error(clear_data, unadded_user_token, dm_1):
         'dm_id': dm_1['dm_id']
     }).status_code == ACCESS_ERROR
 
-def test_dm_remove_v1(clear_data, user_token1, dm_1):
+def test_dm_remove_v1(clear, user_token1, dm_1):
     """
     Testing whether dm is removed. If dm is removed, dm_details_v1 should raise
     InputError since dm is removed.
