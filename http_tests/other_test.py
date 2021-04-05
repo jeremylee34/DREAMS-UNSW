@@ -36,10 +36,15 @@ def test_search_v2(clear_data):
         'message': 'Hello',
     })
 
-    assert requests.get(config.url + 'search/v1', json = {
+    #def message_send_v1(token, channel_id, message):
+
+    # return {
+    #    'message_id': message_id,
+    #}   
+    assert requests.get(config.url + 'search/v2', json = {
         'token': user_pl['token'],
-        'query_str':'Hello',
-    }).status_code == 400
+        'query_str': 'Hello',
+    }).status_code == 200
 
 def test_search_v2_input_error(clear_data):
     user = requests.post(config.url + 'auth/register/v2', json = {
@@ -63,13 +68,13 @@ def test_search_v2_input_error(clear_data):
         'message': 'Hello',
     })
 
-    assert requests.get(config.url + 'search/v1', json = {
+    assert requests.get(config.url + 'search/v2', json = {
         'token': user_pl['token'],
         'query_str':'Hello' * 1000,
     }).status_code == InputError.code
 
 def test_search_v2_input_token(clear_data):
-    assert requests.get(config.url + 'search/v1', json = {
+    assert requests.get(config.url + 'search/v2', json = {
         'token': 6,
         'query_str':'Hello',
     }).status_code == AccessError.code
@@ -103,7 +108,7 @@ def test_notifications_get_tag(clear_data):
         'message': 'Hello @gordonliang',
     })
 
-    notification = requests.post(config.url + 'notifications/get/v1', json = {
+    notification = requests.get(config.url + 'notifications/get/v1', json = {
         'token': user_pl['token'],
     })
     notification_pl = notification.json()
@@ -149,7 +154,7 @@ def test_notifications_get_add_to_channel(clear_data):
         'u_id': user2_pl['auth_user_id'],
     })
 
-    notification = requests.post(config.url + 'notifications/get/v1', json = {
+    notification = requests.get(config.url + 'notifications/get/v1', json = {
         'token': user2_pl['token'],
     })
     notification_pl = notification.json()
@@ -174,18 +179,19 @@ def test_notifications_get_tag_dm(clear_data):
     user2_pl = user2.json()
 
     dm_info = requests.post(config.url + 'dm/create/v1', json = {
-        'token': user_pl['token']
-        'u_ids': [user2_pl['auth_user_id']]
+        'token': user_pl['token'],
+        'u_ids': [user2_pl['auth_user_id']],
+    })
+    dm_info_pl = dm_info.json()
+
+    msg_senddm = requests.post(config.url + 'message/senddm/v1', json = {
+        'token': user_pl['token'],
+        'dm_id': dm_info_pl['dm_id'],
+        'message': 'Hello @kanitsrihakorth',
     })
 
-    requests.post(config.url + 'message/senddm/v1', json = {
-        'token': user_pl['token']
-        'dm_id': dm_info['dm_id']
-        'message': 'Hello @kanitsrihakorth'
-    })
-
-    notification = requests.post(config.url + 'notifications/get/v1', json = {
-        'token': user2_pl['token']
+    notification = requests.get(config.url + 'notifications/get/v1', json = {
+        'token': user2_pl['token'],
     })
     notification_pl = notification.json()
     #change input
@@ -210,12 +216,12 @@ def test_notifications_get_add_to_dm(clear_data):
     user2_pl = user2.json()
 
     dm_info = requests.post(config.url + 'dm/create/v1', json = {
-        'token': user_pl['token']
-        'u_ids': [user2_pl['auth_user_id']]
+        'token': user_pl['token'],
+        'u_ids': [user2_pl['auth_user_id']],
     })
 
-    notification = requests.post(config.url + 'notifications/get/v1', json = {
-        'token': user2_pl['token']
+    notification = requests.get(config.url + 'notifications/get/v1', json = {
+        'token': user2_pl['token'],
     })
     notification_pl = notification.json()
 
