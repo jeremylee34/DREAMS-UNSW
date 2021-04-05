@@ -180,6 +180,15 @@ def test_message_edit_access_error2(clear):
     message_info = message_send_v1(user['token'], channel['channel_id'], 'Hello')
     with pytest.raises(AccessError):
         assert message_edit_v1(user2['token'], message_info['message_id'], '123')
+def test_message_edit_no_error(clear):
+    user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
+    user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
+    channel = channels_create_v1(user['token'], "Channel1", True)
+    channel_join_v1(user2['token'], channel['channel_id'])
+    message_info = message_send_v1(user2['token'], channel['channel_id'], 'Hello')
+    message_edit_v1(user2['token'], message_info['message_id'], '123')
+    messages = channel_messages_v1(user2['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['message'] == '123'
 # Tests for message_remove_v1
 def test_message_remove(clear):
     '''
