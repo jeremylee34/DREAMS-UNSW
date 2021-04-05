@@ -1,15 +1,21 @@
+'''
+Http tests for message functions
+Written by Gordon Liang
+'''
 import pytest
 import requests
-from src.config import port
 from src.config import url
-from src.other import clear_v1
-from src.error import InputError
-from src.error import AccessError
 
 @pytest.fixture
 def clear():
+    '''
+    Clears data in data file
+    '''
     requests.delete(f"{url}/clear/v1")
 def test_message_send(clear):
+    '''
+    Basic test for functionality of message/send/v2
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -21,7 +27,7 @@ def test_message_send(clear):
         'name': 'Channel1',
         'is_public': True
     })
-    message_id = requests.post(f"{url}/message/send/v2", json={
+    requests.post(f"{url}/message/send/v2", json={
         'token': register_info['token'],
         'channel_id': channel['channel_id'],
         'message': 'Hello'
@@ -34,6 +40,9 @@ def test_message_send(clear):
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_send_input_error(clear):
+    '''
+    Tests for when message is over 1000 characters
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -51,6 +60,9 @@ def test_message_send_input_error(clear):
         'message': 'Hello' * 500
     }).status_code == 400
 def test_message_send_input_error2(clear):
+    '''
+    Tests for when no message is put in
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -68,6 +80,9 @@ def test_message_send_input_error2(clear):
         'message': ''
     }).status_code == 400
 def test_message_send_access_error(clear):
+    '''
+    Tests for when a user hasn't joined the channel and tries to send message
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -91,6 +106,9 @@ def test_message_send_access_error(clear):
         'message': 'Hello'
     }).status_code == 403
 def test_message_send_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -109,6 +127,9 @@ def test_message_send_invalid_token(clear):
     }).status_code == 403
 
 def test_message_edit(clear):
+    '''
+    Basic test for functionality of message/edit/v2
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -138,6 +159,9 @@ def test_message_edit(clear):
     messages = messages.json()
     assert messages['messages'][0]['message'] == '123'
 def test_message_edit_input_error(clear):
+    '''
+    Tests for when message is more than 1000 characters
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -160,6 +184,9 @@ def test_message_edit_input_error(clear):
         'message': '123' * 1000
     }).status_code == 400
 def test_message_edit_input_error2(clear):
+    '''
+    Tests for when a message has already been deleted
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -186,6 +213,9 @@ def test_message_edit_input_error2(clear):
         'message': '123'
     }).status_code == 400
 def test_message_edit_access_error(clear):
+    '''
+    Tests for when the message was not sent by user and user is not an owner
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -218,6 +248,9 @@ def test_message_edit_access_error(clear):
         'message': '1'
     }).status_code == 403
 def test_edit_message_no_error(clear):
+    '''
+    Checks to see if regular member can edit their message
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -258,6 +291,9 @@ def test_edit_message_no_error(clear):
     assert messages['messages'][0]['message'] == '123'
 
 def test_message_remove(clear):
+    '''
+    Basic test for message/remove/v2
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -286,6 +322,9 @@ def test_message_remove(clear):
     messages = messages.json()
     assert messages['messages'][0]['message'] == ''
 def test_message_remove_input_error(clear):
+    '''
+    Tests for when message has already been removed
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -311,6 +350,9 @@ def test_message_remove_input_error(clear):
         'message_id': message_id['message_id']
     }).status_code == 400
 def test_message_remove_access_error(clear):
+    '''
+    Tests for when the message was not sent by the user and user is not an owner
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -342,6 +384,9 @@ def test_message_remove_access_error(clear):
         'message_id': message_id['message_id'],
     }).status_code == 403
 def test_message_remove_dm(clear):
+    '''
+    Tests removing a message from a dm
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -376,6 +421,9 @@ def test_message_remove_dm(clear):
     assert messages['messages'][0]['message'] == ''
 
 def test_message_share(clear):
+    '''
+    Basic testfor message/share/v2
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -412,6 +460,9 @@ def test_message_share(clear):
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello123'
 def test_message_share_access_error(clear):
+    '''
+    Tests for when the user has not joined the channel they are sharing to
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -441,6 +492,9 @@ def test_message_share_access_error(clear):
         'dm_id': -1
     }).status_code == 403
 def test_message_share_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -470,6 +524,9 @@ def test_message_share_invalid_token(clear):
         'dm_id': -1
     }).status_code == 403
 def test_message_share_deleted_message(clear):
+    '''
+    Tests for when a message is deleted
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -504,6 +561,9 @@ def test_message_share_deleted_message(clear):
     }).status_code == 403
 
 def test_message_senddm(clear):
+    '''
+    Basic test for functionality of message/senddm/v2
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -533,6 +593,9 @@ def test_message_senddm(clear):
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_senddm_input_error(clear):
+    '''
+    Tests for when message is over 1000 characters
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -555,6 +618,9 @@ def test_message_senddm_input_error(clear):
         'message': 'Hello' * 500
     }).status_code == 400
 def test_message_senddm_access_error(clear):
+    '''
+    Tests for when user is not part of the dm
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
@@ -583,6 +649,9 @@ def test_message_senddm_access_error(clear):
         'message': 'Hello'
     }).status_code == 403
 def test_message_senddm_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     register_info = requests.post(f"{url}/auth/register/v2", json={
         'email': 'gordon@gmail.com',
         'password': '12345678',
