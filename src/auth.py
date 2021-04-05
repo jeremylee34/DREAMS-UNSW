@@ -1,6 +1,6 @@
 '''
 Implementation of auth functions which includes auth_login_v1,
-auth_register_v1.
+auth_register_v1, auth_login_v1
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data

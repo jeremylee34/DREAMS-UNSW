@@ -1,3 +1,7 @@
+'''
+Implementation of server which includes routes for all auth, user, other, channel, channels, dm functions
+Written by Kanit Srihakorth, Tharushi Gunawardana, Gordon Liang, Jeremy Lee and Rolan Lin
+'''
 import sys
 from json import dumps, loads, dump
 from flask import Flask, request

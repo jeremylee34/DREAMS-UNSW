@@ -1,3 +1,8 @@
+'''
+Implementation of other functions which includes clear_v1,
+search_v1, notifications_get_v1
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 from src.data import data
 def clear_v1():
     """

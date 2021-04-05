@@ -1,3 +1,7 @@
+'''
+Implementation of tests for other functions
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 import pytest
 from src.auth import auth_register_v1
 from src.auth import auth_login_v1
