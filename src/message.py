@@ -6,7 +6,7 @@ Written by Gordon Liang
 import jwt
 from src.error import InputError
 from src.error import AccessError
-from src.data import data
+from src.database import data
 from datetime import datetime
 from datetime import timezone
 
@@ -193,9 +193,9 @@ def message_edit_v1(token, message_id, message):
                 if message2['message'] == '':
                     raise InputError('Message has been deleted')
                 for member in current_channel['owner_members']:
-                    if member['u_id'] == auth_user_id and auth_user_id == u_id:
+                    if member['u_id'] == auth_user_id or auth_user_id == u_id:
                         validuser = 1
-                if auth_user_id == u_id and data['users'][auth_user_id]['permission_id'] == 1:
+                if auth_user_id == u_id or data['users'][auth_user_id]['permission_id'] == 1:
                     validuser = 1
                 # Raises AccessError if message is not sent by user given and user
                 # is not an owner of the channel
