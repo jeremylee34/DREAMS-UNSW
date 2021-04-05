@@ -205,6 +205,7 @@ def dm_invite_v1(token, dm_id, u_id):
     new_notification = {
         "u_id": u_id,
         "message": "",
+        "channel_id": -1,
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
