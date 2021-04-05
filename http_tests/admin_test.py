@@ -11,7 +11,6 @@ from src.data import data
 def clear_data():
     requests.delete(config.url + 'clear/v1')
 
-#remove user
 def test_successful_admin_user_remove(clear_data):
     user1 = requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
@@ -36,7 +35,7 @@ def test_successful_admin_user_remove(clear_data):
         'permission_id' : 1,
     })
 
-    deleted = requests.delete(config.url + 'admin/user/remove/v1', json = {
+    requests.delete(config.url + 'admin/user/remove/v1', json = {
         'token': payload1['token'],
         'u_id': payload2['auth_user_id'],
     })
@@ -48,7 +47,7 @@ def test_successful_admin_user_remove(clear_data):
 
 
 def test_invalid_token_successful_admin_user_remove(clear_data):
-    user1 = requests.post(config.url + 'auth/register/v2', json = {
+    requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
         'name_first': 'Tom',
@@ -60,7 +59,6 @@ def test_invalid_token_successful_admin_user_remove(clear_data):
         'name_first': 'Brown',
         'name_last': 'diaam',
     })
-    payload1 = user1.json()
     payload2 = user2.json()
     assert requests.delete(config.url + 'admin/user/remove/v1', json = {
         'token': 'sometoken',
@@ -74,14 +72,14 @@ def test_invalid_uid_admin_user_remove(clear_data):
         'name_first': 'Tom',
         'name_last': 'diaaa',
     })
-    user2 = requests.post(config.url + 'auth/register/v2', json = {
+    requests.post(config.url + 'auth/register/v2', json = {
         'email': 'skad@gmail.com',
         'password': '1234aasaaaa',
         'name_first': 'Brown',
         'name_last': 'diaam',
     })
     payload1 = user1.json()
-    payload2 = user2.json()
+
     assert requests.delete(config.url + 'admin/user/remove/v1', json = {
         'token': payload1['token'],
         'u_id': 99,
@@ -111,7 +109,7 @@ def test_successful_admin_userpermission_change_v1(clear_data):
     remove == {}
 
 def test_invalid_token_admin_userpermission_change_v1(clear_data):
-    user1 = requests.post(config.url + 'auth/register/v2', json = {
+    requests.post(config.url + 'auth/register/v2', json = {
         'email': 'ska@gmail.com',
         'password': '1234aaaaaa',
         'name_first': 'Tom',
@@ -123,7 +121,6 @@ def test_invalid_token_admin_userpermission_change_v1(clear_data):
         'name_first': 'Brown',
         'name_last': 'diaam',
     })
-    payload1 = user1.json()
     payload2 = user2.json()
     assert requests.post(config.url + 'admin/userpermission/change/v1', json = {
         'token' : 'asdf',
@@ -139,14 +136,13 @@ def test_invalid_u_id_admin_userpermission_change_v1(clear_data):
         'name_first': 'Tom',
         'name_last': 'diaaa',
     })
-    user2 = requests.post(config.url + 'auth/register/v2', json = {
+    requests.post(config.url + 'auth/register/v2', json = {
         'email': 'skad@gmail.com',
         'password': '1234aasaaaa',
         'name_first': 'Brown',
         'name_last': 'diaam',
     })
     payload1 = user1.json()
-    payload2 = user2.json()
     assert requests.post(config.url + 'admin/userpermission/change/v1', json = {
         'token' : payload1['token'],
         'u_id' : '999',

@@ -42,22 +42,15 @@ def echo():
         'data': data
     })
 
+'''
+Channels server routes
+'''
+
 @APP.route('/auth/register/v2', methods=['POST'])
 def register():
-    """
-    Description of function:
-        Gets the user inputs and calls the auth_register_v1 function
-    Parameters:
-        None
-    Exceptions:
-        None
-    Returns:
-        Returns the result of the auth_register_v1 function in json
-    """       
     inputs = request.get_json()
     r = auth.auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
     return dumps(r)
-
 
 @APP.route('/search/v2', methods=['GET'])
 def search():
@@ -85,32 +78,12 @@ def notifications_get():
     return dumps(r)
 
 @APP.route('/clear/v1', methods=['DELETE'])
-def clear():
-    """
-    Description of function:
-        Gets the user inputs and calls the clear_v1 function
-    Parameters:
-        None
-    Exceptions:
-        None
-    Returns:
-        Returns the result of the clear_v1 function in json
-    """        
+def clear():   
     r = other.clear_v1()
     return dumps(r)
 
 @APP.route('/users/all/v1', methods=['GET'])
-def users_all():
-    """
-    Description of function:
-        Gets the user inputs and calls the users_all_v1 function
-    Parameters:
-        None
-    Exceptions:
-        None
-    Returns:
-        Returns the result of the users_all_v1 function in json
-    """        
+def users_all():     
     token = request.args.get('token')
     r = user.users_all_v1(token)
     return dumps(r)
