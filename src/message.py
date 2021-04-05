@@ -336,7 +336,7 @@ def message_senddm_v1(token, dm_id, message):
         new_notification = {
             'message': message,
             'channel_id': -1,
-            'dm': dm_id,
+            'dm_id': dm_id,
             'u_id': auth_user_id
         }
         data['notifications'].append(new_notification)
