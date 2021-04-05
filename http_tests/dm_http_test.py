@@ -815,7 +815,7 @@ def test_dm_messages_v1_many_messages(clear):
         message_id = requests.post(f"{url}/message/senddm/v1", json={
             'token': reg_info1['token'],
             'dm_id': dm_2['dm_id'],
-            'message': 'hi'
+            'message': f"message number {i}"
         })
         message_id = message_id.json()
     messages = requests.get(f"{url}/dm/messages/v1", json={
