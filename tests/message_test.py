@@ -93,9 +93,6 @@ def test_message_send_invalid_token(clear):
     channel = channels_create_v1(user['token'], "Channel1", True)
     with pytest.raises(InputError):
         assert message_send_v1(5, channel['channel_id'], 'Hello')
-'''def test_message_send_notification(clear):
-    user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
-    channel = channels_create_v1(user['token'], "Channel1", True)'''
 # Tests for message_edit_v1
 def test_message_edit(clear):
     '''
@@ -162,6 +159,9 @@ def test_message_edit_dm(clear):
     assert messages['messages'][0]['message'] == 'Goodbye'
     assert messages['messages'][1]['message'] == '123'
 def test_message_edit_dm_input_error(clear):
+    '''
+    Tests for when a message is already removed
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dm_info = dm_create_v1(user['token'], [user2['auth_user_id']])
@@ -170,6 +170,9 @@ def test_message_edit_dm_input_error(clear):
     with pytest.raises(InputError):
         assert message_edit_v1(user['token'], message_info['message_id'], '123')
 def test_message_edit_access_error2(clear):
+    '''
+    Tests for when a user is not an owner or the user who posted the message
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     channel = channels_create_v1(user['token'], "Channel1", True)
@@ -229,12 +232,18 @@ def test_message_remove_multiple(clear):
     assert messages['messages'][2]['message'] == ''
     assert messages['messages'][3]['message'] == ''
 def test_message_remove_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     channel = channels_create_v1(user['token'], "Channel1", True)
     message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
     with pytest.raises(InputError):
         assert message_remove_v1(6, message['message_id'])
 def test_message_remove_dm_input_error(clear):
+    '''
+    Tests for when message has already been removed
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dms = dm_create_v1(user['token'], [user2['auth_user_id']])
@@ -319,12 +328,18 @@ def test_message_share_message_addition(clear):
     messages = channel_messages_v1(user['token'], channel2['channel_id'], 0)
     assert messages['messages'][0]['message'] == 'HelloGoodbye'
 def test_message_share_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     channel = channels_create_v1(user['token'], "Channel1", True)
     message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
     with pytest.raises(InputError):
         assert message_share_v1(7, message['message_id'], 'Goodbye', channel['channel_id'], -1)
 def test_message_share_input_error(clear):
+    '''
+    Tests for when message is greater than 1000 characters
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     channel = channels_create_v1(user['token'], "Channel1", True)
     message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
@@ -375,6 +390,9 @@ def test_message_senddm_multiple(clear):
     assert messages['messages'][1]['message'] == 'Hello2'
     assert messages['messages'][2]['message'] == 'Hello'
 def test_message_senddm_invalid_token(clear):
+    '''
+    Tests for invalid token
+    '''
     user = auth_register_v1("gordonl@gmail.com", "1234567", "Gordon", "Liang")
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dms = dm_create_v1(user['token'], [user2['auth_user_id']])
