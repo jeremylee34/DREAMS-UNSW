@@ -233,4 +233,162 @@ def test_channel_messages_v1_access_error(clear_data, auth_id1, auth_id2, public
 ################################################################################
 ################################################################################ 
 
-       
+def test_channel_addowner_v1_InputError1(clear_data, auth_id1, auth_id2):
+    """
+    InputError happens when Channel ID is not a valid channel
+    """
+    with pytest.raises(InputError):
+        assert channel_addowner_v1(auth_id1['token'], 69, auth_id2['auth_user_id'])   
+        
+def test_channel_addowner_v1_InputError2(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    InputError happens when u_id is already an owner of the channe'
+    """ 
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(InputError):
+        assert channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(InputError):
+        assert channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+        
+def test_channel_addowner_v1_AccessError1(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
+    """
+    AccessError happens when authorised user is not an owner of DREAMS or the channel
+    """ 
+    with pytest.raises(AccessError):
+        assert channel_addowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(AccessError):
+        assert channel_addowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+        
+def test_channel_addowner_v1_Add1(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    Test whether user will be added as an owner of the channel properly
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id2['auth_user_id']
+    
+def test_channel_addowner_v1_AddMulti(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
+    """
+    Test whether multiple users will be added as owner of the channel properly 
+    in correct order
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_addowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id3['auth_user_id']
+    assert channel_details1['owner_members'][-2]['u_id'] == auth_id2['auth_user_id'] 
+    
+    
+
+def test_channel_removeowner_v1_InputError1(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    InputError happens when Channel ID is not a valid channel
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(InputError):
+        assert channel_removeowner_v1(auth_id1['token'], 69, auth_id2['auth_user_id'])
+        
+def test_channel_removeowner_v1_InputError2(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    InputError happens when u_id is not an owner of the channel
+    """
+    with pytest.raises(InputError):
+        assert channel_removeowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(InputError):
+        assert channel_removeowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+        
+def test_channel_removeowner_v1_InputError3(clear_data, auth_id1, channel_id1):
+    """
+    InputError happens when user is the only owner in the channel 
+    """
+    with pytest.raises(InputError):
+        assert channel_removeowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+        
+def test_channel_removeowner_v1_AccessError1(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    AccessError happens when authorised user is not an owner of DREAMS or the channel
+    """ 
+    with pytest.raises(AccessError):
+        assert channel_removeowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    with pytest.raises(AccessError):
+        assert channel_removeowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+        
+def test_channel_removeowner_v1_Remove1(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    Test whether user will be removed as owner of the channel properly
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_removeowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id1['auth_user_id']    
+    
+def test_channel_removeowner_v1_RemoveMulti(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
+    """
+    Test whether multiple users will be removed as owner of the channel properly
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_addowner_v1(auth_id2['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_removeowner_v1(auth_id3['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_removeowner_v1(auth_id3['token'], channel_id1['channel_id'], auth_id1['auth_user_id'])
+    channel_details1 = channel_details_v2(auth_id3['token'], channel_id1['channel_id'])
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id3['auth_user_id'] 
+    assert channel_details1['owner_members'][0]['u_id'] == auth_id3['auth_user_id'] 
+    
+
+
+def test_channel_leave_v1_InputError1(clear_data, auth_id1):
+    """
+    InputError happens when Channel ID is not a valid channel 
+    """
+    with pytest.raises(InputError):
+        assert channel_leave_v1(auth_id1['token'], 69)
+        
+def test_channel_leave_v1_AccessError1(clear_data, channel_id1, auth_id2):
+    """
+    AccessError happens when authorised user is not a member of the channel with
+    channel_id 
+    """
+    with pytest.raises(AccessError):
+        assert channel_leave_v1(auth_id2['token'], channel_id1['channel_id'])
+
+def test_channel_leave_v1_Leave1(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    Test whether a normal member can leave the channel properly
+    """
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_leave_v1(auth_id2['token'], channel_id1['channel_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
+
+def test_channel_leave_v1_LeaveMulti(clear_data, auth_id1, channel_id1, auth_id2, auth_id3):
+    """
+    Test whether multiple members can leave the channel properly
+    """
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_invite_v1(auth_id1['token'], channel_id1['channel_id'], auth_id3['auth_user_id'])
+    channel_leave_v1(auth_id2['token'], channel_id1['channel_id'])
+    channel_leave_v1(auth_id3['token'], channel_id1['channel_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
+    
+def test_channel_leave_v1_LeaveOwner(clear_data, auth_id1, channel_id1, auth_id2):
+    """
+    Test whether a owner can leave the channel properly (not the last owner)
+    They must be removed from all_members and owner_members
+    """
+    channel_addowner_v1(auth_id1['token'], channel_id1['channel_id'], auth_id2['auth_user_id'])
+    channel_leave_v1(auth_id2['token'], channel_id1['channel_id'])
+    channel_details1 = channel_details_v2(auth_id1['token'], channel_id1['channel_id'])
+    assert channel_details1['all_members'][-1]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['all_members'][0]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['owner_members'][-1]['u_id'] == auth_id1['auth_user_id']
+    assert channel_details1['owner_members'][0]['u_id'] == auth_id1['auth_user_id']
+    
+    
+    
+        
