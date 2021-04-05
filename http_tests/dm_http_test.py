@@ -4,6 +4,7 @@
 ################################################################################
 
 import pytest
+import jwt
 import requests
 from src.config import url
 from src.other import clear_v1
@@ -17,6 +18,8 @@ from src.error import AccessError
 INPUT_ERROR = 400
 ACCESS_ERROR = 403
 INVALID_ID = 9999
+SECRET = "HELLO"
+INVALID_TOKEN = jwt.encode({"session_id": 9999}, SECRET, algorithm = "HS256")
 
 ################################################################################
 #########################         FIXTURES         #############################
@@ -691,7 +694,7 @@ def test_dm_messages_v1_InputError2(clear):
     dm_2 = dm_2.json()
     message_id = requests.post(f"{url}/message/senddm/v1", json={
         'token': reg_info1['token'],
-        'dm_id': dm_2['dm_id']
+        'dm_id': dm_2['dm_id'],
         'message': 'hi'
     })
     message_id = message_id.json()
@@ -733,7 +736,7 @@ def test_dm_messages_v1_AccessError(clear):
     dm_2 = dm_2.json()
     message_id = requests.post(f"{url}/message/senddm/v1", json={
         'token': reg_info1['token'],
-        'dm_id': dm_2['dm_id']
+        'dm_id': dm_2['dm_id'],
         'message': 'hi'
     })
     message_id = message_id.json()
@@ -768,7 +771,7 @@ def test_dm_messages_v1_simple(clear):
     dm_2 = dm_2.json()
     message_id = requests.post(f"{url}/message/senddm/v1", json={
         'token': reg_info1['token'],
-        'dm_id': dm_2['dm_id']
+        'dm_id': dm_2['dm_id'],
         'message': 'hi'
     })
     message_id = message_id.json()
@@ -807,7 +810,7 @@ def test_dm_messages_v1_many_messages(clear):
     for i in range(0, 50):
         message_id = requests.post(f"{url}/message/senddm/v1", json={
         'token': reg_info1['token'],
-        'dm_id': dm_2['dm_id']
+        'dm_id': dm_2['dm_id'],
         'message': 'hi'
         })
         message_id = message_id.json()

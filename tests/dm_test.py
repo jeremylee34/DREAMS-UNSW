@@ -5,6 +5,7 @@
 
 #Import pytest
 import pytest 
+import jwt
 
 #Import functions from dm for testing
 from src.dm import dm_details_v1
@@ -32,6 +33,8 @@ from src.other import clear_v1
 ################################################################################
 
 INVALID_ID = 1000
+SECRET = "HELLO"
+INVALID_TOKEN = jwt.encode({"session_id": 9999}, SECRET, algorithm = "HS256")
 
 ################################################################################
 #########################         FIXTURES         #############################
@@ -114,7 +117,7 @@ def test_dm_details_v1_invalid_token(clear_data, dm_1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_details_v1('invalid_token', dm_1['dm_id'])
+        assert dm_details_v1(INVALID_TOKEN, dm_1['dm_id'])
 
 ################################################################################
 #########################       dm_list tests      #############################
@@ -144,7 +147,7 @@ def test_dm_list_v1_invalid_token(clear_data):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_list_v1('invalid_token')
+        assert dm_list_v1(INVALID_TOKEN)
 
 ################################################################################
 #########################      dm_create tests     #############################
@@ -177,7 +180,7 @@ def test_dm_create_v1_invalid_token(clear_data, user_token1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_create_v1('invalid_token', [user_token1['auth_user_id']])
+        assert dm_create_v1(INVALID_TOKEN, [user_token1['auth_user_id']])
 
 ################################################################################
 #########################      dm_remove tests     #############################
@@ -211,7 +214,7 @@ def test_dm_remove_v1_invalid_token(clear_data, dm_1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_remove_v1('invalid_token', dm_1['dm_id'])
+        assert dm_remove_v1(INVALID_TOKEN, dm_1['dm_id'])
 
 ################################################################################
 #########################      dm_invite tests     #############################
@@ -261,7 +264,7 @@ def test_dm_invite_v1_invalid_token(clear_data, dm_1, user_token1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_invite_v1('invalid_token', dm_1['dm_id'], user_token1['auth_user_id'])
+        assert dm_invite_v1(INVALID_TOKEN, dm_1['dm_id'], user_token1['auth_user_id'])
 
 ################################################################################
 #########################      dm_leave tests      #############################
@@ -313,7 +316,7 @@ def test_dm_leave_v1_invalid_token(clear_data, dm_1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_leave_v1('invalid_token', dm_1['dm_id'])
+        assert dm_leave_v1(INVALID_TOKEN, dm_1['dm_id'])
 
 ################################################################################
 #########################     dm_messages tests    #############################
@@ -368,7 +371,7 @@ def test_dm_messages_v1_invalid_token(clear_data, dm_1):
     InputError to be thrown when token is invalid
     """
     with pytest.raises(InputError):
-        assert dm_messages_v1('invalid_token', dm_1['dm_id'], 0)
+        assert dm_messages_v1(INVALID_TOKEN, dm_1['dm_id'], 0)
 
 
 

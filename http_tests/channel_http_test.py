@@ -4,6 +4,7 @@
 ################################################################################
 
 import pytest
+import jwt
 import requests
 from src.config import url
 from src.other import clear_v1
@@ -17,7 +18,8 @@ from src.error import AccessError
 INPUT_ERROR = 400
 ACCESS_ERROR = 403
 INVALID_ID = 9999
-INVALID_TOKEN = "INVALID_TOKEN"
+SECRET = "HELLO"
+INVALID_TOKEN = jwt.encode({"session_id": 9999}, SECRET, algorithm = "HS256")
 
 ################################################################################
 #########################         FIXTURES         #############################
@@ -367,7 +369,7 @@ def test_channel_details_v1_OneInv(clear):
     assert channel_details1['name'] == 'Channel1'
     assert channel_details1['owner_members'][0]['u_id'] == reg_info1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == reg_info1['auth_user_id']
-    assert channel_details1['all_members'][1]['u_id'] == reg_info2['auth_user_id'
+    assert channel_details1['all_members'][1]['u_id'] == reg_info2['auth_user_id']
 
 def test_channel_details_invalid_token(clear):
     """
@@ -680,8 +682,8 @@ def test_channel_addowner_v1_AccessError1(clear):
     })
     channel_id1 = channel_id1.json()
     assert requests.post(f"{url}/channel/addowner/v1", json={
-        'token': reg_info2['token']
-        'channel_id': channel_id1['channel_id']
+        'token': reg_info2['token'],
+        'channel_id': channel_id1['channel_id'],
         'u_id': reg_info3['auth_user_id']
     }).status_code == 403
     requests.post(f"{url}/channel/invite/v2", json={
@@ -916,7 +918,7 @@ def test_channel_removeowner_v1_RemoveMulti(clear):
     """
     Test whether multiple users will be removed as owner of the channel properly
     """
-     reg_info1 = requests.post(f"{url}/auth/register/v2", json={
+    reg_info1 = requests.post(f"{url}/auth/register/v2", json={
         'email': 'Godan@gmail.com',
         'password': 'password',
         'name_first': 'Godan',

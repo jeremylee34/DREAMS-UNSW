@@ -5,6 +5,7 @@
 
 #Import pytest
 import pytest 
+import jwt
 
 #Import functions from channel, channels and auth for testing
 from src.channel import channel_invite_v1
@@ -33,7 +34,8 @@ from src.other import clear_v1
 ################################################################################
 
 INVALID_ID = 1000
-INVALID_TOKEN = "INVALID_TOKEN"
+SECRET = "HELLO"
+INVALID_TOKEN = jwt.encode({"session_id": 9999}, SECRET, algorithm = "HS256")
 
 ################################################################################
 #########################         FIXTURES         #############################
