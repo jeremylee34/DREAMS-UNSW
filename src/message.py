@@ -70,6 +70,7 @@ def message_send_v1(token, channel_id, message):
         new_notification = {
             'message': message,
             'channel_id': channel_id,
+            'dm_id': -1,
             'u_id': auth_user_id
         }
         data['notifications'].append(new_notification)
@@ -334,6 +335,7 @@ def message_senddm_v1(token, dm_id, message):
     if '@' in message:
         new_notification = {
             'message': message,
+            'channel_id': -1,
             'dm': dm_id,
             'u_id': auth_user_id
         }
