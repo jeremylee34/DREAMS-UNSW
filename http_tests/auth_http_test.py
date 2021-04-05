@@ -142,13 +142,12 @@ def test_successful_logout(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_logout(clear_data):    
-    x = requests.post(config.url + 'auth/register/v2', json={
+    requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
     })
-    payload = x.json() 
     requests.post(config.url + 'auth/login/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
