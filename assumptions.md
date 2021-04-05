@@ -26,3 +26,12 @@ For channel_test:
 For channels.py:
 - Assume that channels_create_v1 will produce an InputError when no channel name is given
 - Assume that is_public will always be True or False
+
+For admin.py:
+- Assume that either InputError will be raised when Input isn't valid 
+- Assume that either AccessError will be raised when user doesn't have permission
+
+For other.py
+- Assume that either InputError will be raised when Input isn't valid 
+- Assume that either AccessError will be raised when user doesn't have permission
+- Assume that given query_str is always string
