@@ -6,7 +6,7 @@ import re
 
 SECRET = 'HELLO'
 
-def user_profile_v2(token, u_id):
+def user_profile_v1(token, u_id):
     """
     Description of function:
         Provides basic information of a user
@@ -37,7 +37,7 @@ def user_profile_v2(token, u_id):
         raise InputError("Invalid user")
     return profile
 
-def user_profile_setname_v2(token, name_first, name_last):
+def user_profile_setname_v1(token, name_first, name_last):
     """
     Description of function:
         Changes firstname and lastname of a user
@@ -63,7 +63,7 @@ def user_profile_setname_v2(token, name_first, name_last):
                 x['name_last'] = name_last 
     return {}    
 
-def user_profile_setemail_v2(token, email):
+def user_profile_setemail_v1(token, email):
     """
     Description of function:
         Changes email of a user

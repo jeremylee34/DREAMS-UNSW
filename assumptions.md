@@ -26,3 +26,6 @@ For channel_test:
 For channels.py:
 - Assume that channels_create_v1 will produce an InputError when no channel name is given
 - Assume that is_public will always be True or False
+
+For channel_leave_v1:
+- Assume that an owner may not leave if they are the only owner left
