@@ -111,7 +111,35 @@ def users_all():
     r = user.users_all_v1(token)
     return dumps(r)
 
+@APP.route("/channels/create/v2", methods=['POST'])
+def create_channel():
+    data = request.get_json()
+    channel_id = channels_create_v1(data['token'], data['name'], data['is_public'])
+    return dumps({channel_id})
 
+@APP.route("/message/send/v2", methods=['POST'])
+def message_send():
+    data = request.get_json()
+    message_id = message_send_v1(data['token'], data['channel_id'], data['message'])
+    return dumps({message_id})
+
+@APP.route("/message/senddm/v1", methods=['POST'])
+def message_senddm():
+    data = request.get_json()
+    message_id = message_senddm_v1(data['token'], data['dm_id'], data['message'])
+    return dumps({message_id})
+
+@APP.route("/channel/invite/v2", methods=['POST'])
+def message_senddm():
+    data = request.get_json()
+    channel_invite = channel_invite_v1(data['token'], data['channel_id'], data['u_id'])
+    return dumps({channel_invite})
+
+@APP.route("/dm/create/v1", methods=['POST'])
+def message_senddm():
+    data = request.get_json()
+    dm_create = dm_create_v1(data['token'], data['u_ids'])
+    return dumps({dm_create})
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
