@@ -280,7 +280,7 @@ def details_channel():
 @APP.route("/channel/messages/v2", methods=['GET'])
 def messages_channel():
     data = request.get_json()
-    msg = channel_message_v1(data['token'], data['channel_id'], data['start'])
+    msg = channel_messages_v1(data['token'], data['channel_id'], data['start'])
     return dumps(msg)
 
 @APP.route("/channel/join/v2", methods=['POST'])

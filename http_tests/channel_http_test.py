@@ -477,7 +477,7 @@ def test_channel_messages_v1_many(clear, user_token1, user_token2, public_channe
 def test_channel_messages_invalid_token(clear, channel_id1):
     assert requests.get(f"{url}/channel/messages/v2", json={
         'token': INVALID_TOKEN,
-        'channel_id': channel_id['channel_id'],
+        'channel_id': channel_id1['channel_id'],
         'start': 0
     }).status_code == INPUT_ERROR
 
@@ -542,45 +542,33 @@ def test_channel_join_v1_check_details(clear, user_token1, user_token2, public_c
         'channel_id': channel_id
     }).json()
     assert channel_info['all_members'][user_token1['auth_user_id']]['u_id'] == user_token1['auth_user_id']
-    assert channel_info['all_members'][user_token1['auth_user_id']]['name_first'] == 'Roland'
-    assert channel_info['all_members'][user_token1['auth_user_id']]['name_last'] == 'Lin'
+    assert channel_info['all_members'][user_token1['auth_user_id']]['name_first'] == 'Godan'
+    assert channel_info['all_members'][user_token1['auth_user_id']]['name_last'] == 'Liang'
     assert channel_info['all_members'][user_token2['auth_user_id']]['u_id'] == user_token2['auth_user_id']
-    assert channel_info['all_members'][user_token2['auth_user_id']]['name_first'] == 'Godan'
-    assert channel_info['all_members'][user_token2['auth_user_id']]['name_last'] == 'Liang'
+    assert channel_info['all_members'][user_token2['auth_user_id']]['name_first'] == 'Jeremy'
+    assert channel_info['all_members'][user_token2['auth_user_id']]['name_last'] == 'Lee'
 
 def test_channel_join_invalid_token(clear, channel_id1):
     assert requests.post(f"{url}/channel/join/v2", json={
         'token': INVALID_TOKEN,
-        'channel_id': channel_id['channel_id']
+        'channel_id': channel_id1['channel_id']
     }).status_code == INPUT_ERROR
 
-def test_channel_join_owner_perm(clear):
-    user_id1 = requests.post(f"{url}/auth/register/v2", json={
-        'email': 'Godan@gmail.com',
-        'password': 'password',
-        'name_first': 'Godan',
-        'name_last': 'Liang'
-    }).json()
-    user_id2 = requests.post(f"{url}/auth/register/v2", json={
-        'email': 'Jeremy@gmail.com',
-        'password': 'password',
-        'name_first': 'Jeremy',
-        'name_last': 'Lee'
-    }).json()
+def test_channel_join_owner_perm(clear, channel_id1, user_token1, user_token2):
     channel = requests.post(f"{url}/channels/create/v2", json={
-        'token': user_id2['token'],
+        'token': user_token2['token'],
         'name': "Channel",
         'is_public': False
     }).json()
     requests.post(f"{url}/channel/join/v2", json={
-        'token': user_id1['token'],
-        'channel_id': channel_id['channel_id']
+        'token': user_token1['token'],
+        'channel_id': channel_id1['channel_id']
     })
     details = requests.get(f"{url}/channel/details/v2", json={
-        'token': user_id1['token'],
-        'channel_id': channel_id['channel_id']
+        'token': user_token1['token'],
+        'channel_id': channel_id1['channel_id']
     }).json()
-    assert details['all_members'][-1]['name_first'] == 'Roland'
+    assert details['all_members'][-1]['name_first'] == 'Godan'
 
 ################################################################################
 #####################      channel_addowner tests      #########################
@@ -903,7 +891,7 @@ def test_channel_removeowner_v1_AccessError1(clear):
         'is_public': True
     })
     channel_id1 = channel_id1.json()
-    requests.post(f"{url}/channel/invite/v2", json={
+    requests.post(f"{url}/channel/addowner/v1", json={
         'token': reg_info1['token'],
         'channel_id': channel_id1['channel_id'],
         'u_id': reg_info3['auth_user_id']
@@ -994,7 +982,7 @@ def test_channel_removeowner_invalid_token(clear):
         'token': 'invalid_token',
         'channel_id': channel_id1['channel_id'],
         'u_id': reg_info1['auth_user_id']
-    }).status_code == 403
+    }).status_code == 400
 
 ################################################################################
 #####################        channel_leave tests       #########################
@@ -1068,7 +1056,7 @@ def test_channel_leave_v1_LeaveMulti(clear, user_token1, channel_id1, user_token
     assert channel_details1['all_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
 
-def test_channel_leave_v1_LeaveOwner(clear, user_token1, channel_id1, user_token2):
+def test_channel_leave_v1_LeaveOwner(clear, channel_id1, user_token1, user_token2):
     """
     Test whether a owner can leave the channel properly (not the last owner)
     They must be removed from all_members and owner_members
@@ -1086,9 +1074,9 @@ def test_channel_leave_v1_LeaveOwner(clear, user_token1, channel_id1, user_token
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id']
     }).json()
+    print(channel_details1)
     assert channel_details1['all_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
-    assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['owner_members'][0]['u_id'] == user_token1['auth_user_id']
 
 def test_channel_leave_v1_last_owner(clear, user_token1, channel_id1):
