@@ -14,6 +14,7 @@ def clear_v1():
     data['dms'].clear() 
     data['message_ids'].clear() 
     data['token_list'].clear()
+    data['notifications'].clear()
     return {}
 
 
@@ -95,40 +96,40 @@ def notifications_get_v1(token):
     for notification in data['notifications']:
         if notification_num == 20:
             break
-        if notification['u_id'] == u_id:
-            if f'@{handle}' in notification['message']:
-                if notification['channel_id'] == -1:
-                    dm_name = data['dms'][notification['channel_id']]['name']
-                    new_dict = {
-                        'channel_id': notification['channel_id'],
-                        'dm_id': notification['dm_id'],
-                        'notification_message': f"{handle} tagged you in {dm_name}",
-                    }
-                else:
-                    channel_name = data['channels'][notification['channel_id']]['name']
-                    new_dict = {
-                        'channel_id': notification['channel_id'],
-                        'dm_id': notification['dm_id'],
-                        'notification_message': f"{handle} tagged you in {channel_name}",
-                    }
-                msg_list.append(new_dict)
-            if notification['message'] == '':
-                if notification['channel_id'] == -1:
-                    dm_name = data['dms'][notification['channel_id']]['name']
-                    new_dict = {
-                        'channel_id': notification['channel_id'],
-                        'dm_id': notification['dm_id'],
-                        'notification_message': f"{handle} added you to {dm_name}"
-                    }
-                else:
-                    channel_name = data['channels'][notification['channel_id']]['name']
-                    new_dict = {
-                        'channel_id': notification['channel_id'],
-                        'dm_id': notification['dm_id'],
-                        'notification_message': f"{handle} added you to {channel_name}"
-                    }
-                msg_list.append(new_dict)
-            notification_num += 1
+        handle_from = data['users'][notification['u_id']]['handle_str']
+        if f'@{handle}' in notification['message']:
+            if notification['channel_id'] == -1:
+                dm_name = data['dms'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} tagged you in {dm_name}: {notification['message'][:20]}",
+                }
+            else:
+                channel_name = data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
+                }
+            msg_list.append(new_dict)
+        elif notification['message'] == '':
+            if notification['channel_id'] == -1:
+                dm_name = data['dms'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} added you to {dm_name}"
+                }
+            else:
+                channel_name = data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} added you to {channel_name}"
+                }
+            msg_list.append(new_dict)
+        notification_num += 1
     return {
         'notifications': msg_list
     }
