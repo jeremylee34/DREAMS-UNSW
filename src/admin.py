@@ -27,7 +27,6 @@ def admin_user_remove_v1(token, u_id):
     if valid_token == 0:
         raise AccessError('Invalid token')
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    owner = 0
     for user in data['users']:
         if user['u_id'] == u_id:
             valid = 1
@@ -48,11 +47,15 @@ def admin_user_remove_v1(token, u_id):
     for x in data['users']: 
         if x['u_id'] == u_id:
             data['users'].remove(x)
+    channel = 0
     for channel in data['channels']:
+        channel += 1
         for message in data['messages']:
             if message['u_id'] == u_id:
                 message['message'] == 'Removed user'
+    dm = 0
     for dm in data['dms']:
+        dm += 1
         for message2 in data['messages']:
             if message2['u_id'] == u_id:
                 message2['message'] == 'Removed user'
@@ -81,14 +84,12 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
         raise AccessError('Permission_id is not valid') 
     valid = 0
     valid_token = 0
-    num_owners = 0
     for tokens in data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token == 0:
         raise AccessError('Invalid token')
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    owner = 0
     for user in data['users']:
         if user['u_id'] == u_id:
             valid = 1
