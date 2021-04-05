@@ -74,6 +74,14 @@ def test_dm_invite_v1_InputError_2(clear_data, user_token1, dm_1):
     with pytest.raises(InputError):
         assert dm_invite_v1(user_token1['token'], dm_1['dm_id'], 69)
         
+def test_dm_invite_v1_InputError3(clear_data, user_token1, dm_2, user_token3):
+    """
+    Test whether InputError will be raised if user already in DM is invited
+    """
+    dm_invite_v1(user_token1['token'], dm_2['dm_id'], user_token3['auth_user_id'])
+    with pytest.raises(InputError):
+        assert dm_invite_v1(user_token1['token'], dm_2['dm_id'], user_token3['auth_user_id'])
+        
 def test_dm_invite_v1_AccessError(clear_data, unadded_user_token, dm_2, user_token3):
     """
     AccessError happens when authorised user is not already a member of the DM

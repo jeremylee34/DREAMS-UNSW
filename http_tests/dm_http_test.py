@@ -73,6 +73,47 @@ def test_dm_invite_v1_InputError2(clear):
         'u_id': INVALID_ID
     }).status_code == 400
     
+def test_dm_invite_v1_InputError3(clear):
+    """
+    Test whether InputError will be raised if user already in DM is invited
+    """
+    reg_info1 = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'Godan@gmail.com',
+        'password': 'password',
+        'name_first': 'Godan',
+        'name_last': 'Liang'
+    })
+    reg_info1 = reg_info1.json()
+    reg_info2 = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'Jeremy@gmail.com',
+        'password': 'password',
+        'name_first': 'Jeremy',
+        'name_last': 'Lee'
+    })
+    reg_info2 = reg_info2.json()
+    reg_info3 = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'Roland@gmail.com',
+        'password': 'password',
+        'name_first': 'Roland',
+        'name_last': 'Lin'
+    })
+    reg_info3 = reg_info3.json()
+    dm_2 = requests.post(f"{url}/dm/create/v1", json={
+        'token': reg_info1['token'],
+        'u_ids': [reg_info2['auth_user_id']]
+    })
+    dm_2 = dm_2.json()
+    requests.post(f"{url}/dm/invite/v1", json={
+        'token': reg_info1['token'],
+        'dm_id': dm_2['dm_id'],
+        'u_id': reg_info3['auth_user_id']
+    })
+    assert requests.post(f"{url}/dm/invite/v1", json={
+        'token': reg_info1['token'],
+        'dm_id': dm_2['dm_id'],
+        'u_id': reg_info3['auth_user_id']
+    }).status_code == 400
+    
 def test_dm_invite_v1_AccessError1(clear):
     """
     AccessError happens when authorised user is not already a member of the DM
