@@ -67,7 +67,7 @@ def channel_invite_v1(token, channel_id, u_id):
         "name_last": data['users'][u_id]['name_last']
     }
     new_notification = {
-        "u_id": u_id,
+        "u_id": owner_u_id,
         "message": "",
         "channel_id": channel_id,
         "dm_id": -1

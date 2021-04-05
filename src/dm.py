@@ -203,7 +203,7 @@ def dm_invite_v1(token, dm_id, u_id):
     data['dms'][dm_id]['name'] = handlelist_string        
 
     new_notification = {
-        "u_id": u_id,
+        "u_id": user,
         "message": "",
         "channel_id": -1,
         "dm_id": dm_id
