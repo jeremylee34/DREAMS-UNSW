@@ -178,7 +178,7 @@ def users_all_v1(token):
     if valid_token == 1:
         all_users = []
         info = {}
-        #Gets the user profile information
+        #Gets the user information
         for x in data["users"]:
             info['u_id'] = x['u_id']
             info['email'] = x['email']

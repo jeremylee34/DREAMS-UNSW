@@ -9,7 +9,7 @@ from src.other import clear_v1
 from src.data import data
 
 @pytest.fixture
-#Clears all data
+#Clears all user data
 def clear_data():
     clear_v1()
     
