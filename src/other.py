@@ -6,28 +6,6 @@ from src.channels import channels_list_v1
 
 from src.error import InputError, AccessError
 
-def clear_v1():
-    """
-    Description of function:
-        Removes all existing users and their information
-    Parameters:
-        None
-    Exceptions:
-        None
-    Returns:
-        Empty dictionary
-    """           
-    for x in data["users"]:
-        x["session_ids"].clear()
-    data['users'].clear()
-    data['channels'].clear()
-    data['dms'].clear() 
-    data['message_ids'].clear() 
-    data['token_list'].clear()
-    data['notifications'].clear()
-    return {}
-
-
 
 def search_v1(token, query_str):
     """
