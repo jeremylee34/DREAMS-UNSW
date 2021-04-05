@@ -1,3 +1,7 @@
+'''
+Implementation of http tests for other functions and routes
+Written by Kanit Srihakorth and Tharushi Gunawardana
+'''
 import requests
 import pytest
 from src import config
