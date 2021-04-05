@@ -229,7 +229,7 @@ def test_channel_messages_v1_input_error2(clear_data, user_token1, public_channe
     InputError2 to be thrown when start is greater than number of messages in channel
     """
     channel_id = public_channel['channel_id']
-    message_id = message_send_v1(user_token1['token'], channel_id, "Hello")
+    message_send_v1(user_token1['token'], channel_id, "Hello")
     start = 1
     with pytest.raises(InputError):
         assert channel_messages_v1(user_token1['token'], channel_id, start)
@@ -240,7 +240,7 @@ def test_channel_messages_v1_access_error(clear_data, user_token1, user_token2, 
     user_token1 is in the channel (added during public_channel function)
     """
     channel_id = public_channel['channel_id']
-    message_id = message_send_v1(user_token1['token'], channel_id, "Hello")
+    message_send_v1(user_token1['token'], channel_id, "Hello")
     start = 0
     with pytest.raises(AccessError):
         # check user_token1's messages (never added to channel)
@@ -251,7 +251,7 @@ def test_channel_messages_v1_simple(clear_data, user_token1, user_token2, public
     Test if -1 is returned if start + 50 surpasses total messages
     """
     channel_id = public_channel['channel_id']
-    message_id = message_send_v1(user_token1['token'], channel_id, "Hello")
+    message_send_v1(user_token1['token'], channel_id, "Hello")
     start = 0
     messages = channel_messages_v1(user_token1['token'], channel_id, start)
     assert messages['end'] == -1
@@ -263,7 +263,7 @@ def test_channel_messages_v1_many(clear_data, user_token1, user_token2, public_c
     """
     channel_id = public_channel['channel_id']
     for i in range(0, 50):
-        message_id = message_send_v1(user_token1['token'], channel_id, "Hello")
+        message_send_v1(user_token1['token'], channel_id, f'message{i}')
     start = 0
     messages = channel_messages_v1(user_token1['token'], channel_id, start)
     assert messages['end'] == 50

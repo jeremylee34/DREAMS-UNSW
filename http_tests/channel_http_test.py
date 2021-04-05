@@ -413,7 +413,7 @@ def test_channel_messages_v1_input_error2(clear, user_token1, public_channel):
     InputError2 to be thrown when start is greater than number of messages in channel
     """
     channel_id = public_channel['channel_id']
-    message_id = requests.post(f"{url}/message/send/v2", json={
+    requests.post(f"{url}/message/send/v2", json={
         'token': user_token1['token'],
         'channel_id': channel_id,
         'message': "Hello"
@@ -431,7 +431,7 @@ def test_channel_messages_v1_access_error(clear, user_token1, user_token2, publi
     user_token1 is in the channel (added during public_channel function)
     """
     channel_id = public_channel['channel_id']
-    message_id = requests.post(f"{url}/message/send/v2", json={
+    requests.post(f"{url}/message/send/v2", json={
         'token': user_token1['token'],
         'channel_id': channel_id,
         'message': "Hello"
@@ -445,7 +445,7 @@ def test_channel_messages_v1_access_error(clear, user_token1, user_token2, publi
 
 def test_channel_messages_v1_simple(clear, user_token1, user_token2, public_channel):
     channel_id = public_channel['channel_id']
-    message_id = requests.post(f"{url}/message/send/v2", json={
+    requests.post(f"{url}/message/send/v2", json={
         'token': user_token1['token'],
         'channel_id': channel_id,
         'message': "Hello"
@@ -461,10 +461,10 @@ def test_channel_messages_v1_simple(clear, user_token1, user_token2, public_chan
 def test_channel_messages_v1_many(clear, user_token1, user_token2, public_channel):
     channel_id = public_channel['channel_id']
     for i in range(0, 50):
-        message_id = requests.post(f"{url}/message/send/v2", json={
+        requests.post(f"{url}/message/send/v2", json={
             'token': user_token1['token'],
             'channel_id': channel_id,
-            'message': "Hello"
+            'message': f"message number {i}"
         }).json()
     start = 0
     messages = requests.get(f"{url}/channel/messages/v2", json={
@@ -555,7 +555,7 @@ def test_channel_join_invalid_token(clear, channel_id1):
     }).status_code == INPUT_ERROR
 
 def test_channel_join_owner_perm(clear, channel_id1, user_token1, user_token2):
-    channel = requests.post(f"{url}/channels/create/v2", json={
+    requests.post(f"{url}/channels/create/v2", json={
         'token': user_token2['token'],
         'name': "Channel",
         'is_public': False

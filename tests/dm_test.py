@@ -334,7 +334,6 @@ def test_dm_messages_v1_InputError2(clear_data, user_token1, dm_1):
     InputError happens when start is greater than total number of messages in 
     the channel
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     with pytest.raises(InputError):
         assert dm_messages_v1(user_token1['token'], dm_1['dm_id'], 1)
     
@@ -343,7 +342,7 @@ def test_dm_messages_v1_AccessError(clear_data, unadded_user_token, dm_1, user_t
     """
     AccessError happens when authorised user is not a member of the DM
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+    message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     with pytest.raises(AccessError):
         assert dm_messages_v1(unadded_user_token['token'], dm_1['dm_id'], 0)
 
@@ -352,7 +351,7 @@ def test_dm_messages_v1_simple(clear_data, dm_1, user_token1):
     """
     AccessError happens when authorised user is not a member of the DM
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+    message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     messages = dm_messages_v1(user_token1['token'], dm_1['dm_id'], 0)
     assert messages['end'] == -1
 
@@ -362,7 +361,7 @@ def test_dm_messages_v1_many_messages(clear_data, dm_1, user_token1):
     messages in DM
     """
     for i in range(0, 50):
-        message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+        message_senddm_v1(user_token1['token'], dm_1['dm_id'], f'message{i}')
     messages = dm_messages_v1(user_token1['token'], dm_1['dm_id'], 0)
     assert messages['end'] == 50
 
