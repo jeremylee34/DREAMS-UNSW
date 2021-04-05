@@ -141,7 +141,7 @@ def test_dm_list_v1_simple(clear_data, user_token1, dm_1, dm_2):
             }
         ]
     }
-    assert dms = expected_dm
+    assert dms == expected_dm
 
 def test_dm_create_v1_input_error(clear_data, user_token1):
     """
