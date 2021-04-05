@@ -466,6 +466,7 @@ def test_channel_addowner_invalid_token(clear):
         'name': 'Channel1',
         'is_public': True
     })
+    channel_id1 = channel_id1.json()
     assert requests.post(f"{url}/channel/addowner/v1", json={
         'token': 'invalid_token',
         'channel_id': channel_id1['channel_id'],
