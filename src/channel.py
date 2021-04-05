@@ -12,10 +12,14 @@ from src.helper import check_public_channel
 from src.helper import check_user_in_channel
 from src.helper import token_to_u_id
 from src.helper import check_owner_perm
+from src.helper import check_if_owner
+
+import jwt
 
 GLOBAL_OWNER = 0
 DREAMS_OWNER = 0
 OWNER_PERMISSION = 1
+SECRET = "HELLO"
 
 def channel_invite_v1(token, channel_id, u_id):
     """
@@ -210,6 +214,7 @@ def channel_leave_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
+    u_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
