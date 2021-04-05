@@ -13,13 +13,13 @@ from src.auth import auth_register_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.message import message_send_v1
+from src.user import users_all_v1
+from src.user import user_profile_v1
+
 
 #Import error from src
 from src.error import InputError
 from src.error import AccessError
-
-#Import data from src
-import src.data
 
 #Import other from src
 from src.other import clear_v1
@@ -167,16 +167,14 @@ def test_channel_join_v1_input_error(clear_data, auth_id1, public_channel):
         assert channel_join_v1(auth_id1['token'], channel_id)
 
 
-def test_channel_join_v1_access_error(clear_data, auth_id1, auth_id2):
+def test_channel_join_v1_access_error(clear_data, auth_id1, auth_id2, auth_id3):
     """
     AccessError to be thrown when channel is private
     """
-
     new_channel = channels_create_v1(auth_id2['token'], "Private channel", False)
-    
     channel_id = new_channel['channel_id']
     with pytest.raises(AccessError):
-        assert channel_join_v1(auth_id2['token'], channel_id)
+        assert channel_join_v1(auth_id3['token'], channel_id)
 
 def test_channel_join_v1_check_details(clear_data, auth_id1, auth_id2, public_channel):
     """
@@ -406,3 +404,40 @@ def test_channel_leave_v1_last_owner(clear_data, auth_id1, channel_id1):
     channel_leave_v1(auth_id1['token'], channel_id1['channel_id'])
     channel_details1 = channel_details_v1(auth_id1['token'], channel_id1['channel_id'])
     assert channel_details1['owner_members'][-1]['u_id'] == auth_id1['auth_user_id']
+
+def test_channel_invite_invalid_token(clear_data, auth_id1, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_invite_v1('invalid_token', channel_id1['channel_id'], auth_id1['auth_user_id'])
+
+def test_channel_details_invalid_token(clear_data, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_details_v1('invalid_token', channel_id1['channel_id'])
+
+def test_channel_messages_invalid_token(clear_data, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_messages_v1('invalid_token', channel_id1['channel_id'], 0)
+
+def test_channel_join_invalid_token(clear_data, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_join_v1('invalid_token', channel_id1['channel_id'])
+
+def test_channel_addowner_invalid_token(clear_data, auth_id1, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_addowner_v1('invalid_token', channel_id1['channel_id'], auth_id1['auth_user_id'])
+
+def test_channel_removeowner_invalid_token(clear_data, auth_id1, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_removeowner_v1('invalid_token', channel_id1['channel_id'], auth_id1['auth_user_id'])
+
+def test_channel_leave_invalid_token(clear_data, channel_id1):
+    with pytest.raises(InputError):
+        assert channel_leave_v1('invalid_token', channel_id1['channel_id'])
+
+def test_channel_join_owner_perm(clear_data):
+    user_id1 = auth_register_v1("Roland@gmail.com", "password", "Roland", "Lin")
+    user_id2 = auth_register_v1("Godan@gmail.com", "password", "Godan", "Liang")
+
+    channel = channels_create_v1(user_id2['token'], "Channel", False)
+    channel_join_v1(user_id1['token'], channel['channel_id'])
+    details = channel_details_v1(user_id1['token'], channel['channel_id'])
+    assert details['all_members'][-1]['name_first'] == 'Roland'

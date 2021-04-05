@@ -21,7 +21,6 @@ from src.error import AccessError
 
 #Import other from src
 from src.other import clear_v1
-import src.data
 
 #Make fixtures
 @pytest.fixture
@@ -294,4 +293,33 @@ def test_dm_messages_v1_many_messages(clear_data, dm_1, user_token1):
         message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     messages = dm_messages_v1(user_token1['token'], dm_1['dm_id'], 0)
     assert messages['end'] == 50
+
+def test_dm_details_v1_invalid_token(clear_data, dm_1):
+    with pytest.raises(InputError):
+        assert dm_details_v1('invalid_token', dm_1['dm_id'])
+
+def test_dm_list_v1_invalid_token(clear_data):
+    with pytest.raises(InputError):
+        assert dm_list_v1('invalid_token')
+
+def test_dm_create_v1_invalid_token(clear_data, user_token1):
+    with pytest.raises(InputError):
+        assert dm_create_v1('invalid_token', [user_token1['auth_user_id']])
+
+def test_dm_remove_v1_invalid_token(clear_data, dm_1):
+    with pytest.raises(InputError):
+        assert dm_remove_v1('invalid_token', dm_1['dm_id'])
+
+def test_dm_invite_v1_invalid_token(clear_data, dm_1, user_token1):
+    with pytest.raises(InputError):
+        assert dm_invite_v1('invalid_token', dm_1['dm_id'], user_token1['auth_user_id'])
+
+def test_dm_leave_v1_invalid_token(clear_data, dm_1):
+    with pytest.raises(InputError):
+        assert dm_leave_v1('invalid_token', dm_1['dm_id'])
+
+def test_dm_messages_v1_invalid_token(clear_data, dm_1):
+    with pytest.raises(InputError):
+        assert dm_messages_v1('invalid_token', dm_1['dm_id'], 0)
+
 

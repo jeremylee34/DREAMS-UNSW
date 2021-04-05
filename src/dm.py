@@ -6,6 +6,7 @@ from src.helper import check_valid_user
 from src.helper import check_valid_dm
 from src.helper import token_to_u_id
 from src.helper import check_user_in_dm
+from src.helper import check_valid_token
 from src.user import user_profile_v1
 
 import jwt
@@ -29,6 +30,8 @@ def dm_details_v1(token, dm_id):
         dms, a list of a dm dicts
 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     # check valid dm_id
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
@@ -55,6 +58,8 @@ def dm_list_v1(token):
         dms, a list of a dm dicts
 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     dms = []
     user_id = token_to_u_id(token)
     for dm in data['dms']:
@@ -84,6 +89,8 @@ def dm_create_v1(token, u_ids):
         Returns a dict containing the new dm_id and dm_name
 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     # Check valid u_ids
     for u_id in u_ids:
         if check_valid_user(u_id) == False:
@@ -135,6 +142,8 @@ def dm_remove_v1(token, dm_id):
         Returns nothing
 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     # check valid dm_id
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to a valid DM")
@@ -168,6 +177,8 @@ def dm_invite_v1(token, dm_id, u_id):
         
     Return Value: {} 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")
@@ -207,6 +218,8 @@ def dm_leave_v1(token, dm_id):
         
     Return Value: {} 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")
@@ -252,6 +265,8 @@ def dm_messages_v1(token, dm_id, start):
         end  - Final index of messages returned, usually start + 50 but will be 
                set to -1 if start + 50 surpasses the bound of messages in DM 
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
     if check_valid_dm(dm_id) == False:
         raise InputError("dm_id does not refer to an existing dm")

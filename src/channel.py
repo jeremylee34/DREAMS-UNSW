@@ -14,6 +14,7 @@ from src.helper import token_to_u_id
 from src.helper import check_owner_perm
 from src.helper import check_if_owner
 from src.helper import check_valid_user
+from src.helper import check_valid_token
 
 import jwt
 
@@ -42,6 +43,9 @@ def channel_invite_v1(token, channel_id, u_id):
     Return Value:
         Returns <{}> on u_id being succesfully added to channel with channel_id
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     owner_u_id = token_to_u_id(token)
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
@@ -91,6 +95,9 @@ def channel_details_v1(token, channel_id):
         Returns <all_members> on u_id being part of channel with
         channel_id and channel_id being valid
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
     #Loop through channels list to check if channel_id is valid
     #raises InputError if not
@@ -138,10 +145,11 @@ def channel_messages_v1(token, channel_id, start):
         Returns a list of message dictionaries, a start index and an end index (-1)
         if reached end of all messages in channel
     """
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     # Check valid channel
     if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
-
     # Check if start is greater than number of messages in channel
     if start > (len(data['channels'][channel_id]['messages']) - 1):
         raise InputError("Start is greater than the total number of messages in the channel")
@@ -191,6 +199,9 @@ def channel_leave_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(channel_id) is False:
@@ -227,16 +238,17 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
-
+    
     # Check whether channel accesible
-    if u_id == DREAMS_OWNER:
+    if check_owner_perm(u_id) == True:
         pass
-    # elif check_owner_perm(u_id) == True:
-    #     pass
     elif check_public_channel(channel_id) is False:
         raise AccessError("channel_id refers to a channel that is private")
 
@@ -259,6 +271,9 @@ def channel_addowner_v1(token, channel_id, u_id):
     """
     asdasd
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(channel_id) is False:
@@ -266,7 +281,7 @@ def channel_addowner_v1(token, channel_id, u_id):
     # Check if u_id is already owner
     if check_if_owner(u_id, channel_id) is True:
         raise InputError("user with user id u_id is already an owner of the channel")
-        
+    
     # Check if person with token is dreams owner or owner of channel
     if author_id == DREAMS_OWNER:
         pass
@@ -286,6 +301,9 @@ def channel_removeowner_v1(token, channel_id, u_id):
     """
     asdasd
     """
+    
+    if check_valid_token(token) == False:
+        raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
     # Check valid channel
     if check_valid_channel(channel_id) is False:
@@ -293,6 +311,7 @@ def channel_removeowner_v1(token, channel_id, u_id):
     # Check if user with u_id is an owner in the first place
     if check_if_owner(u_id, channel_id) is False:
         raise InputError("user with user id u_id is not an owner of the channel.")
+    
     # Check if user is the only owner
     if len(data['channels'][channel_id]['owner_members']) == 1:
         raise InputError("User is currently the only owner")\

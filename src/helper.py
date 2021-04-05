@@ -25,15 +25,17 @@ def check_public_channel(channel_id):
     """
     if data['channels'][channel_id]['is_public'] is False:
         return False
+    else:
+        return True
 
-def check_user_in_channel(channel_id, auth_user_id):
+def check_user_in_channel(channel_id, u_id):
     """
     Checks whether a user is in a channel
     """
     user_in_channel = False
     for member in data['channels'][channel_id]['all_members']:
-        ## if auth_user_id matches the member
-        if member['u_id'] == auth_user_id:
+        ## if u_id matches the member
+        if member['u_id'] == u_id:
             user_in_channel = True
             break
     return user_in_channel
@@ -55,7 +57,8 @@ def token_to_u_id(token):
     for user in data['users']:
         for session in user['session_ids']:
             if session == session_id['session_id']:
-                return user['u_id']
+                u_id = user['u_id']
+    return u_id
 
 def check_valid_dm(dm_id):
     valid_dm = False
@@ -78,7 +81,6 @@ def check_valid_token(token):
     for token_hash in data['token_list']:
         if token_hash == token:
             valid_token = True
-            break
     return valid_token
 
 def check_owner_perm(u_id):
@@ -87,7 +89,6 @@ def check_owner_perm(u_id):
         if user['u_id'] == u_id:
             if user['permission_id'] == OWNER_PERMISSION:
                 is_owner = True
-                break
     return is_owner
 
 def check_if_owner(u_id, channel_id):
@@ -97,3 +98,10 @@ def check_if_owner(u_id, channel_id):
             is_owner = True
             break
     return is_owner
+
+# def check_channel_owner(u_id, channel_id):
+#     channel_owner = False
+#     for owner in data['channels'][channel_id]['owner_members']:
+#         if owner['u_id'] == u_id:
+#             channel_owner = True
+#     return channel_owner
