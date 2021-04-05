@@ -39,7 +39,7 @@ def message_send_v1(token, channel_id, message):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Gets auth_user_id from token given
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
@@ -66,6 +66,13 @@ def message_send_v1(token, channel_id, message):
         'message': message,
         'time_created': timestamp
     }
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'channel_id': channel_id,
+            'u_id': auth_user_id
+        }
+        data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
     data['channels'][channel_id]['messages'].insert(0, new_message)
     return {
@@ -92,7 +99,7 @@ def message_remove_v1(token, message_id):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Gets the auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
@@ -122,6 +129,10 @@ def message_remove_v1(token, message_id):
                 for member in current_channel['owner_members']:
                     if member['u_id'] == auth_user_id and auth_user_id == u_id:
                         validuser = 1
+                if auth_user_id == u_id and data['users'][auth_user_id]['permission_id'] == 1:
+                        validuser = 1
+                # Raises AccessError if message is not sent by user given and user
+                # is not an owner of the channel
                 if validuser != 1:
                     raise AccessError('Message was not sent by user and user is not an owner of the channel')
                 # Removes message from dms if not in channel messages
@@ -151,7 +162,7 @@ def message_edit_v1(token, message_id, message):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Checks if message is greater than 1000 characters, if it is, then
     # InputError is raised
     if len(message) > 1000:
@@ -180,14 +191,16 @@ def message_edit_v1(token, message_id, message):
                 # Raises InputError if message is deleted
                 if message2['message'] == '':
                     raise InputError('Message has been deleted')
-            for member in current_channel['owner_members']:
-                if member['u_id'] == auth_user_id and auth_user_id == u_id:
-                    validuser = 1
-            # Raises AccessError if message is not sent by user given and user
-            # is not an owner of the channel
-            if validuser != 1:
-                raise AccessError('Message was not sent by user and user is not an owner of the channel')
-            message2['message'] = message
+                for member in current_channel['owner_members']:
+                    if member['u_id'] == auth_user_id and auth_user_id == u_id:
+                        validuser = 1
+                if auth_user_id == u_id and data['users'][auth_user_id]['permission_id'] == 1:
+                        validuser = 1
+                # Raises AccessError if message is not sent by user given and user
+                # is not an owner of the channel
+                if validuser != 1:
+                    raise AccessError('Message was not sent by user and user is not an owner of the channel')
+                message2['message'] = message
     return {
     }
 def message_share_v1(token, og_message_id, message, channel_id, dm_id):
@@ -214,7 +227,7 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Checks if message is over 1000 characters
     if len(message) > 1000:
         raise InputError('Message is over 1000 characters')
@@ -281,13 +294,14 @@ def message_senddm_v1(token, dm_id, message):
     Return Value:
         {message_id} - returns the id of the message
     '''
+    valid = 0
     exists = 0
     # Checks if token is valid
     for tokens in data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
     # Checks if message is more than 1000 characters
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
