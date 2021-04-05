@@ -200,7 +200,15 @@ def dm_invite_v1(token, dm_id, u_id):
 
     handlelist.sort()
     handlelist_string = ', '.join(map(str, handlelist))
-    data['dms'][dm_id]['name'] = handlelist_string                
+    data['dms'][dm_id]['name'] = handlelist_string        
+
+    new_notification = {
+        "u_id": u_id,
+        "message": "",
+        "dm_id": dm_id
+    }
+    data['notifications'].append(new_notification)
+
     return {}
        
        

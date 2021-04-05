@@ -66,7 +66,12 @@ def channel_invite_v1(token, channel_id, u_id):
         "name_first": data['users'][u_id]['name_first'],
         "name_last": data['users'][u_id]['name_last']
     }
-
+    new_notification = {
+        "u_id": u_id,
+        "message": "",
+        "channel_id": channel_id
+    }
+    data['notifications'].append(new_notification)
     data['channels'][channel_id]['all_members'].append(new_member)
 
     return {}
