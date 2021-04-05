@@ -30,6 +30,7 @@ def search_v1(token, query_str):
     Returns:
         dictionary of message_id, u_id, message, time_created 
     """
+    valid = 0
     for tokens in data['token_list']:
         if tokens == token:
             valid = 1
@@ -75,13 +76,13 @@ def notifications_get_v1(token):
     Returns:
         Blank dictionary
     """
+    valid = 0
     for tokens in data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
         raise AccessError('User does not exist')
 
-    valid = 0
     decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
     msg_list = []
     notification_num = 0

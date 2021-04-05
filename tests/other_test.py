@@ -26,6 +26,10 @@ def test_search_v1_input_error(clear_data):
     message_send_v1(user['token'], channel_info['channel_id'], 'Hello')
     with pytest.raises(InputError):
         assert search_v1(user['token'], 'Hello' * 1000)
+        
+def test_search_v1_invalid_token(clear_data):
+    with pytest.raises(AccessError):
+        assert search_v1(6, 'Hello')
 
 #test notifications
 def test_notifications_get(clear_data):
@@ -33,4 +37,12 @@ def test_notifications_get(clear_data):
     notification = notifications_get_v1(user['token'])
     assert len(notification['notifications']) < 20
 
-
+def test_notifications_get_invalid_token(clear_data):
+    with pytest.raises(AccessError):
+        assert notifications_get_v1(5)
+def test_notifications_get_more_than_20(clear_data):
+    user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
+    channel_info = channels_create_v1(user['token'], 'Channel1', True)
+    message_send_v1(user['token'], channel_info['channel_id'], 'Hello @gordonliang')
+    notification = notifications_get_v1(user['token'])
+    assert notification['notifications'][0]['notification_message'] == '@gordonliang tagged you in Channel1'

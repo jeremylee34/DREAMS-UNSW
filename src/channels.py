@@ -1,31 +1,42 @@
 '''
-Implementation of channels functions which includes channels_list_v1, 
-channels_listall_v1 and channels_create_v1. 
+Implementation of channels functions which includes channels_list_v1,
+channels_listall_v1 and channels_create_v1.
 Written by Gordon Liang
 '''
+import jwt
 from src.error import InputError
 from src.error import AccessError
 from src.data import data
-''' 
-This function lists all the channels that a user is in
-Arguments:
-    auth_user_id (int) - id of the user
-Exceptions:
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channels' 
-'''
-def channels_list_v1(auth_user_id):
-    # Checks if auth_user_id exists
+
+SECRET = 'HELLO'
+
+def channels_list_v1(token):
+    '''
+    This function lists all the channels that a user is in
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+    Exceptions:
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channels'
+    '''
     valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
             valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    if valid != 1:
+        raise AccessError('User does not exist')
+    # Getting auth_user_id from token
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data['users']:
+        for s_id in user['session_ids']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
     # List of channels that user is in
     channel_list = []
-    # Loops through channel list 
+    # Loops through channel list
     for channel in data['channels']:
         member_list = channel.get('all_members')
         # Loops through all members and checks if auth_user_id is included
@@ -39,23 +50,24 @@ def channels_list_v1(auth_user_id):
     return {
         'channels': channel_list
     }
-''' 
-This function lists all the channels
-Arguments:
-    auth_user_id (int) - id of the user
-Exceptions:
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channels' 
-'''
-def channels_listall_v1(auth_user_id):
-    # Checks if auth_user_id exists
+
+def channels_listall_v1(token):
+    '''
+    This function lists all the channels
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+    Exceptions:
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channels'
+    '''
     valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
             valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    if valid != 1:
+        raise AccessError('User does not exist')
     channel_list = []
     # Loops through the data and adds every into the channel list
     for channel in data['channels']:
@@ -66,27 +78,35 @@ def channels_listall_v1(auth_user_id):
     return {
         'channels': channel_list
     }
-''' 
-This function creates a channel and adds it to the data file
-Arguments:
-    auth_user_id (int) - id of the user
-    name (string) - name of the channel
-    is_public (bool) - determines if channel is public or private
-Exceptions:
-    InputError - Occurs when channel name is more than 20 characters long
-    InputError - Occurs when no channel name is entered
-    AccessError - when auth_user_id does not exist
-Return Value:
-    Returns 'channel_id' 
-'''
-def channels_create_v1(auth_user_id, name, is_public):
-    # Checks if auth_user_id exists
+
+def channels_create_v1(token, name, is_public):
+    '''
+    This function creates a channel and adds it to the data file
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+        name (str) - name of the channel
+        is_public (bool) - determines if channel is public or private
+    Exceptions:
+        InputError - Occurs when channel name is more than 20 characters long
+        InputError - Occurs when no channel name is entered
+        AccessError - when auth_user_id does not exist
+    Return Value:
+        Returns 'channel_id'
+    '''
     valid = 0
-    for users in data['users']:
-        if users['id'] == auth_user_id:
+    # Checking if token is valid
+    for tokens in data['token_list']:
+        if tokens == token:
             valid = 1
-    if valid == 0:
-        raise AccessError('auth_user_id does not exist')
+    if valid != 1:
+        raise AccessError('User does not exist')
+    # Gets auth_user_id from token
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data['users']:
+        for s_id in user['session_ids']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
     # Produces an error if channel name is greater than 20 characters
     if len(name) > 20:
         raise InputError('Name is more than 20 characters long')
@@ -101,8 +121,8 @@ def channels_create_v1(auth_user_id, name, is_public):
         "owner_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname'],
+                'name_first': data['users'][auth_user_id]['name_first'],
+                'name_last': data['users'][auth_user_id]['name_last'],
                 'email': data['users'][auth_user_id]['email'],
                 'handle_str': data['users'][auth_user_id]['handle_str']
             }
@@ -110,17 +130,17 @@ def channels_create_v1(auth_user_id, name, is_public):
         "all_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['firstname'],
-                'name_last': data['users'][auth_user_id]['Lastname'],
+                'name_first': data['users'][auth_user_id]['name_first'],
+                'name_last': data['users'][auth_user_id]['name_last'],
                 'email': data['users'][auth_user_id]['email'],
                 'handle_str': data['users'][auth_user_id]['handle_str']
             }
         ],
         "messages": []
     }
-    id = len(data['channels'])
+    channel_id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
     return {
-        'channel_id': id
+        'channel_id': channel_id
     }

@@ -1,12 +1,14 @@
 '''
-Implementation of auth functions which includes auth_login_v1 and
+Implementation of auth functions which includes auth_login_v1,
 auth_register_v1.
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
-from src.error import InputError
+from src.error import InputError, AccessError
 import re
-
+import jwt
+import hashlib
+from flask import request
 
 SECRET = 'HELLO'
 
@@ -74,32 +76,32 @@ def auth_login_v1(email, password):
         'auth_user_id': count,
     }
 
-'''
-Description of function:
-    Stores user registration information in the data file. It returns the auth_user_id of that user.
 
-Parameters:
-    email (str)
-    password (str)
-    name_first (str) 
-    name_last (str)
 
-Exceptions:
-    InputError - when the email is not valid
-    InputError - when the email is used by another user
-    InputError - when the password is too short (smaller than 6 character)
-    InputError - when the name_first is invalid (smaller than 1 character or larger than 50 characters)    
-    InputError - when the name_last is invalid (smaller than 1 character or larger than 50 characters)
-
-Returns:
-    'auth_user_id'
-'''
 def auth_register_v1(email, password, name_first, name_last):
+    """
+    Description of function:
+        Stores user registration information in the data file
+    Parameters:
+        email (str)
+        password(str)
+        name_first (str)
+        name_last (str)
+    Exceptions:
+        InputError - when the email is not valid
+        InputError - when the email is user by another existing user
+        InputError - when the password is too short (less than 6 character)
+        InputError - when the name_first is invalid (less than 1 character or greater than 50 characters)    
+        InputError - when the name_last is invalid (less than 1 character or greater than 50 characters)
+        
+    Returns:
+        Dictionary containing 'token' and 'auth_user_id'
+    """    
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
     count = len(data['users'])
     register = {}
-
+    register['u_id'] = count
     # Checks for valid email
     if re.search(regex, email):
         pass
@@ -119,7 +121,7 @@ def auth_register_v1(email, password, name_first, name_last):
                 register["email"] = email
     # Checks for valid password
     if len(password) >= 6:
-        register["password"] = password
+        register["password"] = hashlib.sha256(password.encode()).hexdigest()
     else:
         raise InputError("Password too short")
 
@@ -149,8 +151,7 @@ def auth_register_v1(email, password, name_first, name_last):
     if len(handle) > 20:
         handle = handle[:20]
     
-        # finding repetitions of names
-    # repeat = 0
+    # finding repetitions of names
     number = 0
     i = 0
     length = 0
@@ -165,26 +166,30 @@ def auth_register_v1(email, password, name_first, name_last):
             number += 1
             i = 0
         else:
-            i += 1 
-            
-    #setting DREAMS(admin) permission
-    if (len(data['user']) < 1):
-        register['permission_id'] = '1'
-    else:
-        register['permission_id'] = '2'
-
+            i += 1
+      
     register["handle_str"] = handle 
+    
+    #setting DREAMS(admin) permission
+    if (len(data['users']) < 1):
+        register['permission_id'] = 1
+    else:
+        register['permission_id'] = 2
+
+    #creating session_id
     register['session_ids'] = []
     register['session_ids'].append(create_session_id())    
+    #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
-    data["users"].append(register)
+    data["users"].append(register)    
     return {
         'token': token,
         'auth_user_id': count,
     }
 
-    def auth_logout_v1(token):
+
+def auth_logout_v1(token):
     """
     Description of function:
         Accepts a token and logs out a user of a particular session based on the token. If the logout is successful, then True is returned, otherwise False
@@ -213,5 +218,3 @@ def auth_register_v1(email, password, name_first, name_last):
     return {
         'is_success': logout,
     }
-
-
