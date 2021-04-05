@@ -1,5 +1,8 @@
 data = {
     "users" : [],
     "channels" : [],
-    "messages" : [],
+    "message_ids" : [],
+    "dms": [],
+    "token_list": [],
+    "notifications": [],
 }
