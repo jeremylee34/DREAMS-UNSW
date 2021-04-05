@@ -28,9 +28,9 @@ from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
 
-with open('store.json', 'r') as fp:
-   global data
-   data = loads(fp.read())
+# with open('store.json', 'r') as fp:
+#    global data
+#    data = loads(fp.read())
 
 def defaultHandler(err):
     response = err.get_response()
@@ -243,19 +243,19 @@ def search():
 #####################         CHANNELS ROUTES          #########################
 ################################################################################
 
-@APP.route("channels/list/v2", methods=['GET'])
+@APP.route("/channels/list/v2", methods=['GET'])
 def get_list():
     token = request.args.get('token')
     channels = channels_list_v1(token)
     return dumps(channels)
 
-@APP.route("channels/listall/v2", methods=['GET'])
+@APP.route("/channels/listall/v2", methods=['GET'])
 def get_listall():
     token = request.args.get('token')
     channels = channels_listall_v1(token)
     return dumps(channels)
 
-@APP.route("channels/create/v2", methods=['POST'])
+@APP.route("/channels/create/v2", methods=['POST'])
 def create_channel():
     data = request.get_json()
     channel_id = channels_create_v1(data['token'], data['name'], data['is_public'])
@@ -265,43 +265,43 @@ def create_channel():
 #####################         CHANNEL ROUTES           #########################
 ################################################################################
 
-@APP.route("channel/invite/v2", methods=['POST'])
+@APP.route("/channel/invite/v2", methods=['POST'])
 def invite_channel():
     data = request.get_json()
     channel_invite_v1(data['token'], data['channel_id'], data['u_id'])
     return dumps({})
     
-@APP.route("channel/details/v2", methods=['GET'])
+@APP.route("/channel/details/v2", methods=['GET'])
 def details_channel():
     data = request.get_json()
     details = channel_details_v1(data['token'], data['channel_id'])
     return dumps(details)
     
-@APP.route("channel/messages/v2", methods=['GET'])
+@APP.route("/channel/messages/v2", methods=['GET'])
 def messages_channel():
     data = request.get_json()
     msg = channel_message_v1(data['token'], data['channel_id'], data['start'])
     return dumps(msg)
 
-@APP.route("channel/join/v2", methods=['POST'])
+@APP.route("/channel/join/v2", methods=['POST'])
 def join_channel():
     data = request.get_json()
     channel_join_v1(data['token'], data['channel_id'])
     return dumps({})
 
-@APP.route("channel/addowner/v1", methods=['POST'])
+@APP.route("/channel/addowner/v1", methods=['POST'])
 def addowner_channel():
     data = request.get_json()
     channel_addowner_v1(data['token'], data['channel_id'], data['u_id'])
     return dumps({})
     
-@APP.route("channel/removeowner/v1", methods=['POST'])
+@APP.route("/channel/removeowner/v1", methods=['POST'])
 def removeowner_channel():
     data = request.get_json()
     channel_removeowner_v1(data['token'], data['channel_id'], data['u_id'])
     return dumps({})
 
-@APP.route("channel/leave/v2", methods=['POST'])
+@APP.route("/channel/leave/v1", methods=['POST'])
 def leave_channel():
     data = request.get_json()
     channel_leave_v1(data['token'], data['channel_id'])
@@ -311,43 +311,43 @@ def leave_channel():
 #####################           DM ROUTES              #########################
 ################################################################################
 
-@APP.route("dm/details/v1", methods=['GET'])
+@APP.route("/dm/details/v1", methods=['GET'])
 def details_dm():
     data = request.get_json()
     details = dm_details_v1(data['token'], data['dm_id'])
     return dumps(details)
 
-@APP.route("dm/list/v1", methods=['GET'])
+@APP.route("/dm/list/v1", methods=['GET'])
 def list_dm():
     data = request.get_json()
     dm_list = dm_list_v1(data['token'])
     return dumps(dm_list)
 
-@APP.route("dm/create/v1", methods=['POST'])
+@APP.route("/dm/create/v1", methods=['POST'])
 def create_dm():
     data = request.get_json()
     dm_info = dm_create_v1(data['token'], data['u_ids'])
     return dumps(dm_info)
 
-@APP.route("dm/remove/v1", methods=['DELETE'])
-def list_dm():
+@APP.route("/dm/remove/v1", methods=['DELETE'])
+def remove_dm():
     data = request.get_json()
     dm_remove_v1(data['token'], data['dm_id'])
     return dumps({})
 
-@APP.route("dm/invite/v1", methods=['POST'])
+@APP.route("/dm/invite/v1", methods=['POST'])
 def invite_dm():
     data = request.get_json()
     dm_invite_v1(data['token'], data['dm_id'], data['u_id'])
     return dumps({})
     
-@APP.route("dm/leave/v1", methods=['POST'])
+@APP.route("/dm/leave/v1", methods=['POST'])
 def leave_dm():
     data = request.get_json()
     dm_leave_v1(data['token'], data['dm_id'])
     return dumps({})
     
-@APP.route("dm/messages/v1", methods=['GET'])
+@APP.route("/dm/messages/v1", methods=['GET'])
 def messages_dm():
     data = request.get_json()
     msg = dm_messages_v1(data['token'], data['dm_id'], data['start'])
@@ -357,31 +357,31 @@ def messages_dm():
 #####################         MESSAGE ROUTES           #########################
 ################################################################################
 
-@APP.route("message/send/v2", methods=['POST'])
+@APP.route("/message/send/v2", methods=['POST'])
 def message_send():
     data = request.get_json()
     message_id = message_send_v1(data['token'], data['channel_id'], data['message'])
     return dumps({message_id})
 
-@APP.route("message/edit/v2", methods=['PUT'])
+@APP.route("/message/edit/v2", methods=['PUT'])
 def message_edit():
     data = request.get_json()
     message_edit_v1(data['token'], data['message_id'], data['message'])
     return dumps({})
 
-@APP.route("message/remove/v1", methods=['DELETE'])
+@APP.route("/message/remove/v1", methods=['DELETE'])
 def message_remove():
     data = request.get_json()
     message_remove_v1(data['token'], data['message_id'])
     return dumps({})
 
-@APP.route("message/share/v1", methods=['POST'])
+@APP.route("/message/share/v1", methods=['POST'])
 def message_share():
     data = request.get_json()
     shared_message_id = message_share_v1(data['token'], data['og_message_id'], data['message'], data['channel_id'], data['dm_id'])
     return dumps({shared_message_id})
 
-@APP.route("message/senddm/v1", methods=['POST'])
+@APP.route("/message/senddm/v1", methods=['POST'])
 def message_senddm():
     data = request.get_json()
     message_id = message_senddm_v1(data['token'], data['dm_id'], data['message'])
