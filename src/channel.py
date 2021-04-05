@@ -43,7 +43,6 @@ def channel_invite_v1(token, channel_id, u_id):
     Return Value:
         Returns <{}> on u_id being succesfully added to channel with channel_id
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     owner_u_id = token_to_u_id(token)
@@ -101,7 +100,6 @@ def channel_details_v1(token, channel_id):
         Returns <all_members> on u_id being part of channel with
         channel_id and channel_id being valid
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -275,7 +273,21 @@ def channel_join_v1(token, channel_id):
 
 def channel_addowner_v1(token, channel_id, u_id):
     """
-    asdasd
+    Make user with user id u_id an owner of this channel
+
+    Arguments:
+        token (string)    - an encoded session_id used to identify a user's session
+        channel_id (dict)    - unique id attributeed to a particular channel
+        u_id (integer)    - <unique id used to identify the user who is being added as owner
+
+    Exceptions:
+        InputError  - Occurs when channel_id is not a valid channel
+        InputError  - Occurs when user with user id u_id is already an owner of the channel
+        AccessError - Occurs when when the authorised user is not an owner of 
+        the **Dreams**, or an owner of this channel
+      
+    Return Value:
+        Returns nothing on all cases
     """
     
     if check_valid_token(token) == False:
@@ -305,7 +317,22 @@ def channel_addowner_v1(token, channel_id, u_id):
 
 def channel_removeowner_v1(token, channel_id, u_id):
     """
-    asdasd
+    Remove user with user id u_id an owner of this channel
+
+    Arguments:
+        token (string)    - an encoded session_id used to identify a user's session
+        channel_id (dict)    - unique id attributeed to a particular channel
+        u_id (integer)    - <unique id used to identify the user who is being removed as owner
+
+    Exceptions:
+        InputError  - Occurs when channel_id is not a valid channel
+        InputError  - Occurs when user with user id u_id is not already an owner of the channel
+        InputError  - Occurs when the user is currently the only owner
+        AccessError - Occurs when when the authorised user is not an owner of 
+        the **Dreams**, or an owner of this channel
+      
+    Return Value:
+        Returns nothing on all cases
     """
     
     if check_valid_token(token) == False:
