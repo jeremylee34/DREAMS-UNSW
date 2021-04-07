@@ -77,18 +77,13 @@ def test_search_v2_input_token(clear_data):
     '''
     Test for invalid input token in search function
     '''
-    assert requests.get(config.url + 'search/v2', json = {
-        'token': 6,
-        'query_str':'Hello',
-    }).status_code == AccessError.code
+    assert requests.get(config.url + 'search/v2?token=6&query_str=Hello').status_code == AccessError.code
 
 def test_notifications_get_invalid_token(clear_data):
     '''
     Test for invalid input token in notification function
     '''
-    assert requests.get(config.url + 'notifications/get/v1', json = {
-        'token': 6,
-    }).status_code == AccessError.code
+    assert requests.get(config.url + 'notifications/get/v1?token=6').status_code == AccessError.code
 
 def test_notifications_get_tag(clear_data):
     '''
@@ -115,9 +110,7 @@ def test_notifications_get_tag(clear_data):
         'message': 'Hello @gordonliang',
     })
 
-    notification = requests.get(config.url + 'notifications/get/v1', json = {
-        'token': user_pl['token'],
-    })
+    notification = requests.get(config.url + f"notifications/get/v1?token={user_pl['token']}")
     notification_pl = notification.json()
 
     assert notification_pl['notifications'][0]['notification_message'] == 'gordonliang tagged you in Channel1: Hello @gordonliang'
@@ -155,9 +148,7 @@ def test_notifications_get_add_to_channel(clear_data):
         'u_id': user2_pl['auth_user_id'],
     })
 
-    notification = requests.get(config.url + 'notifications/get/v1', json = {
-        'token': user2_pl['token'],
-    })
+    notification = requests.get(config.url + f"notifications/get/v1?token={user2_pl['token']}")
     notification_pl = notification.json()
 
     assert notification_pl['notifications'][0]['notification_message'] == 'gordonliang added you to Channel1'
@@ -194,9 +185,7 @@ def test_notifications_get_tag_dm(clear_data):
         'message': 'Hello @kanitsrihakorth',
     })
 
-    notification = requests.get(config.url + 'notifications/get/v1', json = {
-        'token': user2_pl['token'],
-    })
+    notification = requests.get(config.url + f"notifications/get/v1?token={user2_pl['token']}")
     notification_pl = notification.json()
     assert notification_pl['notifications'][0]['notification_message'] == 'gordonliang added you to gordonliang, kanitsrihakorth'
     assert notification_pl['notifications'][1]['notification_message'] == 'gordonliang tagged you in gordonliang, kanitsrihakorth: Hello @kanitsrihakor'
@@ -226,9 +215,7 @@ def test_notifications_get_add_to_dm(clear_data):
         'u_ids': [user2_pl['auth_user_id']],
     })
 
-    notification = requests.get(config.url + 'notifications/get/v1', json = {
-        'token': user2_pl['token'],
-    })
+    notification = requests.get(config.url + f"notifications/get/v1?token={user2_pl['token']}")
     notification_pl = notification.json()
 
     assert notification_pl['notifications'][0]['notification_message'] == 'gordonliang added you to gordonliang, kanitsrihakorth' 
