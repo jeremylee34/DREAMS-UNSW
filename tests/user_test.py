@@ -145,4 +145,3 @@ def test_invalid_token_users_all(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(AccessError):
         assert users_all_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE') 
-        

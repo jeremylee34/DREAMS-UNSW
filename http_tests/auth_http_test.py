@@ -159,4 +159,3 @@ def test_invalid_token_logout(clear_data):
     assert requests.post(config.url + 'auth/logout/v1', json = {
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
     }).status_code == AccessError.code
-    
