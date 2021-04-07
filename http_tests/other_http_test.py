@@ -44,7 +44,7 @@ def test_search_v2(clear_data):
         'message': 'Hello',
     })
   
-    assert requests.get(config.url + f"search/v2?token={user_pl['token']}&query_str=Hello"}).status_code == 200
+    assert requests.get(config.url + f"search/v2?token={user_pl['token']}&query_str=Hello").status_code == 200
 
 def test_search_v2_input_error(clear_data):
     '''
@@ -71,10 +71,7 @@ def test_search_v2_input_error(clear_data):
         'message': 'Hello',
     })
 
-    assert requests.get(config.url + 'search/v2', json = {
-        'token': user_pl['token'],
-        'query_str':'Hello' * 1000,
-    }).status_code == InputError.code
+    assert requests.get(config.url + f"search/v2?token={user_pl['token']}&query_str={'Hello' * 1000}").status_code == InputError.code
 
 def test_search_v2_input_token(clear_data):
     '''
