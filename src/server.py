@@ -264,14 +264,14 @@ def clear():
 
 @APP.route("/channels/list/v2", methods=['GET'])
 def get_list():
-    token = request.get_json()
-    channels = channels_list_v1(token['token'])
+    token = request.args.get()
+    channels = channels_list_v1(token)
     return dumps(channels)
 
 @APP.route("/channels/listall/v2", methods=['GET'])
 def get_listall():
-    token = request.get_json()
-    channels = channels_listall_v1(token['token'])
+    token = request.args.get()
+    channels = channels_listall_v1(token)
     return dumps(channels)
 
 @APP.route("/channels/create/v2", methods=['POST'])
