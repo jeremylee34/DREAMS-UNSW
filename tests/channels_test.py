@@ -103,7 +103,7 @@ def test_channel_list_invalid_token(clear, auth_id):
     '''
     Tests if entering an invalid token will produce an access error
     '''
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert channels_list_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo0fQ.UWh4yaDf6lPdmJroKBXfBZURXskoLULjM7Es_xZSK6U')
 
 def test_channels_listall_none(clear, auth_id):
@@ -138,7 +138,7 @@ def test_channel_listall_invalid_token(clear, auth_id):
     '''
     Tests if inputting an invalid token will produce an AccessError
     '''
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert channels_listall_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo0fQ.UWh4yaDf6lPdmJroKBXfBZURXskoLULjM7Es_xZSK6U')
 def test_channels_create(clear, channel_id, channels):
     '''
@@ -181,5 +181,5 @@ def test_channels_create_invalid_token(clear, auth_id):
     '''
     Checks if token returns AccessError when given an invalid token
     '''
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert channels_create_v1(2, "Channel1", True)

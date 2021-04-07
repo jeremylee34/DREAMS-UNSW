@@ -21,12 +21,11 @@ def test_empty_list(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     channels = requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert channels_json == []
+    }).json()
+    assert channels['channels'] == []
 def test_list(clear):
     '''
     Basic test for functionality of channels/list/v2
@@ -36,7 +35,7 @@ def test_list(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -44,9 +43,8 @@ def test_list(clear):
     })
     channels = requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
 def test_multiple_lists(clear):
     '''
     Tests for multiple lists 
@@ -56,7 +54,7 @@ def test_multiple_lists(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -69,10 +67,9 @@ def test_multiple_lists(clear):
     })
     channels = requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
-    assert 'Channel2' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
+    assert channels['channels'][1]['name'] == "Channel2"
 def test_list_private_channel(clear):
     '''
     Tests if private channels are listed properly
@@ -82,7 +79,7 @@ def test_list_private_channel(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -90,9 +87,8 @@ def test_list_private_channel(clear):
     })
     channels = requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
 def test_channel_list_valid_token(clear):
     '''
     Checks if token given is valid
@@ -102,7 +98,7 @@ def test_channel_list_valid_token(clear):
     }
     assert requests.get(f"{url}/channels/list/v2", json={
         'token': register_info['token']
-    }).status_code == 403
+    }).status_code == 400
 
 def test_empty_listall(clear):
     '''
@@ -113,13 +109,12 @@ def test_empty_listall(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     channels = requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert channels_json == []
-def test_listall():
+    }).json()
+    assert channels['channels'] == []
+def test_listall(clear):
     '''
     Basic test for channels/listall/v2
     '''
@@ -128,7 +123,7 @@ def test_listall():
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -136,9 +131,8 @@ def test_listall():
     })
     channels = requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
 def test_multiple_listall(clear):
     '''
     Test multiple lists
@@ -148,7 +142,7 @@ def test_multiple_listall(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -161,10 +155,9 @@ def test_multiple_listall(clear):
     })
     channels = requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
-    assert 'Channel2' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
+    assert channels['channels'][1]['name'] == "Channel2"
 def test_listall_private_channel(clear):
     '''
     Tests if private channels appear in the list
@@ -174,7 +167,7 @@ def test_listall_private_channel(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -182,9 +175,8 @@ def test_listall_private_channel(clear):
     })
     channels = requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
 def test_listall_valid_token(clear):
     '''
     Tests for an invalid token
@@ -194,7 +186,7 @@ def test_listall_valid_token(clear):
     }
     assert requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    }).status_code == 403
+    }).status_code == 400
 
 def test_create(clear):
     '''
@@ -205,7 +197,7 @@ def test_create(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1',
@@ -213,9 +205,10 @@ def test_create(clear):
     })
     channels = requests.get(f"{url}/channels/listall/v2", json={
         'token': register_info['token']
-    })
-    channels_json = channels['channels'].json()
-    assert 'Channel1' in channels_json.values()
+    }).json()
+    assert channels['channels'][0]['name'] == "Channel1"
+
+
 def test_channels_create_input_error(clear):
     '''
     Tests for when name of channel is greater than 20 characters
@@ -225,7 +218,7 @@ def test_channels_create_input_error(clear):
         'password': '12345678',
         'name_first': 'Gordon',
         'name_last': 'Liang'
-    })
+    }).json()
     assert requests.post(f"{url}/channels/create/v2", json={
         'token': register_info['token'],
         'name': 'Channel1Channel1Channel1Channel1',
@@ -242,4 +235,4 @@ def test_channels_create_invalid_token(clear):
         'token': register_info['token'],
         'name': 'Channel1',
         'is_public': True
-    }).status_code == 403
+    }).status_code == 400
