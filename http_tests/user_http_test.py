@@ -26,10 +26,7 @@ def test_invalid_uid(clear_data):
         'name_last': 'brown',
     })
     payload = r.json()
-    assert requests.get(f'{url}/user/profile/v2', json={
-        'token': payload['token'],
-        'u_id': 10000
-    }).status_code == InputError.code 
+    assert requests.get(f"{url}/user/profile/v2?token={payload['token']}&u_id=1000").status_code == InputError.code
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):    
@@ -40,10 +37,7 @@ def test_invalid_token_profile(clear_data):
         'name_last': 'brown',
     }).json()
     
-    assert requests.get(f'{url}/user/profile/v2', json={
-        'token': 'invalid_token',
-        'u_id': user['auth_user_id']
-    }).status_code == AccessError.code
+    assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == AccessError.code
    
 
 ##Tests for user/profile/setname/v2
