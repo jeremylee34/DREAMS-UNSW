@@ -70,8 +70,9 @@ def echo():
 
 @APP.route('/search/v2', methods=['GET'])
 def search():
-    inputs = request.get_json()
-    r = search_v1(inputs['token'], inputs['query_str'])
+    inputs = request.args.get('token')
+    query_str = request.args.get('query_str')
+    r = search_v1(token, query_str)
     return dumps(r)
 
 @APP.route('/admin/user/remove/v1', methods=['DELETE'])
@@ -88,8 +89,8 @@ def admin_userpermission_change():
 
 @APP.route('/notifications/get/v1', methods=['GET'])
 def notifications_get():
-    token = request.get_json()
-    r = notifications_get_v1(token['token'])
+    token = request.args.get('token')
+    r = notifications_get_v1(token)
     return dumps(r)
 
 ################################################################################
@@ -166,8 +167,9 @@ def user_profile():
     Returns:
         Returns the result of the user_profile_v1 function in json
     """       
-    data = request.get_json()
-    r = user.user_profile_v1(data['token'], data['u_id'])
+    token = request.args.get('token')
+    u_id = int(request.args.get('u_id'))
+    r = user.user_profile_v1(token, u_id)
     return dumps(r)
 
 @APP.route('/user/profile/setname/v2', methods=['PUT'])
@@ -264,14 +266,14 @@ def clear():
 
 @APP.route("/channels/list/v2", methods=['GET'])
 def get_list():
-    token = request.get_json()
-    channels = channels_list_v1(token['token'])
+    token = request.args.get('token')
+    channels = channels_list_v1(token)
     return dumps(channels)
 
 @APP.route("/channels/listall/v2", methods=['GET'])
 def get_listall():
-    token = request.get_json()
-    channels = channels_listall_v1(token['token'])
+    token = request.args.get('token')
+    channels = channels_listall_v1(token)
     return dumps(channels)
 
 @APP.route("/channels/create/v2", methods=['POST'])
@@ -292,14 +294,17 @@ def invite_channel():
     
 @APP.route("/channel/details/v2", methods=['GET'])
 def details_channel():
-    data = request.get_json()
-    details = channel_details_v1(data['token'], data['channel_id'])
+    token = request.args.get('token')
+    channel_id = int(request.args.get('channel_id'))
+    details = channel_details_v1(token, channel_id)
     return dumps(details)
     
 @APP.route("/channel/messages/v2", methods=['GET'])
 def messages_channel():
-    data = request.get_json()
-    msg = channel_messages_v1(data['token'], data['channel_id'], data['start'])
+    token = request.args.get('token')
+    channel_id = int(request.args.get('channel_id'))
+    start = start(request.args.get('start'))
+    msg = channel_messages_v1(token, channel_id, start)
     return dumps(msg)
 
 @APP.route("/channel/join/v2", methods=['POST'])
@@ -332,14 +337,15 @@ def leave_channel():
 
 @APP.route("/dm/details/v1", methods=['GET'])
 def details_dm():
-    data = request.get_json()
-    details = dm_details_v1(data['token'], data['dm_id'])
+    token = request.args.get('token')
+    dm_id = int(request.args.get('dm_id'))
+    details = dm_details_v1(token, dm_id)
     return dumps(details)
 
 @APP.route("/dm/list/v1", methods=['GET'])
 def list_dm():
-    data = request.get_json()
-    dm_list = dm_list_v1(data['token'])
+    data = request.args.get('token')
+    dm_list = dm_list_v1(data)
     return dumps(dm_list)
 
 @APP.route("/dm/create/v1", methods=['POST'])
@@ -368,8 +374,10 @@ def leave_dm():
     
 @APP.route("/dm/messages/v1", methods=['GET'])
 def messages_dm():
-    data = request.get_json()
-    msg = dm_messages_v1(data['token'], data['dm_id'], data['start'])
+    token = request.args.get('token')
+    dm_id = int(request.args.get('dm_id'))
+    start = int(request.args.get('start'))
+    msg = dm_messages_v1(token, dm_id, start)
     return dumps(msg)
 
 ################################################################################
