@@ -64,13 +64,11 @@ def echo():
     data = request.args.get('data')
     if data == 'echo':
    	    raise InputError(description='Cannot echo "echo"')
-    return dumps({
-        'data': data
-    })
+    return dumps({'data': data})
 
 @APP.route('/search/v2', methods=['GET'])
 def search():
-    inputs = request.args.get('token')
+    token = request.args.get('token')
     query_str = request.args.get('query_str')
     r = search_v1(token, query_str)
     return dumps(r)
@@ -78,14 +76,14 @@ def search():
 @APP.route('/admin/user/remove/v1', methods=['DELETE'])
 def admin_user_remove():
     inputs = request.get_json()
-    r = admin_user_remove_v1(inputs['token'], inputs['u_id'])
-    return dumps(r)
+    admin_user_remove_v1(inputs['token'], inputs['u_id'])
+    return dumps({})
 
 @APP.route('/admin/userpermission/change/v1', methods=['POST'])
 def admin_userpermission_change():
     inputs = request.get_json()
-    r = admin_userpermission_change_v1(inputs['token'], inputs['u_id'], inputs['permission_id'])
-    return dumps(r)
+    admin_userpermission_change_v1(inputs['token'], inputs['u_id'], inputs['permission_id'])
+    return dumps({})
 
 @APP.route('/notifications/get/v1', methods=['GET'])
 def notifications_get():
@@ -111,8 +109,6 @@ def login():
     """   
     inputs = request.get_json()
     r = auth.auth_login_v1(inputs['email'], inputs['password'])
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))
     return dumps(r)
 
 @APP.route('/auth/register/v2', methods=['POST'])
@@ -129,8 +125,6 @@ def register():
     """       
     inputs = request.get_json()
     r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
@@ -146,9 +140,7 @@ def logout():
         Returns the result of the auth_logout_v1 function in json
     """       
     inputs = request.get_json()
-    r = auth.auth_logout_v1(inputs['token'])
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))    
+    r = auth.auth_logout_v1(inputs['token'])   
     return dumps(r)
 
 ################################################################################
@@ -185,8 +177,8 @@ def profile_setname():
         Returns the result of the user_profile_setname_v1 function in json
     """       
     inputs = request.get_json()
-    r = user.user_profile_setname_v1(inputs['token'], inputs['name_first'], inputs['name_last'])
-    return dumps(r)
+    user.user_profile_setname_v1(inputs['token'], inputs['name_first'], inputs['name_last'])
+    return dumps({})
 
 @APP.route('/user/profile/setemail/v2', methods=['PUT'])
 def profile_setemail():
@@ -201,8 +193,8 @@ def profile_setemail():
         Returns the result of the user_profile_setemail_v1 function in json
     """       
     inputs = request.get_json()
-    r = user.user_profile_setemail_v1(inputs['token'], inputs['email'])
-    return dumps(r)
+    user.user_profile_setemail_v1(inputs['token'], inputs['email'])
+    return dumps({})
 
 @APP.route('/user/profile/sethandle/v1', methods=['PUT'])
 def profile_sethandle():
@@ -217,8 +209,8 @@ def profile_sethandle():
         Returns the result of the user_profile_sethandle_v1 function in json
     """        
     inputs = request.get_json()
-    r = user.user_profile_sethandle_v1(inputs['token'], inputs['handle_str']) 
-    return dumps(r)
+    user.user_profile_sethandle_v1(inputs['token'], inputs['handle_str']) 
+    return dumps({})
 
 @APP.route('/users/all/v1', methods=['GET'])
 def users_all():
@@ -234,8 +226,6 @@ def users_all():
     """        
     token = request.args.get('token')
     r = user.users_all_v1(token)
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))    
     return dumps(r)
 
 ################################################################################
@@ -254,10 +244,8 @@ def clear():
     Returns:
         Returns the result of the clear_v1 function in json
     """        
-    r = other.clear_v1()
-    with open('store.json', 'w') as fp:
-        fp.write(dumps(data))    
-    return dumps(r)
+    other.clear_v1()
+    return dumps({})
 
 
 ################################################################################
@@ -303,7 +291,7 @@ def details_channel():
 def messages_channel():
     token = request.args.get('token')
     channel_id = int(request.args.get('channel_id'))
-    start = start(request.args.get('start'))
+    start = int(request.args.get('start'))
     msg = channel_messages_v1(token, channel_id, start)
     return dumps(msg)
 

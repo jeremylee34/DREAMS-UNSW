@@ -115,6 +115,7 @@ def channel_details_v1(token, channel_id):
     #Make dictionary with required keys that is to be returned
     channel_info = {
         "name": "",
+        "is_public": data['channels'][channel_id]['is_public'],
         "owner_members": [],
         "all_members": []
     }
