@@ -56,7 +56,6 @@ def test_admin_remove_invalid_token(clear_data):
     '''
     Test if admin_remove_input has invalid token
     '''
-    user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
     user2 = auth_register_v1('Kanit@gmail.com', '12345678', 'Kanit', 'Liang')
     with pytest.raises(AccessError):
         assert admin_user_remove_v1('asdf', user2['auth_user_id'])
@@ -129,7 +128,6 @@ def test_admin_userpermission_invalid_token(clear_data):
     '''
     Test if function raises AccessError('Invalid token') 
     '''
-    user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
     user2 = auth_register_v1('Kanit@gmail.com', '12345678', 'Kanit', 'Liang')
     with pytest.raises(AccessError):
         assert admin_userpermission_change_v1('asdf', user2['auth_user_id'], 1)

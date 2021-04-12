@@ -42,7 +42,6 @@ def test_search_v1_invalid_token(clear_data):
     '''
     Test for invalid token in search
     '''
-    user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
     with pytest.raises(AccessError):
         assert search_v1(6, 'Hello')
         assert search_v1('asdf', 'Helloooo')
