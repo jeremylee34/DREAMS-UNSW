@@ -200,7 +200,7 @@ def test_all_users(clear_data):
     query_string = f"token={payload['token']}"
     users = requests.get(f'{url}/users/all/v1?{query_string}')
     payload2 = users.json()
-    assert len(payload2) == 2  
+    assert len(payload2['users']) == 2  
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):    
