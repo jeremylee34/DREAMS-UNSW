@@ -751,7 +751,3 @@ def test_message_senddm_invalid_token(clear):
         'dm_id': dm_info['dm_id'],
         'message': 'Hello'
     }).status_code == 400
-<<<<<<< HEAD
-
-=======
->>>>>>> master
