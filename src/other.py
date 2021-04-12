@@ -51,7 +51,7 @@ def search_v1(token, query_str):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
 
     msg_list = []
     token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
@@ -85,7 +85,7 @@ def notifications_get_v1(token):
         u_id (int)
     Exceptions:
         InputError - if the u_id is not a valid user
-        AccessError - Authorised user isn't an owner
+        InputError - Authorised user isn't an owner
     Returns:
         Blank dictionary
     """
@@ -94,7 +94,7 @@ def notifications_get_v1(token):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
 
     decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
     msg_list = []

@@ -70,7 +70,7 @@ def echo():
 
 @APP.route('/search/v2', methods=['GET'])
 def search():
-    inputs = request.args.get('token')
+    token = request.args.get('token')
     query_str = request.args.get('query_str')
     r = search_v1(token, query_str)
     return dumps(r)

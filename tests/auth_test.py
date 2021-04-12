@@ -123,5 +123,5 @@ def test_logout(clear_data):
 #Tests whether input error is raised for invalid token
 def test_invalid_token(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert auth_logout_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE')

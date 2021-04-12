@@ -28,7 +28,7 @@ def user_profile_v1(token, u_id):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
-    #If token is valid, then profile dict is updated otherwise access error is thrown
+    #If token is valid, then profile dict is updated otherwise input error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         profile = {}
@@ -47,7 +47,7 @@ def user_profile_v1(token, u_id):
         if valid == 0:
             raise InputError("Invalid user")
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return profile
 
 def user_profile_setname_v1(token, name_first, name_last):
@@ -68,7 +68,7 @@ def user_profile_setname_v1(token, name_first, name_last):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1    
-    #If token is valid, then profile dict is updated otherwise access error is thrown
+    #If token is valid, then profile dict is updated otherwise input error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         #Checks if name_first is valid
@@ -84,7 +84,7 @@ def user_profile_setname_v1(token, name_first, name_last):
                     x['name_first'] = name_first
                     x['name_last'] = name_last 
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}    
 
 def user_profile_setemail_v1(token, email):
@@ -104,7 +104,7 @@ def user_profile_setemail_v1(token, email):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
-    #If token is valid, then profile dict is updated otherwise access error is thrown
+    #If token is valid, then profile dict is updated otherwise input error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
@@ -123,7 +123,7 @@ def user_profile_setemail_v1(token, email):
                     if y == decoded_token["session_id"]:
                         x['email'] = email
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
         
 
@@ -144,7 +144,7 @@ def user_profile_sethandle_v1(token, handle_str):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
-    #If token is valid, then profile dict is updated otherwise access error is thrown
+    #If token is valid, then profile dict is updated otherwise input error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         #Checks if handle_str is valid
@@ -160,7 +160,7 @@ def user_profile_sethandle_v1(token, handle_str):
                     if y == decoded_token["session_id"]:
                         x['handle_str'] = handle_str
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
 
 
@@ -179,7 +179,7 @@ def users_all_v1(token):
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
-    #If token is valid, then profile dict is updated otherwise access error is thrown
+    #If token is valid, then profile dict is updated otherwise input error is thrown
     if valid_token == 1:
         all_users = []
         info = {}
@@ -193,5 +193,5 @@ def users_all_v1(token):
             info['permission_id'] = x['permission_id']
             all_users.append(info)
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return all_users

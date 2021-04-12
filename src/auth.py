@@ -209,7 +209,7 @@ def auth_logout_v1(token):
         if token == t:
             valid_token = 1
             data['token_list'].remove(token) 
-    #If the token is valid, then particular session_id is removed, otherwise AccessError is raised
+    #If the token is valid, then particular session_id is removed, otherwise InputError is raised
     if valid_token == 1:
         for x in data["users"]:
             for y in x["session_ids"]:
@@ -217,7 +217,7 @@ def auth_logout_v1(token):
                     x["session_ids"].remove(y)
                     logout = True
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {
         'is_success': logout,
     }

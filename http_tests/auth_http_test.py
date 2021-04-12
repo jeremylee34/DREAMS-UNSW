@@ -144,7 +144,7 @@ def test_successful_logout(clear_data):
     payload2 = r.json()
     assert payload2["is_success"] == True
 
-#Tests whether access error is raised for invalid token
+#Tests whether input error is raised for invalid token
 def test_invalid_token_logout(clear_data):    
     requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -158,4 +158,4 @@ def test_invalid_token_logout(clear_data):
     })              
     assert requests.post(config.url + 'auth/logout/v1', json = {
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
-    }).status_code == AccessError.code
+    }).status_code == InputError.code
