@@ -47,9 +47,7 @@ def channels_list_v1(token):
                 channel_dict['channel_id'] = channel['channel_id']
                 channel_dict['name'] = channel['name']
                 channel_list.append(channel_dict)
-    return {
-        'channels': channel_list
-    }
+    return {'channels': channel_list}
 
 def channels_listall_v1(token):
     '''
@@ -75,9 +73,7 @@ def channels_listall_v1(token):
         channel_dict['channel_id'] = channel['channel_id']
         channel_dict['name'] = channel['name']
         channel_list.append(channel_dict)
-    return {
-        'channels': channel_list
-    }
+    return {'channels': channel_list}
 
 def channels_create_v1(token, name, is_public):
     '''
@@ -141,6 +137,4 @@ def channels_create_v1(token, name, is_public):
     channel_id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
-    return {
-        'channel_id': channel_id
-    }
+    return {'channel_id': channel_id}

@@ -138,7 +138,7 @@ def test_all_users(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
     user_result = users_all_v1(register1['token'])
-    assert len(user_result) == 2 
+    assert len(user_result['users']) == 2 
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):
