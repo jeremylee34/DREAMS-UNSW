@@ -203,6 +203,7 @@ def test_all_users(clear_data):
     assert len(payload2) == 2  
 
 #Tests whether input error is raised for invalid token
+#TODO: MAYBE CHANGING
 def test_invalid_token_users_all(clear_data):    
     requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -212,3 +213,47 @@ def test_invalid_token_users_all(clear_data):
     })
     query_string = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
     assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code   
+
+##Tests for user/stats/v1
+#checks for how big is the dictionary to test if function is successful
+#TODO: MAYBE CHANGING
+def test_success_user_stats(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    payload = r.json()
+    assert requests.get(f"{url}user/stats/v1?token={payload['token']}").status_code == 200
+
+##Tests for users/stats/v1
+#checks for how big is the dictionary to test if function is successful
+def test_success_users_stats(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    payload = r.json()
+    requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }) 
+    requests.post(f'{url}/auth/register/v2', json={
+        'email': 'sam@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'sam',
+        'name_last': 'red',
+    })        
+    assert requests.get(f"{url}users/stats/v1?token={payload['token']}").status_code == 200
+
+##Tests for /user/profile/uploadphoto/v1
+'''
+    InputError - img_url returns a HTTP status other than 200 (not successful)
+    InputError - x_start, y_start, x_end, y_end are not within the dimensions of the image at the url
+    InputError - image uploaded is not a JPEG
+'''

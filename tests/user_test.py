@@ -145,3 +145,16 @@ def test_invalid_token_users_all(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(InputError):
         assert users_all_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE') 
+
+##Tests for user/stats/v1
+#checks for how big is the dictionary to test if function is successful
+
+##Tests for users/stats/v1
+#checks for how big is the dictionary to test if function is successful
+
+##Tests for /user/profile/uploadphoto/v1
+'''
+    InputError - img_url returns a HTTP status other than 200 (not successful)
+    InputError - x_start, y_start, x_end, y_end are not within the dimensions of the image at the url
+    InputError - image uploaded is not a JPEG
+'''

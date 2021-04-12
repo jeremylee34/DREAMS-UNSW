@@ -159,3 +159,37 @@ def test_invalid_token_logout(clear_data):
     assert requests.post(config.url + 'auth/logout/v1', json = {
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
     }).status_code == InputError.code
+
+##Tests for passwordreset/request
+#Tests whether input error is raised for invalid reset code
+def test_reset_invalid_code(clear_data):    
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    requests.post(config.url + 'auth/passwordreset/request/v1', json={
+        'email': 'tom@gmail.com',
+    })              
+    assert requests.post(config.url + 'auth/passwordreset/reset/v1', json = {
+        'reset_code': 'temp_code',
+        'new_password': 'hello1234'
+    }).status_code == InputError.code
+
+#Tests whether input error is raised for invalid password
+def test_invalid_reset_password(clear_data):    
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    requests.post(config.url + 'auth/passwordreset/request/v1', json={
+        'email': 'tom@gmail.com',
+    })              
+    assert requests.post(config.url + 'auth/passwordreset/reset/v1', json = {
+        'reset_code': 'temp_code',
+        'new_password': 'hi'
+    }).status_code == InputError.code
+

@@ -125,3 +125,21 @@ def test_invalid_token(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(InputError):
         assert auth_logout_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE')
+
+##Tests for passwordreset/request
+
+
+##Tests for passwordreset/reset
+#Tests whether input error is raised for invalid reset code (reset code is not the same as given reset code for user) 
+def test_invalid_reset_code(clear_data):
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_passwordreset_request_v1("asdf@gmail.com")
+    with pytest.raises(InputError):
+        assert auth_passwordreset_reset_v1('temp_code', 'hello1234')
+
+#Tests whether input error is raised for invalid password
+def test_reset_invalid_password(clear_data):
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_passwordreset_request_v1("asdf@gmail.com")
+    with pytest.raises(InputError):
+        assert auth_passwordreset_reset_v1('temp_code', 'hi')
