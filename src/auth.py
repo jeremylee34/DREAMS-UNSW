@@ -75,7 +75,7 @@ def auth_login_v1(email, password):
     data['token_list'].append(token)
     return {
         'token': token,
-        'auth_user_id': count,
+        'auth_user_id': count
     }
 
 
@@ -185,7 +185,7 @@ def auth_register_v1(email, password, name_first, name_last):
     data['users'].append(register)    
     return {
         'token': token,
-        'auth_user_id': count,
+        'auth_user_id': count
     }
 
 
@@ -219,7 +219,7 @@ def auth_logout_v1(token):
     else:
         raise AccessError("Invalid token")
     return {
-        'is_success': logout,
+        'is_success': logout
     }
 
 
