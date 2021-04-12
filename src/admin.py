@@ -47,18 +47,16 @@ def admin_user_remove_v1(token, u_id):
     for x in data['users']: 
         if x['u_id'] == u_id:
             data['users'].remove(x)
-    channel = 0
-    for channel in data['channels']:
-        channel += 1
-        for message in data['messages']:
-            if message['u_id'] == u_id:
-                message['message'] == 'Removed user'
-    dm = 0
-    for dm in data['dms']:
-        dm += 1
-        for message2 in data['messages']:
+    
+    for channel_id in data['channels']:
+        for messages in channel_id['messages']:
+            if messages['u_id'] == u_id:
+                messages['message'] = 'Removed user'
+
+    for dm_id in data['dms']:
+        for message2 in dm_id['messages']:
             if message2['u_id'] == u_id:
-                message2['message'] == 'Removed user'
+                message2['message'] = 'Removed user'
 
     return {}
 

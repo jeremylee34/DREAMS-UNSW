@@ -124,7 +124,8 @@ def notifications_get_v1(token):
                                 'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
                             }
                         msg_list.append(new_dict)
-                    elif notification['message'] == '':
+                    #notification['message'] == '' and not @:
+                    else:
                         if notification['channel_id'] == -1:
                             dm_name = data['dms'][notification['channel_id']]['name']
                             new_dict = {
