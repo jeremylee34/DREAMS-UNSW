@@ -30,12 +30,12 @@ def test_invalid_uid(clear_data):
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):    
-    user = requests.post(f'{url}/auth/register/v2', json={
+    requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
-    }).json()
+    })
     
     assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == AccessError.code
    

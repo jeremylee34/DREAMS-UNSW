@@ -373,7 +373,6 @@ def test_channel_messages_v1_input_error1(clear, user_token1, public_channel):
     """
     InputError to be thrown when channel_id is invalidW
     """
-    start = 0
     assert requests.get(f"{url}/channel/messages/v2?token={user_token1['token']}&channel_id={INVALID_ID}&start=0").status_code == INPUT_ERROR
 
 def test_channel_messages_v1_input_error2(clear, user_token1, public_channel):
