@@ -156,7 +156,14 @@ def channel_messages_v1(token, channel_id, start):
     if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
     # Check if start is greater than number of messages in channel
-    if start > (len(data['channels'][channel_id]['messages']) - 1):
+    length_messages = len(data['channels'][channel_id]['messages'])
+    if start == 0 and length_messages == 0:
+        return {
+            'messages': [],
+            'start': start,
+            'end': 0
+        }
+    if start >= length_messages:
         raise InputError("Start is greater than the total number of messages in the channel")
     u_id = token_to_u_id(token)
     # Check if user is in channel

@@ -291,7 +291,14 @@ def dm_messages_v1(token, dm_id, start):
         raise InputError("dm_id does not refer to an existing dm")
     #Check if start is greater tham total messages in the DM
     #Raise InputError if it is 
-    if start > (len(data['dms'][dm_id]['messages']) - 1):
+    length_messages = len(data['dms'][dm_id]['messages'])
+    if start == 0 and length_messages == 0:
+        return {
+            'messages': [],
+            'start': start,
+            'end': 0
+        }
+    if start >= length_messages:
         raise InputError("Start is greater tham total messages in the DM")
 
     user = token_to_u_id(token)
