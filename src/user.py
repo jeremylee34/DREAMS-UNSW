@@ -193,5 +193,5 @@ def users_all_v1(token):
             info['permission_id'] = x['permission_id']
             all_users.append(info)
     else:
-        raise AccessError("Invalid token")
-    return all_users
+        raise AccessError("Invalid token")  
+    return {'users': all_users}

@@ -77,7 +77,7 @@ def message_send_v1(token, channel_id, message):
     # Inserts the message into the channel messages
     data['channels'][channel_id]['messages'].insert(0, new_message)
     return {
-        'message_id': message_id,
+        'message_id': message_id
     }
 
 def message_remove_v1(token, message_id):

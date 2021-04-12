@@ -26,24 +26,18 @@ def test_invalid_uid(clear_data):
         'name_last': 'brown',
     })
     payload = r.json()
-    assert requests.get(f'{url}/user/profile/v2', json={
-        'token': payload['token'],
-        'u_id': 10000
-    }).status_code == InputError.code 
+    assert requests.get(f"{url}/user/profile/v2?token={payload['token']}&u_id=1000").status_code == InputError.code
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):    
-    user = requests.post(f'{url}/auth/register/v2', json={
+    requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
-    }).json()
+    })
     
-    assert requests.get(f'{url}/user/profile/v2', json={
-        'token': 'invalid_token',
-        'u_id': user['auth_user_id']
-    }).status_code == AccessError.code
+    assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == AccessError.code
    
 
 ##Tests for user/profile/setname/v2
@@ -206,7 +200,7 @@ def test_all_users(clear_data):
     query_string = f"token={payload['token']}"
     users = requests.get(f'{url}/users/all/v1?{query_string}')
     payload2 = users.json()
-    assert len(payload2) == 2  
+    assert len(payload2['users']) == 2  
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):    
