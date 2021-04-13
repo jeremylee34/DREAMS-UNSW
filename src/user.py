@@ -5,7 +5,7 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from flask import request
 import jwt
-from src.data import data
+from src.database import data
 from src.error import InputError, AccessError
 import re
 

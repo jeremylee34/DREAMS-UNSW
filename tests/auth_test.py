@@ -10,7 +10,6 @@ from src.auth import auth_logout_v1
 from src.user import user_profile_v1
 from src.error import InputError, AccessError
 from src.other import clear_v1
-from src.data import data
 
 @pytest.fixture
 #Clears all user data

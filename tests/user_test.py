@@ -13,7 +13,6 @@ from src.user import user_profile_sethandle_v1
 from src.user import users_all_v1
 from src.error import InputError, AccessError
 from src.other import clear_v1
-from src.data import data
 
 @pytest.fixture
 #Clears all data

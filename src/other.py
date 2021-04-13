@@ -6,7 +6,7 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 import requests
 import jwt
-from src.data import data
+from src.database import data
 from src.channel import channel_messages_v1
 from src.channels import channels_list_v1
 

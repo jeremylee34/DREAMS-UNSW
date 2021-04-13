@@ -3,7 +3,7 @@ First iteration of channel.py
 channel_join_v1 and channel_messages_v1 authored by Jeremy Lee
 chanel_invite_v1 and channel_details authored by Roland Lin
 """
-from src.data import data
+from src.database import data
 from src.error import InputError
 from src.error import AccessError
 from src.user import user_profile_v1

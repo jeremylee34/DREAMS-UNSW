@@ -11,7 +11,6 @@ from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.other import clear_v1
 from src.error import InputError, AccessError
-from src.data import data
 
 @pytest.fixture
 def clear_data():

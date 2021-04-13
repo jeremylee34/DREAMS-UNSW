@@ -6,7 +6,7 @@ Written by Gordon Liang
 import jwt
 from src.error import InputError
 from src.error import AccessError
-from src.data import data
+from src.database import data
 
 SECRET = 'HELLO'
 
