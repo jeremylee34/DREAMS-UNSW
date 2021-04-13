@@ -221,7 +221,7 @@ def test_dm_remove_v1_invalid_token(clear_data, dm_1):
 
 def test_dm_invite_v1_InputError_1(clear_data, user_token1, user_token2):
     """
-    InputError happnes when dm_id does not refer to a existing DM
+    InputError happens when dm_id does not refer to a existing DM
     """
     with pytest.raises(InputError):
         assert dm_invite_v1(user_token1['token'], INVALID_ID, user_token2['auth_user_id'])
@@ -232,6 +232,13 @@ def test_dm_invite_v1_InputError_2(clear_data, user_token1, dm_1):
     """
     with pytest.raises(InputError):
         assert dm_invite_v1(user_token1['token'], dm_1['dm_id'], INVALID_ID)
+
+def test_dm_invite_v1_InputError_3(clear_data, user_token1, dm_1):
+    """
+    InputError happens when user is already in dm
+    """
+    with pytest.raises(InputError):
+        assert dm_invite_v1(user_token1['token'], dm_1['dm_id'], user_token1['auth_user_id'])
         
 def test_dm_invite_v1_AccessError(clear_data, unadded_user_token, dm_2, user_token3):
     """
@@ -333,7 +340,6 @@ def test_dm_messages_v1_InputError2(clear_data, user_token1, dm_1):
     InputError happens when start is greater than total number of messages in 
     the channel
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     with pytest.raises(InputError):
         assert dm_messages_v1(user_token1['token'], dm_1['dm_id'], 1)
     
@@ -342,16 +348,26 @@ def test_dm_messages_v1_AccessError(clear_data, unadded_user_token, dm_1, user_t
     """
     AccessError happens when authorised user is not a member of the DM
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+    message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     with pytest.raises(AccessError):
         assert dm_messages_v1(unadded_user_token['token'], dm_1['dm_id'], 0)
 
+def test_dm_messages_v1_empty_channel(clear_data, user_token1, dm_1):
+    """
+    Accessing messages from a new, empty dm should return nothing
+    """
+    dm_id = dm_1['dm_id']
+    start = 0
+    messages = dm_messages_v1(user_token1['token'], dm_id, start) 
+    assert messages['messages'] == []
+    assert messages['start'] == 0
+    assert messages['end'] == 0
 
 def test_dm_messages_v1_simple(clear_data, dm_1, user_token1):
     """
     AccessError happens when authorised user is not a member of the DM
     """
-    message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+    message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
     messages = dm_messages_v1(user_token1['token'], dm_1['dm_id'], 0)
     assert messages['end'] == -1
 
@@ -361,7 +377,7 @@ def test_dm_messages_v1_many_messages(clear_data, dm_1, user_token1):
     messages in DM
     """
     for i in range(0, 50):
-        message_id = message_senddm_v1(user_token1['token'], dm_1['dm_id'], 'hi')
+        message_senddm_v1(user_token1['token'], dm_1['dm_id'], f'message{i}')
     messages = dm_messages_v1(user_token1['token'], dm_1['dm_id'], 0)
     assert messages['end'] == 50
 
@@ -371,5 +387,7 @@ def test_dm_messages_v1_invalid_token(clear_data, dm_1):
     """
     with pytest.raises(InputError):
         assert dm_messages_v1(INVALID_TOKEN, dm_1['dm_id'], 0)
+
+
 
 
