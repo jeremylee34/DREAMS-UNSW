@@ -8,7 +8,6 @@ from src.config import url
 import src.auth
 import src.user
 import src.other
-import src.data
 from src.error import InputError, AccessError
 
 @pytest.fixture
