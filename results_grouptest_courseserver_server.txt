@@ -1,0 +1,1783 @@
+Please set email account credentials as environment variables for email to work.
+ * Serving Flask app "server" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://127.0.0.1:60811/ (Press CTRL+C to quit)
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //admin/userpermission/change/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //admin/user/remove/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mGET //users/all/v1?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJnaWQiOjAsImxvZ2luX3RpbWUiOjE2MTgyNTUwMjAsInNhbHQiOiI4MmQ2MWJkZS0yYTM0LTRiNjMtOTE4Ny0xODBmNmVlOTQ4ZmYifQ.wZOjdfpYC9NkfS4Y83VNxz9Xy3w0QEkVqvXgRq5E0Bk HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mDELETE //admin/user/remove/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mDELETE //admin/user/remove/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //admin/userpermission/change/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mPOST //admin/userpermission/change/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mPOST //admin/userpermission/change/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mPOST //admin/userpermission/change/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST /auth/login/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:00] "[31m[1mPOST /auth/login/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/login/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/login/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/register/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/register/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/register/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/register/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST /auth/register/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/login/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/logout/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/login/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST /auth/logout/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST //channel/invite/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST //channel/invite/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST //channel/invite/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST //channel/invite/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,225] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[31m[1mPOST //channel/invite/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,327] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,368] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,427] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,492] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,530] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,572] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,616] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,660] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,901] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:01,980] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:01] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 400 -
+[2021-04-13 05:17:02,021] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/join/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,134] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/join/v2 HTTP/1.1[0m" 400 -
+[2021-04-13 05:17:02,244] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,409] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/addowner/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/removeowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/removeowner/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,622] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/removeowner/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/leave/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[31m[1mPOST //channel/leave/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,763] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/leave/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,846] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/addowner/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channel/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:02,936] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:02] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channel/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:03,003] ERROR in app: Exception on /channel/details/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 74, in channel_details_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[35m[1mGET //channel/details/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mPOST //channel/leave/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/list/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/list/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/list/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/list/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/list/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //channels/listall/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mPOST //channels/create/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mPOST //channels/create/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:03,635] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:03,694] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:03,734] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mGET //dm/list/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mPOST //dm/create/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mDELETE //dm/remove/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mDELETE //dm/remove/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //dm/remove/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:03,958] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[31m[1mPOST //dm/invite/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:03] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //dm/invite/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //dm/invite/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //dm/invite/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,090] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,166] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //dm/leave/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //dm/leave/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,274] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/invite/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/leave/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/leave/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/leave/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,369] ERROR in app: Exception on /dm/details/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 211, in dm_details_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/details/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,400] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,442] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,486] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,527] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,762] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[33mGET /echo?data=hello HTTP/1.1[0m" 404 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:04,847] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //message/send/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //message/send/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:04] "[31m[1mPOST //message/send/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPUT //message/edit/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,024] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPUT //message/edit/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //message/remove/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPUT //message/edit/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channel/join/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPUT //message/edit/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channel/join/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPUT //message/edit/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,164] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //message/remove/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,230] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //message/remove/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mDELETE //message/remove/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channel/join/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mDELETE //message/remove/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //message/remove/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,348] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/share/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,416] ERROR in app: Exception on /channel/messages/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 84, in channel_messages_server
+    channel_id = int(request.args.get('channel_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //channel/messages/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPOST //message/share/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPOST //message/share/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //message/senddm/v1 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:05,562] ERROR in app: Exception on /dm/messages/v1 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 271, in dm_messages_server
+    dm_id = int(request.args.get('dm_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[35m[1mGET //dm/messages/v1 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPOST //message/senddm/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPOST //message/senddm/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE //clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST //dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mPOST //message/senddm/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /search/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /search/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /search/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /notifications/get/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /message/send/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /notifications/get/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /channels/create/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /channel/invite/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /notifications/get/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /message/senddm/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /notifications/get/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[37mPOST /dm/create/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:05] "[31m[1mGET /notifications/get/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:06,009] ERROR in app: Exception on /user/profile/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 293, in user_profile_server
+    u_id = int(request.args.get('u_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[35m[1mGET //user/profile/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+[2021-04-13 05:17:06,032] ERROR in app: Exception on /user/profile/v2 [GET]
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/server.py", line 293, in user_profile_server
+    u_id = int(request.args.get('u_id'))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/import/kamen/3/cs1531/.local/lib/python3.7/site-packages/flask/app.py", line 1822, in handle_user_exception
+    return handler(e)
+  File "/tmp_amd/kamen/export/kamen/3/cs1531/automark/src/api/error.py", line 5, in default_handler
+    response = err.get_response()
+AttributeError: 'TypeError' object has no attribute 'get_response'
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[35m[1mGET //user/profile/v2 HTTP/1.1[0m" 500 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setname/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setname/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setname/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setemail/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setemail/v2 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/setemail/v2 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT /user/profile/sethandle/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/sethandle/v1 HTTP/1.1[0m" 400 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mPUT //user/profile/sethandle/v1 HTTP/1.1[0m" 403 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mGET //users/all/v1?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJnaWQiOjQ0MiwibG9naW5fdGltZSI6MTYxODI1NTAyNiwic2FsdCI6ImQwMjM4OGNmLWZkNzktNDZjOS05YzM0LWQ3Y2Y3ZGY2ZGI3MCJ9.8yoh4wPZx-qR_Dytz4gIRcUcm_YoJOVTw1E6TqNwgv0 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mDELETE /clear/v1 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[37mPOST //auth/register/v2 HTTP/1.1[0m" 200 -
+127.0.0.1 - - [13/Apr/2021 05:17:06] "[31m[1mGET //users/all/v1?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo HTTP/1.1[0m" 403 -
