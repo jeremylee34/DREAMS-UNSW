@@ -257,6 +257,8 @@ def test_message_remove_dm_input_error(clear):
     user2 = auth_register_v1("roland@gmail.com", "1234567", "Roland", "Lin")
     dms = dm_create_v1(user['token'], [user2['auth_user_id']])
     message = message_senddm_v1(user['token'], dms['dm_id'], 'Hello')
+    message_senddm_v1(user['token'], dms['dm_id'], 'Hello2')
+    message_senddm_v1(user['token'], dms['dm_id'], 'Hello3')
     message_remove_v1(user['token'], message['message_id'])
     with pytest.raises(InputError):
         assert message_remove_v1(user['token'], message['message_id'])
