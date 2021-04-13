@@ -755,7 +755,3 @@ def test_dm_messages_v1_many_messages(clear):
     messages = requests.get(f"{url}/dm/messages/v1?token={reg_info1['token']}&dm_id={dm_2['dm_id']}&start={0}")
     messages = messages.json()   
     assert messages["end"] == 50
-<<<<<<< HEAD
-
-=======
->>>>>>> master
