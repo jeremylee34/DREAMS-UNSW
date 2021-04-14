@@ -1,12 +1,11 @@
 from src.error import InputError
 from src.error import AccessError
-from src.database import data
+from src.data import data
 
 import jwt
 
 SECRET = "HELLO"
 OWNER_PERMISSION = 1
-
 def check_valid_channel(channel_id):
     """
     Checks if channel_id is a valid channel
@@ -77,6 +76,7 @@ def check_user_in_dm(u_id, dm_id):
     return user_in_dm
 
 def check_valid_token(token):
+    global data
     valid_token = False
     for token_hash in data['token_list']:
         if token_hash == token:

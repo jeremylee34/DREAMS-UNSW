@@ -3,13 +3,14 @@ Implementation of auth functions which includes auth_login_v1,
 auth_register_v1, auth_login_v1
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
-from src.database import data
+from src.data import data
 from src.error import InputError, AccessError
 import re
 import jwt
 import hashlib
 from flask import request
-
+# from src.server import returns
+# from src.server import save
 SECRET = 'HELLO'
 
 session_id = 0
@@ -43,7 +44,9 @@ def auth_login_v1(email, password):
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
     """
-    
+    # global data
+    # data = returns()
+    # data = data1
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
     if re.search(regex, email):
@@ -73,6 +76,7 @@ def auth_login_v1(email, password):
     #Generating new token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
+    # save()
     return {
         'token': token,
         'auth_user_id': count
@@ -98,29 +102,22 @@ def auth_register_v1(email, password, name_first, name_last):
         
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
-    """    
+    """ 
+    # global data
+    # data = returns()
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
     count = len(data['users'])
     register = {}
     register['u_id'] = count
     # Checks for valid email
-    if re.search(regex, email):
-        pass
-    else:    
-        raise InputError("Invalid email")
-
-    # Checks for shared email
-    check_empty = bool(data["users"])
-    if check_empty == False:
-        register["email"] = email
+    if not re.search(regex, email):
+        raise InputError("Invalid email") 
     # If there are already thing in the dictionary
-    else:
-        for y in data["users"]:
-            if y["email"] == email:
-                raise InputError("Email is already used")
-            else:
-                register["email"] = email
+    for y in data["users"]:
+        if y["email"] == email:
+            raise InputError("Email is already used")
+    register["email"] = email
     # Checks for valid password
     if len(password) >= 6:
         register["password"] = hashlib.sha256(password.encode()).hexdigest()
@@ -183,6 +180,7 @@ def auth_register_v1(email, password, name_first, name_last):
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
     data['users'].append(register)
+    # save()
     return {
         'token': token,
         'auth_user_id': count
@@ -199,7 +197,10 @@ def auth_logout_v1(token):
         None
     Returns:
         Dictionary containing 'is_success'
-    """    
+    """
+    # global data
+    # data = returns()
+    # data = data1
     logout = False
     valid_token = 0
     #Decodes the token
@@ -218,6 +219,7 @@ def auth_logout_v1(token):
                     logout = True
     else:
         raise AccessError("Invalid token")
+    # save()
     return {
         'is_success': logout
     }

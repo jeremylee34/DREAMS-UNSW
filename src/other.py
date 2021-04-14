@@ -6,7 +6,9 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 import requests
 import jwt
-from src.database import data
+from src.data import data
+# from src.server import returns
+# from src.server import save
 from src.channel import channel_messages_v1
 from src.channels import channels_list_v1
 
@@ -22,7 +24,9 @@ def clear_v1():
         None
     Returns:
         Empty dictionary
-    """           
+    """   
+    # global data
+    # data = returns()        
     for x in data["users"]:
         x["session_ids"].clear()
     data['users'].clear()
@@ -31,6 +35,7 @@ def clear_v1():
     data['message_ids'].clear() 
     data['token_list'].clear()
     data['notifications'].clear()
+    # save()
     return {}
 
 def search_v1(token, query_str):
@@ -46,6 +51,8 @@ def search_v1(token, query_str):
     Returns:
         dictionary of message_id, u_id, message, time_created 
     """
+    # global data
+    # returns()
     valid = 0
     for tokens in data['token_list']:
         if tokens == token:
@@ -70,7 +77,7 @@ def search_v1(token, query_str):
                     for dm_message in dm['messages']:
                         if query_str == dm_message['message']:
                             msg_list.append(dm_message)
-
+    # save()
     return {
        'messages': msg_list
     } 
@@ -89,6 +96,8 @@ def notifications_get_v1(token):
     Returns:
         Blank dictionary
     """
+    # global data
+    # returns()
     valid = 0
     for tokens in data['token_list']:
         if tokens == token:
@@ -104,44 +113,45 @@ def notifications_get_v1(token):
         for session in user['session_ids']:
             if session == decoded_token["session_id"]:
                 handle = user['handle_str']
-                for notification in data['notifications']:
-                    if notification_num == 20:
-                        break
-                    handle_from = data['users'][notification['u_id']]['handle_str']
-                    if f'@{handle}' in notification['message']:
-                        if notification['channel_id'] == -1:
-                            dm_name = data['dms'][notification['channel_id']]['name']
-                            new_dict = {
-                                'channel_id': notification['channel_id'],
-                                'dm_id': notification['dm_id'],
-                                'notification_message': f"{handle_from} tagged you in {dm_name}: {notification['message'][:20]}",
-                            }
-                        else:
-                            channel_name = data['channels'][notification['channel_id']]['name']
-                            new_dict = {
-                                'channel_id': notification['channel_id'],
-                                'dm_id': notification['dm_id'],
-                                'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
-                            }
-                        msg_list.append(new_dict)
-                    #notification['message'] == '' and not @:
-                    else:
-                        if notification['channel_id'] == -1:
-                            dm_name = data['dms'][notification['channel_id']]['name']
-                            new_dict = {
-                                'channel_id': notification['channel_id'],
-                                'dm_id': notification['dm_id'],
-                                'notification_message': f"{handle_from} added you to {dm_name}"
-                            }
-                        else:
-                            channel_name = data['channels'][notification['channel_id']]['name']
-                            new_dict = {
-                                'channel_id': notification['channel_id'],
-                                'dm_id': notification['dm_id'],
-                                'notification_message': f"{handle_from} added you to {channel_name}"
-                            }
-                        msg_list.append(new_dict)
-                    notification_num += 1
+    for notification in data['notifications']:
+        if notification_num == 20:
+            break
+        handle_from = data['users'][notification['u_id']]['handle_str']
+        if f'@{handle}' in notification['message']:
+            if notification['channel_id'] == -1:
+                dm_name = data['dms'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} tagged you in {dm_name}: {notification['message'][:20]}",
+                }
+            else:
+                channel_name = data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
+                }
+            msg_list.append(new_dict)
+        #notification['message'] == '' and not @:
+        else:
+            if notification['channel_id'] == -1:
+                dm_name = data['dms'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} added you to {dm_name}"
+                }
+            else:
+                channel_name = data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} added you to {channel_name}"
+                }
+            msg_list.append(new_dict)
+        notification_num += 1
+    # save()
     return {
         'notifications': msg_list
     }

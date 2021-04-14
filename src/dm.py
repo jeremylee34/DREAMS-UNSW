@@ -1,4 +1,6 @@
-from src.database import data
+from src.data import data
+# from src.server import returns
+# from src.server import save
 from src.error import InputError
 from src.error import AccessError
 
@@ -30,6 +32,8 @@ def dm_details_v1(token, dm_id):
         dms, a list of a dm dicts
 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     # check valid dm_id
@@ -39,6 +43,7 @@ def dm_details_v1(token, dm_id):
     user_id = token_to_u_id(token)
     if check_user_in_dm(user_id, dm_id) == False:
         raise AccessError("Authorised user is not a member of this DM with dm_id")
+    # save()
     return {
         'name': data['dms'][dm_id]['name'],
         'members': data['dms'][dm_id]['members']
@@ -58,6 +63,8 @@ def dm_list_v1(token):
         dms, a list of a dm dicts
 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     dms = []
@@ -70,6 +77,7 @@ def dm_list_v1(token):
                     'name': dm['name']
                 }
                 dms.append(new_dm_dict)
+    # save()
     return {
         'dms': dms
     }
@@ -89,11 +97,13 @@ def dm_create_v1(token, u_ids):
         Returns a dict containing the new dm_id and dm_name
 
     """
-    if check_valid_token(token) == False:
+    # global data
+    # data = returns()
+    if check_valid_token(token) is False:
         raise InputError("token does not refer to a valid token")
     # Check valid u_ids
     for u_id in u_ids:
-        if check_valid_user(u_id) == False:
+        if check_valid_user(u_id) is False:
             raise InputError("u_id does not refer to a valid user")
 
     owner_u_id = token_to_u_id(token)
@@ -107,7 +117,7 @@ def dm_create_v1(token, u_ids):
         s_id = data['users'][u_id]['session_ids'][0]
         s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
         profile = user_profile_v1(s_token, u_id)
-        member_list.append(profile)
+        member_list.append(profile['user'])
 
     # sort and concatenate
     handle_list.sort()
@@ -128,6 +138,7 @@ def dm_create_v1(token, u_ids):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
+    # save()
     return {
         'dm_id': dm_id,
         'dm_name': handle_list_str
@@ -149,6 +160,8 @@ def dm_remove_v1(token, dm_id):
         Returns nothing
 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     # check valid dm_id
@@ -164,7 +177,7 @@ def dm_remove_v1(token, dm_id):
         data['dms'][dm_id] = empty_dict
     else:
         raise AccessError("The user is not the original DM creator")
-
+    # save()
     return {
     }
 
@@ -184,6 +197,8 @@ def dm_invite_v1(token, dm_id, u_id):
         
     Return Value: {} 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
@@ -204,7 +219,7 @@ def dm_invite_v1(token, dm_id, u_id):
     s_id = data['users'][u_id]['session_ids'][0]
     s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
     profile = user_profile_v1(s_token, u_id)
-    data['dms'][dm_id]['members'].append(profile)
+    data['dms'][dm_id]['members'].append(profile['user'])
     handlelist = data['dms'][dm_id]['name'].split(", ")
     handlelist.append(data['users'][u_id]['handle_str'])
 
@@ -219,7 +234,7 @@ def dm_invite_v1(token, dm_id, u_id):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
-
+    # save()
     return {}
        
        
@@ -237,6 +252,8 @@ def dm_leave_v1(token, dm_id):
         
     Return Value: {} 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
@@ -253,7 +270,7 @@ def dm_leave_v1(token, dm_id):
             s_id = users['session_ids'][0]
             s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
             profile = user_profile_v1(s_token, user)
-            data['dms'][dm_id]['members'].remove(profile)
+            data['dms'][dm_id]['members'].remove(profile['user'])
             stringU = users['handle_str']                   
             handlelist = data['dms'][dm_id]['name'].split(", ")
             handlelist.remove(stringU)
@@ -261,6 +278,7 @@ def dm_leave_v1(token, dm_id):
     handlelist.sort()
     handlelist_string = ', '.join(map(str, handlelist))
     data['dms'][dm_id]['name'] = handlelist_string        
+    # save()
     return{}
     
     
@@ -284,6 +302,8 @@ def dm_messages_v1(token, dm_id, start):
         end  - Final index of messages returned, usually start + 50 but will be 
                set to -1 if start + 50 surpasses the bound of messages in DM 
     """
+    # global data
+    # data = returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     #Check if dm_id refers to a valid dm, raise InputError if not
@@ -328,6 +348,7 @@ def dm_messages_v1(token, dm_id, start):
     #If not, set to -1 to indicate no more can be returned
     if message_start < message_end:
         message_end = -1
+    # save()
     return{
         'messages': messages,
         'start': start,

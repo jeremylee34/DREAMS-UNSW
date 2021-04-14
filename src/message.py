@@ -6,9 +6,11 @@ Written by Gordon Liang
 import jwt
 from src.error import InputError
 from src.error import AccessError
-from src.database import data
+from src.data import data
 from datetime import datetime
 from datetime import timezone
+# from src.server import returns
+# from src.server import save
 
 # Key to decode token
 SECRET = 'HELLO'
@@ -26,6 +28,8 @@ def message_send_v1(token, channel_id, message):
     Return Value:
         {message_id}
     '''
+    # global data
+    # returns()
     valid = 0
     joined = 0
     # If message is more than 1000 characters, an InputError is raised
@@ -76,6 +80,7 @@ def message_send_v1(token, channel_id, message):
         data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
     data['channels'][channel_id]['messages'].insert(0, new_message)
+    # save()
     return {
         'message_id': message_id
     }
@@ -93,6 +98,8 @@ def message_remove_v1(token, message_id):
     Return Value:
         {}
     '''
+    # global data
+    # returns()
     valid = 0
     validuser = 0
     # Checks if token is valid
@@ -138,6 +145,7 @@ def message_remove_v1(token, message_id):
                     raise AccessError('Message was not sent by user and user is not an owner of the channel')
                 # Removes message from dms if not in channel messages
                 message['message'] = ''
+    # save()
     return {
     }
 
@@ -156,6 +164,8 @@ def message_edit_v1(token, message_id, message):
     Return Value:
         {}
     '''
+    # global data
+    # returns()
     validuser = 0
     valid = 0
     # Checks if token is valid
@@ -202,6 +212,7 @@ def message_edit_v1(token, message_id, message):
                 if validuser != 1:
                     raise AccessError('Message was not sent by user and user is not an owner of the channel')
                 message2['message'] = message
+    # save()
     return {
     }
 def message_share_v1(token, og_message_id, message, channel_id, dm_id):
@@ -222,6 +233,8 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     Return Value:
         {shared_message_id} - returns id of the shared message
     '''
+    # global data
+    # returns()
     valid = 0
     # Checks if token is valid
     for tokens in data['token_list']:
@@ -279,6 +292,7 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     # Inserts new message into dms
     else:
         data['dms'][dm_id]['messages'].insert(0, new_message)
+    # save()
     return {
         'shared_message_id': message_id
     }
@@ -295,6 +309,8 @@ def message_senddm_v1(token, dm_id, message):
     Return Value:
         {message_id} - returns the id of the message
     '''
+    # global data
+    # returns()
     valid = 0
     exists = 0
     # Checks if token is valid
@@ -342,6 +358,7 @@ def message_senddm_v1(token, dm_id, message):
         data['notifications'].append(new_notification)
     # Inserts message into dms
     data['dms'][dm_id]['messages'].insert(0, new_message)
+    # save()
     return {
         'message_id': message_id
     }

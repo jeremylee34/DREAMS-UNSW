@@ -1,7 +1,9 @@
 import jwt
-from src.database import data
+from src.data import data
 from src.error import InputError
 from src.error import AccessError
+# from src.server import returns
+# from src.server import save
 
 SECRET = 'HELLO'
 
@@ -19,6 +21,8 @@ def admin_user_remove_v1(token, u_id):
     Returns:
         Blank dictionary
     """
+    # global data
+    # returns()
     valid_token = 0
     valid = 0
     for tokens in data['token_list']:
@@ -57,7 +61,7 @@ def admin_user_remove_v1(token, u_id):
         for message2 in dm_id['messages']:
             if message2['u_id'] == u_id:
                 message2['message'] = 'Removed user'
-
+    # save()
     return {}
 
 def admin_userpermission_change_v1(token, u_id, permission_id):
@@ -75,6 +79,8 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
     Returns:
         Blank dictionary
     """ 
+    # global data
+    # returns()
     valid_permission = 0
     if permission_id == 1 or permission_id == 2:
         valid_permission = 1
@@ -100,5 +106,5 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
         raise AccessError("Authorised user is not an owner")
         
     data['users'][u_id]['permission_id'] = permission_id
-    
+    # save()
     return {}

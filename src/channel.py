@@ -3,7 +3,9 @@ First iteration of channel.py
 channel_join_v1 and channel_messages_v1 authored by Jeremy Lee
 chanel_invite_v1 and channel_details authored by Roland Lin
 """
-from src.database import data
+from src.data import data
+# from src.server import returns
+# from src.server import save
 from src.error import InputError
 from src.error import AccessError
 from src.user import user_profile_v1
@@ -43,6 +45,8 @@ def channel_invite_v1(token, channel_id, u_id):
     Return Value:
         Returns <{}> on u_id being succesfully added to channel with channel_id
     """
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     owner_u_id = token_to_u_id(token)
@@ -73,7 +77,7 @@ def channel_invite_v1(token, channel_id, u_id):
     }
     data['notifications'].append(new_notification)
     data['channels'][channel_id]['all_members'].append(new_member)
-
+    # save()
     return {}
 
 
@@ -100,6 +104,8 @@ def channel_details_v1(token, channel_id):
         Returns <all_members> on u_id being part of channel with
         channel_id and channel_id being valid
     """
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -126,6 +132,7 @@ def channel_details_v1(token, channel_id):
         channel_info['owner_members'].append(owners)
     for members in channel['all_members']:
         channel_info['all_members'].append(members)
+    # save()
     return channel_info
 
 
@@ -150,6 +157,8 @@ def channel_messages_v1(token, channel_id, start):
         Returns a list of message dictionaries, a start index and an end index (-1)
         if reached end of all messages in channel
     """
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     # Check valid channel
@@ -189,7 +198,7 @@ def channel_messages_v1(token, channel_id, start):
     # if reached end of messages before capturing 50 messages, set to -1
     if message_index != message_index_end:
         message_index_end = -1
-
+    # save()
     return {
         'messages': messages,
         'start': start,
@@ -211,7 +220,8 @@ def channel_leave_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -231,6 +241,7 @@ def channel_leave_v1(token, channel_id):
         if user['u_id'] == u_id:
             if len(data['channels'][channel_id]['all_members']) > 1:
                 data['channels'][channel_id]['all_members'].remove(user)
+    # save()
     return {
     }
 
@@ -250,7 +261,8 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -276,6 +288,7 @@ def channel_join_v1(token, channel_id):
         data['channels'][channel_id]['all_members'].append(user_to_append)
     else:
         pass
+    # save()
     return {
     }
 
@@ -297,7 +310,8 @@ def channel_addowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -316,11 +330,11 @@ def channel_addowner_v1(token, channel_id, u_id):
     s_id = data['users'][u_id]['session_ids'][0]
     s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
     profile = user_profile_v1(s_token, u_id)
-    data['channels'][channel_id]['owner_members'].append(profile)
+    data['channels'][channel_id]['owner_members'].append(profile['user'])
 
     if check_user_in_channel(channel_id, u_id) is False:
-        data['channels'][channel_id]['all_members'].append(profile)
-        
+        data['channels'][channel_id]['all_members'].append(profile['user'])
+    # save()    
     return {
     }
 
@@ -343,7 +357,8 @@ def channel_removeowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
+    # global data
+    # returns()
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -366,6 +381,6 @@ def channel_removeowner_v1(token, channel_id, u_id):
     for owner_member in data['channels'][channel_id]['owner_members']:
         if owner_member['u_id'] == u_id:
             data['channels'][channel_id]['owner_members'].remove(owner_member)
-
+    # save()
     return {
     }
