@@ -31,24 +31,25 @@ def user_profile_v1(token, u_id):
     #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-        profile = {}
         #Getting information for user profile
         for x in data["users"]:
                 if u_id == x['u_id']:
                     valid = 1
                     for y in x["session_ids"]:
                         if decoded_token["session_id"] == y:
-                            profile['u_id'] = x['u_id']
-                            profile['email'] = x['email']
-                            profile['name_first'] = x['name_first']
-                            profile['name_last'] = x['name_last']
-                            profile['handle_str'] = x['handle_str']  
+                            profile = {
+                                ['u_id']: ['u_id'],
+                                ['email']: ['email'],
+                                ['name_first']: ['name_first'],
+                                ['name_last']: ['name_last'],
+                                ['handle_str']: ['handle_str']  
+                            }
         #If u_id is not valid
         if valid == 0:
             raise InputError("Invalid user")
     else:
         raise AccessError("Invalid token")
-    return profile
+    return {'user': profile}
 
 def user_profile_setname_v1(token, name_first, name_last):
     """
