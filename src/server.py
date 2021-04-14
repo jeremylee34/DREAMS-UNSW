@@ -1,7 +1,7 @@
 import sys
 from flask import Flask, request
 from flask_cors import CORS
-from json import dumps, loads
+from json import dumps, load
 from src import auth
 from src import config
 from src import other
@@ -19,7 +19,7 @@ from src.channel import channel_removeowner_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.channels import channels_listall_v1
-from src.database import data
+from src.data import data
 from src.dm import dm_create_v1
 from src.dm import dm_details_v1
 from src.dm import dm_invite_v1
@@ -35,7 +35,7 @@ from src.message import message_senddm_v1
 from src.message import message_share_v1
 from src.other import notifications_get_v1
 from src.other import search_v1
-
+import pickle
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -52,12 +52,11 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-global data
-with open('store.json', 'r') as file:
-    data = loads(file.read())
+
+data = pickle.load(open("datastore.p", "rb"))
 def save():
-    with open('store.json', 'w') as file:
-        file.write(dumps(data))
+    with open('datastore.p', 'wb') as FILE:
+        pickle.dump(data, FILE)
 # Example
 @APP.route("/echo", methods=['GET'])
 def echo():
@@ -130,7 +129,14 @@ def register():
     """
     inputs = request.get_json()
     r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
+    # words = {
+    #     'name': 'Gordon'
+    # }
+    # with open('datastore.p', 'wb') as FILE:
+    #     pickle.dump(words, FILE)
     save()
+    data_test = pickle.load(open("datastore.p", "rb"))
+    print(data_test)
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
