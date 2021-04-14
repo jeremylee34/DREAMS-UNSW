@@ -8,6 +8,11 @@ import jwt
 from src.data import data
 from src.error import InputError, AccessError
 import re
+from src.auth import auth_register_v1
+import os
+from PIL import Image
+import urllib.request
+import src.config
 
 SECRET = 'HELLO'
 
@@ -195,3 +200,29 @@ def users_all_v1(token):
     else:
         raise InputError("Invalid token")
     return all_users
+
+def user_stats_v1(token):
+    pass
+
+def users_stats_v1(token):
+    pass
+
+
+def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+    u_id = ''
+    for x in data["users"]:
+        for y in x["session_ids"]:
+            if decoded_token["session_id"] == y:
+                u_id = x['u_id']  
+    #Downloaded the photo
+    fullfilename = os.path.join("static", f"user{u_id}_photo.jpg")
+    urllib.request.urlretrieve(img_url, fullfilename)
+    #Crop image
+    image = Image.open(fullfilename)
+    crop_image = image.crop((x_start,y_start,x_end,y_end))
+    crop_image.save(fullfilename)
+    #Adding link to data
+    data["users"][u_id]["img_url"] = 'http://127.0.0.1:8080/' + fullfilename
+    return data["users"]
+    

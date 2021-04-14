@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from json import dumps, loads, dump
 from src import auth
@@ -52,11 +52,17 @@ def defaultHandler(err):
     response.content_type = 'APPlication/json'
     return response
 
-APP = Flask(__name__)
+APP = Flask(__name__, static_url_path='/static/')
 CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
+
+@APP.route('/static/<path:path>')
+def send__js(path):
+    return send_from_directory('', path)
+
+
 
 # Example
 @APP.route("/echo", methods=['GET'])
@@ -67,6 +73,12 @@ def echo():
     return dumps({
         'data': data
     })
+
+@APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
+def image():
+    info = request.get_json()
+    r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
+    return dumps(r)
 
 @APP.route('/search/v2', methods=['GET'])
 def search():

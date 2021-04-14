@@ -222,4 +222,8 @@ def auth_logout_v1(token):
         'is_success': logout,
     }
 
+def auth_passwordreset_request_v1(email):
+    pass
 
+def auth_passwordreset_reset_v1(reset_code, new_password):
+    pass
