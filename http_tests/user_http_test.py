@@ -11,6 +11,7 @@ import src.other
 import src.data
 from src.error import InputError, AccessError
 
+
 @pytest.fixture
 #Clears all data
 def clear_data():
@@ -37,7 +38,7 @@ def test_invalid_token_profile(clear_data):
         'name_last': 'brown',
     })
     
-    assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == AccessError.code
+    assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == InputError.code
    
 
 ##Tests for user/profile/setname/v2
@@ -83,7 +84,7 @@ def test_invalid_token_setname(clear_data):
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
         'name_first': 'john',
         'name_last': 'smith',
-    }).status_code == AccessError.code    
+    }).status_code == InputError.code    
 
 ##Tests for user/profile/setemail/v2
 #Tests whether input error is raised for invalid email
@@ -131,7 +132,7 @@ def test_invalid_token_setemail(clear_data):
     assert requests.put(f'{url}/user/profile/setemail/v2', json={
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
         'email': 'rob@gmail.com'
-    }).status_code == AccessError.code       
+    }).status_code == InputError.code         
 
 ##Tests for user/profile/sethandle/v1
 #Tests whether input error is raised for invalid handle
@@ -179,7 +180,7 @@ def test_invalid_token_sethandle(clear_data):
     assert requests.put(f'{url}/user/profile/sethandle/v1', json={
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
         'handle_str': 'robblue',
-    }).status_code == AccessError.code     
+    }).status_code == InputError.code        
 
 ##Tests for users/all/v1
 #Tests whether all users are returned (successful implementation)
@@ -211,4 +212,4 @@ def test_invalid_token_users_all(clear_data):
         'name_last': 'brown',
     })
     query_string = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
-    assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == AccessError.code   
+    assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code       
