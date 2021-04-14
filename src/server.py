@@ -136,8 +136,6 @@ def register():
     # with open('datastore.p', 'wb') as FILE:
     #     pickle.dump(words, FILE)
     save()
-    data_test = pickle.load(open("datastore.p", "rb"))
-    print(data_test)
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
