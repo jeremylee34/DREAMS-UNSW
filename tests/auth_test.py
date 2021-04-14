@@ -86,7 +86,7 @@ def test_login_incorrect_email(clear_data):
 def test_handle_too_long(clear_data):
     register = auth_register_v1("honey@outlook.com", "hello12345", "honeybear", "beehivebears")
     result = user_profile_v1(register['token'], 0)
-    assert len(result['handle_str']) <= 20
+    assert len(result['user']['handle_str']) <= 20
    
 #Tests whether handle is not shared (successful implementation)
 def test_handle_same(clear_data):
@@ -94,13 +94,13 @@ def test_handle_same(clear_data):
     register2 = auth_register_v1("honey@outlook.com", "12345678", "K", "S") 
     result1 = user_profile_v1(register1['token'], 0)
     result2 = user_profile_v1(register2['token'], 1)
-    assert result1['handle_str'] != result2['handle_str']
+    assert result1['user']['handle_str'] != result2['user']['handle_str']
 
 #Tests whether handle has no spaces (successful implementation)
 def test_handle_space(clear_data):
     register = auth_register_v1("honey@outlook.com", "hello12345", "honey bear", "bees")
     result = user_profile_v1(register['token'], 0)
-    check = " " in result['handle_str']
+    check = " " in result['user']['handle_str']
     assert check == False
 
 #Tests when handle is too long and is shared (successful implementation)
@@ -108,7 +108,7 @@ def test_handle_too_long_and_shared(clear_data):
     auth_register_v1("honey@outlook.com", "hello12345", "honeybear", "beehivebears")
     register = auth_register_v1("tommy@outlook.com", "tommy12345", "honeybear", "beehivebears")
     result = user_profile_v1(register['token'], 1)
-    assert len(result['handle_str']) <= 20
+    assert len(result['user']['handle_str']) <= 20
 
 ##Tests for logout
 #Tests whether logout is successful (successful implementation)

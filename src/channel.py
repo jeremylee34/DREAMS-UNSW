@@ -316,10 +316,10 @@ def channel_addowner_v1(token, channel_id, u_id):
     s_id = data['users'][u_id]['session_ids'][0]
     s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
     profile = user_profile_v1(s_token, u_id)
-    data['channels'][channel_id]['owner_members'].append(profile)
+    data['channels'][channel_id]['owner_members'].append(profile['user'])
 
     if check_user_in_channel(channel_id, u_id) is False:
-        data['channels'][channel_id]['all_members'].append(profile)
+        data['channels'][channel_id]['all_members'].append(profile['user'])
         
     return {
     }

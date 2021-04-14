@@ -38,17 +38,17 @@ def user_profile_v1(token, u_id):
                     for y in x["session_ids"]:
                         if decoded_token["session_id"] == y:
                             profile = {
-                                ['u_id']: ['u_id'],
-                                ['email']: ['email'],
-                                ['name_first']: ['name_first'],
-                                ['name_last']: ['name_last'],
-                                ['handle_str']: ['handle_str']  
+                                'u_id': x['u_id'],
+                                'email': x['email'],
+                                'name_first': x['name_first'],
+                                'name_last': x['name_last'],
+                                'handle_str': x['handle_str']  
                             }
         #If u_id is not valid
         if valid == 0:
             raise InputError("Invalid user")
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {'user': profile}
 
 def user_profile_setname_v1(token, name_first, name_last):
@@ -85,7 +85,7 @@ def user_profile_setname_v1(token, name_first, name_last):
                     x['name_first'] = name_first
                     x['name_last'] = name_last 
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}    
 
 def user_profile_setemail_v1(token, email):
@@ -124,7 +124,7 @@ def user_profile_setemail_v1(token, email):
                     if y == decoded_token["session_id"]:
                         x['email'] = email
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
         
 
@@ -161,7 +161,7 @@ def user_profile_sethandle_v1(token, handle_str):
                     if y == decoded_token["session_id"]:
                         x['handle_str'] = handle_str
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
 
 
@@ -194,5 +194,5 @@ def users_all_v1(token):
             info['permission_id'] = x['permission_id']
             all_users.append(info)
     else:
-        raise AccessError("Invalid token")  
+        raise InputError("Invalid token")  
     return {'users': all_users}
