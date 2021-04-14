@@ -13,7 +13,7 @@ from src.error import InputError, AccessError
 @pytest.fixture
 #Clears all data
 def clear_data():
-    requests.delete(f'{url}clear/v1')
+    requests.delete(f'{url}/clear/v1')
 
 ##Tests for user/profile/v2
 #Tests whether input error is raised for invalid u_id
