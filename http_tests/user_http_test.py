@@ -11,6 +11,7 @@ import src.other
 import src.data
 from src.error import InputError, AccessError
 
+
 @pytest.fixture
 #Clears all data
 def clear_data():
