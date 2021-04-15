@@ -52,8 +52,8 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-global data
-data = pickle.load(open("datastore.p", "rb"))
+# global data
+# data = pickle.load(open("datastore.p", "rb"))
 def save():
     global data
     with open('datastore.p', 'wb') as FILE:
