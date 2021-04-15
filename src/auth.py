@@ -247,7 +247,7 @@ def auth_passwordreset_request_v1(email):
     server.starttls()
     server.login(server_sender_email, server_sender_password)
 
-    #SEND IT!
+    #SEND IT!!
     server.sendmail(server_sender_email, email, secret_code)
     print('Secret code has been sent to user')
 
