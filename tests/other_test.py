@@ -57,9 +57,7 @@ def test_search_v1_session(clear_data):
     notification = notifications_get_v1(user2['token'])
     assert notification['notifications'][0]['notification_message'] == 'gordonliang added you to gordonliang, kanitsrihakorth'
     assert notification['notifications'][1]['notification_message'] == 'gordonliang tagged you in gordonliang, kanitsrihakorth: Hello @kanitsrihakor'
-    ###############
    
-
 def test_search_v1_dm(clear_data):
     '''
     Test for dm in search
