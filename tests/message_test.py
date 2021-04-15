@@ -75,13 +75,22 @@ def dm_info(user, user2):
     return dm_info
 @pytest.fixture
 def remove(user, message):
+    '''
+    Removes a message from dm or channel
+    '''
     message_remove_v1(user['token'], message['message_id'])
 @pytest.fixture
 def dm_message(user, dm_info):
+    '''
+    Sends a message to a dm
+    '''
     dm_message = message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello')
     return dm_message
 @pytest.fixture
 def join(user2, channel):
+    '''
+    Joins a channel
+    '''
     channel_join_v1(user2['token'], channel['channel_id'])
 # Tests for message_send_v1
 def test_message_send(clear, user, channel, message, messages):
