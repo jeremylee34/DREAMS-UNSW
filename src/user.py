@@ -12,7 +12,7 @@ from src.auth import auth_register_v1
 import os
 from PIL import Image
 import urllib.request
-import src.config
+from src.config import port
 
 SECRET = 'HELLO'
 
@@ -201,8 +201,54 @@ def users_all_v1(token):
         raise InputError("Invalid token")
     return all_users
 
+from src.channels import channels_list_v1
+from src.dm import dm_list_v1
+from src.channels import channels_listall_v1
 def user_stats_v1(token):
-    pass
+    valid = 0
+    num_user_messages = 0
+    #Checking to see if token is valid
+    for t in data['token_list']:
+        if t == token:
+            valid = 1
+    #If token is valid then returns the user stats, otherwise raises input error
+    if valid == 1:
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+        #Finding the user
+        for i in data["users"]:
+            for j in i["session_id"]:
+                if decoded_token["session_id"] == j:
+                    u_id = i['u_id']
+        #Getting number of channels user is in
+        channels = channels_list_v1(token)
+        num_user_channels = len(channels['channels'])
+        #Getting total number of channels
+        all_channels = channels_listall_v1(token)
+        total_channels = len(all_channels['channels'])
+        #Getting number of dms user is in
+        dms = dm_list_v1(token)
+        num_user_dms = len(dms['dms'])
+        #Getting total number of dms
+        total_dms = len(data['dms'])
+        #Getting number of messages user has sent
+        for x in data["channels"]:
+            for y in x["messages"]:
+                if y['u_id'] == u_id:
+                    num_user_messages += 1
+        #Getting total number of messages
+        total_messages = len(data["message_ids"])
+        #Calculating involvement rate
+        numerator = sum(num_user_messages, num_user_dms, num_user_channels)
+        denominator = sum(total_channels, total_dms, total_messages)
+        involvement_rate = float(numerator / denominator)
+    else:
+        raise InputError("Invalid token")
+    return {
+        'channels_joined': num_user_channels,
+        'dms_joined': num_user_channels,
+        'messages_sent': num_user_messages,
+        'involvement_rate': involvement_rate
+    }
 
 def users_stats_v1(token):
     pass
@@ -223,6 +269,6 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     crop_image = image.crop((x_start,y_start,x_end,y_end))
     crop_image.save(fullfilename)
     #Adding link to data
-    data["users"][u_id]["img_url"] = 'http://127.0.0.1:8080/' + fullfilename
-    return data["users"]
+    data["users"][u_id]["img_url"] = f'http://127.0.0.1:{port}/' + fullfilename
+    return {}
     

@@ -74,12 +74,6 @@ def echo():
         'data': data
     })
 
-@APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
-def image():
-    info = request.get_json()
-    r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
-    return dumps(r)
-
 @APP.route('/search/v2', methods=['GET'])
 def search():
     token = request.args.get('token')
@@ -249,6 +243,18 @@ def users_all():
     with open('store.json', 'w') as fp:
         fp.write(dumps(data))    
     return dumps(r)
+
+@APP.route('/user/stats/v1', methods=['POST'])
+def user_stats():
+    info = request.get_json()
+    r = user.user_stats_v1(info['token'])
+    return dumps(r)
+
+@APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
+def uploadphoto():
+    info = request.get_json()
+    r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
+    return dumps(r)    
 
 ################################################################################
 #####################          OTHER ROUTES            #########################
