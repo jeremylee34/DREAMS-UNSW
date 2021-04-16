@@ -11,6 +11,8 @@ import re
 import jwt
 import hashlib
 import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from flask import request
 
 SECRET = 'HELLO'
@@ -247,8 +249,15 @@ def auth_passwordreset_request_v1(email):
     server.starttls()
     server.login(server_sender_email, server_sender_password)
 
+    #create email body
+    email_body = MIMEMultipart()
+    email_body['From'] = server_sender_email
+    email_body['To'] = email
+    email_body['Subject'] = 'YOUR SECRET CODE!'
+    email_body.attach(MIMEText(secret_code))
+
     #SEND IT!!
-    server.sendmail(server_sender_email, email, secret_code)
+    server.sendmail(server_sender_email, email, email_body.as_string())
     print('Secret code has been sent to user')
 
     #terminate session

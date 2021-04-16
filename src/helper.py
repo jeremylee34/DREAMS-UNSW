@@ -125,9 +125,10 @@ def generate_secret_code(email):
     else:
         random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
-        #attach random_str to user's data
+        #attach random_str to user data
         for user in data['users']:
-            user['secret_code'] = random_str
+            if user['email'] == email:
+                user['secret_code'] = random_str
 
         return random_str
 
@@ -137,8 +138,10 @@ def check_secret_code(secret):
     return 1 if valid,
     return 0 if invalid
     '''
-    if len(secret) >= 6:
-        return 1
+    if len(secret) == 6:
+        for letter in secret:
+            if letter in (string.ascii_uppercase + string.digits): 
+                return 1
     return 0
 
 def get_secret_code(u_id):

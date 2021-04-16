@@ -156,8 +156,8 @@ def test_reset_get_secret_code(clear_data):
 
 #Tests whether input error is raised for invalid reset code (reset code is not the same as given reset code for user) 
 def test_invalid_reset_code(clear_data):
-    auth_register_v1("asdasdasd@gmail.com", "12344545", "K","S")
-    auth_passwordreset_request_v1("asdasdasd@gmail.com")
+    auth_register_v1("fanthom1234@gmail.com", "12344545", "K","S")
+    auth_passwordreset_request_v1("fanthom1234@gmail.com")
     with pytest.raises(InputError):
         assert auth_passwordreset_reset_v1('asdf', 'hello1234')
 
