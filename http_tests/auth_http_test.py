@@ -159,3 +159,55 @@ def test_invalid_token_logout(clear_data):
     assert requests.post(config.url + 'auth/logout/v1', json = {
         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
     }).status_code == AccessError.code
+
+###### Tests for passwordreset/request
+#Test if email is invalid
+def test_pssword_req_invalid_email(clear_data):
+    requests.post(config.url + 'auth/passwordreset/request/v1', json = {
+        'email': 'asdasdasdmail.com'
+    }).status_code == InputError
+
+#Test if email is invalid
+def test_pssword_req_valid_email(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    requests.post(config.url + 'auth/passwordreset/request/v1', json ={
+        'email': 'somerandom@gmail.com'
+    }).status_code == InputError
+
+###### Tests for passwordreset/reset
+#Tests whether input error is raised for invalid reset code (reset code is not the same as given reset code for user) 
+def test_invalid_reset_code(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom111@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    requests.post(config.url + 'auth/passwordreset/request/v1', json ={
+        'email': 'tom111@gmail.com'
+    })
+    requests.post(config.url + 'auth/passwordreset/reset/v1', json ={
+        'reset_code': 'asdf'
+        'new_password': '123asdfASDF'
+    }).status_code == InputError
+
+#Tests whether input error is raised for invalid secretcode
+def test_reset_invalid_secretcode(clear_data):
+    requests.post(config.url + 'auth/register/v2', json={
+        'email': 'tom111@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tom',
+        'name_last': 'brown',
+    })
+    requests.post(config.url + 'auth/passwordreset/request/v1', json ={
+        'email': 'tom111@gmail.com'
+    })
+    requests.post(config.url + 'auth/passwordreset/reset/v1', json ={
+        'reset_code': '1'
+        'new_password': '123asdfASDF'
+    }).status_code == InputError

@@ -140,12 +140,11 @@ def test_pssword_req_invalid_email(clear_data):
     with pytest.raises(InputError):
         auth_passwordreset_request_v1('asdasdmail.com')
 
-#Test if email is invalid
-def test_pssword_req_valid_email(clear_data):
+#Test if user is registered user
+def test_pssword_req_invalid_user(clear_data):
     auth_register_v1("asdasdasd@gmail.com", "12344545", "K","S")
     with pytest.raises(InputError):
-        auth_passwordreset_request_v1('somerandom@gmail.com')
-
+        auth_passwordreset_request_v1('ABC@gmail.com')
 
 ###### Tests for passwordreset/reset
 #Test if secret code helper function worked
@@ -156,18 +155,25 @@ def test_reset_get_secret_code(clear_data):
 
 #Tests whether input error is raised for invalid reset code (reset code is not the same as given reset code for user) 
 def test_invalid_reset_code(clear_data):
-    auth_register_v1("fanthom1234@gmail.com", "12344545", "K","S")
-    auth_passwordreset_request_v1("fanthom1234@gmail.com")
+    auth_register_v1("asdfasdf@gmail.com", "12344545", "K","S")
+    auth_passwordreset_request_v1("asdfasdf@gmail.com")
     with pytest.raises(InputError):
         assert auth_passwordreset_reset_v1('asdf', 'hello1234')
 
 #Tests whether input error is raised for invalid secretcode
 def test_reset_invalid_secretcode(clear_data):
-    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    user = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_passwordreset_request_v1("asdf@gmail.com")
     with pytest.raises(InputError):
-        assert auth_passwordreset_reset_v1('temp_code', 'hiasdasdasd')
-        
+        assert auth_passwordreset_reset_v1('1', 'hiasdasdasd')
+
+#Tests whether valid secret code actually is secret code or not
+def test_reset_valid_secretcode_but_wrong(clear_data):
+    user = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_passwordreset_request_v1("asdf@gmail.com")
+    with pytest.raises(InputError):
+        assert auth_passwordreset_reset_v1('ASDFAS', 'hiasdasdasd')
+
 #Check if new_password actually work
 def test_reset_newpass(clear_data):
     user = auth_register_v1("asdas1dasd@gmail.com", "12344545", "K","S")
