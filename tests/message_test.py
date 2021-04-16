@@ -1,5 +1,7 @@
 import pytest
-
+import datetime
+import threading
+import time
 from src.auth import auth_register_v1
 from src.other import clear_v1
 from src.channel import channel_messages_v1
@@ -10,6 +12,7 @@ from src.message import message_edit_v1
 from src.message import message_remove_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
+from src.message import message_sendlater_v1
 from src.error import InputError
 from src.error import AccessError
 from src.dm import dm_create_v1
@@ -356,3 +359,12 @@ def test_message_senddm_invalid_token(clear, user, user2, dm_info):
     '''
     with pytest.raises(InputError):
         assert message_senddm_v1(6, dm_info['dm_id'], 'Hello')
+
+def test_message_sendlater(clear, user, channel):
+    time = datetime.now()
+    new_time = time + datetime.timedelta(minutes=2)
+    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
+    message_id = message_sendlater_v1(user['token'], channel['channel_id'], 'Hello', timestamp)
+    time.sleep(121)
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['message'] == 'Hello'
