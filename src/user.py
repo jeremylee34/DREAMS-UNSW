@@ -5,14 +5,14 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from flask import request
 import jwt
-from src.data import data
-from src.error import InputError, AccessError
+from data import data
+from error import InputError, AccessError
 import re
-from src.auth import auth_register_v1
+from auth import auth_register_v1
 import os
 from PIL import Image
 import urllib.request
-from src.config import port
+from config import port
 
 SECRET = 'HELLO'
 
@@ -201,9 +201,9 @@ def users_all_v1(token):
         raise InputError("Invalid token")
     return all_users
 
-from src.channels import channels_list_v1
-from src.dm import dm_list_v1
-from src.channels import channels_listall_v1
+from channels import channels_list_v1
+import dm
+from channels import channels_listall_v1
 def user_stats_v1(token):
     valid = 0
     num_user_messages = 0
@@ -216,7 +216,7 @@ def user_stats_v1(token):
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         #Finding the user
         for i in data["users"]:
-            for j in i["session_id"]:
+            for j in i["session_ids"]:
                 if decoded_token["session_id"] == j:
                     u_id = i['u_id']
         #Getting number of channels user is in
@@ -226,8 +226,8 @@ def user_stats_v1(token):
         all_channels = channels_listall_v1(token)
         total_channels = len(all_channels['channels'])
         #Getting number of dms user is in
-        dms = dm_list_v1(token)
-        num_user_dms = len(dms['dms'])
+        dms = dm.dm_list_v1(token)
+        num_user_dms = int(len(dms['dms']) - 1)
         #Getting total number of dms
         total_dms = len(data['dms'])
         #Getting number of messages user has sent
@@ -235,23 +235,77 @@ def user_stats_v1(token):
             for y in x["messages"]:
                 if y['u_id'] == u_id:
                     num_user_messages += 1
+        for y in data["dms"]:
+            for z in y["messages"]:
+                if u_id == z["u_id"]:
+                    num_user_messages += 1
         #Getting total number of messages
         total_messages = len(data["message_ids"])
         #Calculating involvement rate
-        numerator = sum(num_user_messages, num_user_dms, num_user_channels)
-        denominator = sum(total_channels, total_dms, total_messages)
+        numerator = num_user_messages + num_user_dms + num_user_channels
+        denominator = total_channels + total_dms + total_messages
         involvement_rate = float(numerator / denominator)
     else:
         raise InputError("Invalid token")
     return {
         'channels_joined': num_user_channels,
-        'dms_joined': num_user_channels,
+        'dms_joined': num_user_dms,
         'messages_sent': num_user_messages,
         'involvement_rate': involvement_rate
     }
 
 def users_stats_v1(token):
-    pass
+    #Getting number of channels that currently exist
+    all_channels = channels_listall_v1(token)
+    total_channels = len(all_channels['channels'])
+    #Getting number of dms that currently exist
+    existing_dms = 0
+    for x in data["dms"]:
+        if x["dm_id"] != '':
+            existing_dms += 1
+    #Getting number of existing messages
+    existing_messages = 0
+    for y in data["channels"]:
+        for z in y["messages"]:
+            if z["message"] != '':
+                existing_messages += 1
+    for a in data["dms"]:
+        for b in a["messages"]:
+            if b["message"] != '':
+                existing_messages += 1
+    #Finding the users joined in at least one channel or dm
+    users_joined = []
+    for i in data["channels"]:
+        for j in i["all_members"]:
+            if users_joined == []:
+                users_joined.append(j["u_id"])
+            else:
+                joined = 0
+                for users in users_joined:
+                    if users == j["u_id"]:
+                        joined = 1
+                if joined == 0:
+                    users_joined.append(j["u_id"])
+
+    for i in data["dms"]:
+        for j in i["members"]:
+            if users_joined == []:
+                users_joined.append(j["u_id"])
+            else:
+                joined = 0
+                for users in users_joined:
+                    if users == j["u_id"]:
+                        joined = 1
+                if joined == 0:
+                    users_joined.append(j["u_id"])
+    #Calculating utilization_rate
+    utilization_rate = float(len(users_joined) / len(data["users"]))
+    return {
+        'channels_exist': total_channels,
+        'dms_exist': existing_dms,
+        'messages_exist': existing_messages,
+        'utilization_rate': utilization_rate,
+    }
 
 
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
@@ -272,3 +326,37 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     data["users"][u_id]["img_url"] = f'http://127.0.0.1:{port}/' + fullfilename
     return {}
     
+from message import message_send_v1, message_share_v1, message_remove_v1
+from channels import channels_create_v1
+if __name__ == '__main__':
+    r = auth_register_v1("tom@gmail.com", "hello1234", "tom", "brown")
+    s = auth_register_v1("tim@gmail.com", "hello1234", "tom", "brown")
+    auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    channel = channels_create_v1(r['token'], "Channel1", True)
+    channels_create_v1(s['token'], "Channel2", True)
+    channels_create_v1(r['token'], "Channel3", True)
+    dms = dm.dm_create_v1(r['token'], [0,1])
+    dms1 = dm.dm_create_v1(s['token'], [0,1])
+    message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')
+    message_send_v1(r['token'], channel['channel_id'], 'Hello')
+    message_share_v1(r['token'], message_id['message_id'], '', -1, dms['dm_id'])
+    message_share_v1(s['token'], message_id['message_id'], '', -1, dms1['dm_id'])
+    message_share_v1(r['token'], message_id['message_id'], '', -1, dms['dm_id'])
+    dm.dm_remove_v1(r['token'], 0)
+    message_remove_v1(r['token'], 4)
+    message_remove_v1(r['token'], 3)
+    message_remove_v1(r['token'], 2)
+    message_remove_v1(r['token'], 1)
+    message_remove_v1(r['token'], 0)
+    t = user_stats_v1(r['token'])
+    print(t)
+    i = users_stats_v1(r['token'])
+    print(i)
+    y = user_stats_v1(s['token'])
+    print(y)
+    j = users_stats_v1(s['token'])
+    print(j)
+
+    ##############################
+    ### ADD SRC AFTER FINISHED ###
+    ##############################

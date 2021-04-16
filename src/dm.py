@@ -1,13 +1,13 @@
-from src.data import data
-from src.error import InputError
-from src.error import AccessError
+from data import data
+from error import InputError
+from error import AccessError
 
-from src.helper import check_valid_user
-from src.helper import check_valid_dm
-from src.helper import token_to_u_id
-from src.helper import check_user_in_dm
-from src.helper import check_valid_token
-from src.user import user_profile_v1
+from helper import check_valid_user
+from helper import check_valid_dm
+from helper import token_to_u_id
+from helper import check_user_in_dm
+from helper import check_valid_token
+from user import user_profile_v1
 
 import jwt
 
@@ -326,3 +326,7 @@ def dm_messages_v1(token, dm_id, start):
         'start': start,
         'end': message_end        
     }
+
+    ##############################
+    ### ADD SRC AFTER FINISHED ###
+    ##############################

@@ -4,9 +4,9 @@ message_edit_v1, message_remove_v1, message_share_v1, message_senddm_v1.
 Written by Gordon Liang
 '''
 import jwt
-from src.error import InputError
-from src.error import AccessError
-from src.data import data
+from error import InputError
+from error import AccessError
+from data import data
 from datetime import datetime
 from datetime import timezone
 
@@ -345,3 +345,8 @@ def message_senddm_v1(token, dm_id, message):
     return {
         'message_id': message_id
     }
+
+
+    ##############################
+    ### ADD SRC AFTER FINISHED ###
+    ##############################

@@ -4,9 +4,9 @@ channels_listall_v1 and channels_create_v1.
 Written by Gordon Liang
 '''
 import jwt
-from src.error import InputError
-from src.error import AccessError
-from src.data import data
+from error import InputError
+from error import AccessError
+from data import data
 
 SECRET = 'HELLO'
 
@@ -144,3 +144,7 @@ def channels_create_v1(token, name, is_public):
     return {
         'channel_id': channel_id
     }
+
+    ##############################
+    ### ADD SRC AFTER FINISHED ###
+    ##############################

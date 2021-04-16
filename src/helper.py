@@ -1,6 +1,6 @@
-from src.error import InputError
-from src.error import AccessError
-from src.data import data
+from error import InputError
+from error import AccessError
+from data import data
 
 import jwt
 
@@ -105,3 +105,8 @@ def check_if_owner(u_id, channel_id):
 #         if owner['u_id'] == u_id:
 #             channel_owner = True
 #     return channel_owner
+
+
+    ##############################
+    ### ADD SRC AFTER FINISHED ###
+    ##############################
