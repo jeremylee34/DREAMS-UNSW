@@ -15,6 +15,10 @@ from src.message import message_senddm_v1
 from src.message import message_share_v1
 from src.message import message_sendlater_v1
 from src.message import message_sendlaterdm_v1
+from src.message import message_react_v1
+from src.message import message_unreact_v1
+from src.message import message_pin_v1
+from src.message import message_unpin_v1
 from src.error import InputError
 from src.error import AccessError
 from src.dm import dm_create_v1
@@ -369,7 +373,7 @@ def test_message_sendlater(clear, user, channel):
     time = datetime.now()
     new_time = time + datetime.timedelta(seconds=5)
     timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    message_id = message_sendlater_v1(user['token'], channel['channel_id'], 'Hello', timestamp)
+    message_sendlater_v1(user['token'], channel['channel_id'], 'Hello', timestamp)
     time.sleep(6)
     messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
     assert messages['messages'][0]['message'] == 'Hello'
@@ -427,7 +431,7 @@ def test_message_sendlaterdm(clear, user, user2, dm_info):
     time = datetime.now()
     new_time = time + datetime.timedelta(seconds=5)
     timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    message_id = message_sendlaterdm_v1(user['token'], dm_info['dm_id'], 'Hello', timestamp)
+    message_sendlaterdm_v1(user['token'], dm_info['dm_id'], 'Hello', timestamp)
     time.sleep(6)
     messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
     assert messages['messages'][0]['message'] == 'Hello'
@@ -478,3 +482,29 @@ def test_message_sendlaterdm_invalid_token(clear, user, user2, dm_info):
     timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
     with pytest.raises(AccessError):
         assert message_sendlaterdm_v1(7, dm_info['dm_id'], 'Hello', timestamp)
+def test_message_react_channel(clear, user, channel, message):
+    message_react_v1(user['token'], message['message_id'], 1)
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
+def test_message_react_dm(clear, user, user2, dm_info, dm_message):
+    message_react_v1(user['token'], dm_message['message_id'], 1)
+    messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
+    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
+def test_message_react_invalid_message_id(clear, user, channel):
+    with pytest.raises(InputError):
+        assert message_react_v1(user['token'], 2, 1)
+def test_message_react_invalid_react_id(clear, user, channel, message):
+    with pytest.raises(InputError):
+        assert message_react_v1(user['token'], message['message_id'], 100)
+def test_message_react_already_reacted(clear, user, channel, message):
+    message_react_v1(user['token'], message['message_id'], 1)
+    with pytest.raises(InputError):
+        assert message_react_v1(user['token'], message['message_id'], 1)
+def test_message_react_access_error(clear, user, user2, channel, message):
+    with pytest.raises(AccessError):
+        assert message_react_v1(user2['token'], message['message_id'], 1)
+def test_message_react_invalid_token(clear, user, channel, message):
+    with pytest.raises(InputError):
+        assert message_react_v1(3, message['message_id'], 1)
