@@ -330,7 +330,9 @@ def message_senddm_v1(token, dm_id, message):
         'message_id': message_id,
         'u_id': auth_user_id,
         'message': message,
-        'time_created': timestamp
+        'time_created': timestamp,
+        'reacts': [],
+        'is_pinned': False
     }
     if '@' in message:
         new_notification = {
