@@ -231,12 +231,13 @@ def auth_passwordreset_request_v1(email):
     '''
     Given email address, send secret code to user's mail
     '''
-    #check for valid email
-    regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
-    if re.search(regex, email):
-        pass
-    else:
-        raise InputError("Invalid email")
+    #check if user is registered user
+    valid_email = 0
+    for user in data['users']:
+        if user['email'] == email:
+            valid_email = 1
+    if valid_email == 0:
+        raise InputError('User did not registered yet')
 
     #generate secret code, to be send to user
     secret_code = generate_secret_code(email)

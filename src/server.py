@@ -9,6 +9,8 @@ from src import user
 from src.admin import admin_user_remove_v1
 from src.admin import admin_userpermission_change_v1
 from src.auth import auth_register_v1
+from src.auth import auth_passwordreset_request_v1
+from src.auth import auth_passwordreset_reset_v1
 from src.channel import channel_addowner_v1
 from src.channel import channel_details_v1
 from src.channel import channel_invite_v1
@@ -150,6 +152,46 @@ def logout():
         fp.write(dumps(data))    
     return dumps(r)
 
+@APP.route('/auth/passwordreset/request/v1', methods=['POST'])
+def passwordreset_request():
+    """
+    Description of function:
+        Given an email if the user is registered user send secret code to
+        user email
+    Parameters:
+        email (string)
+    Exceptions:
+        InputError('User did not registered yet') - raise when when user doesn't registered yet
+    Returns:
+        Returns empty dict
+    """ 
+    datareq = request.get_json()
+    r = auth_passwordreset_request_v1(datareq['email'])
+    #with open('store.json', 'w') as fp:
+    #    fp.write(dumps(data))  
+    return dumps(r)
+
+@APP.route('/auth/passwordreset/reset/v1', methods=['POST'])
+def passwordreset_reset():
+    """
+    Description of function:
+        Set user's new password if reset_code is correct
+    Parameters:
+        reset_code (string)
+        new_password (string)
+    Exceptions:
+        InputError('Reset code invalid') - raise when reset code is invalid
+        InputError("Password too short") - raise when password is too short
+        InputError("secret code can't be found") - raise when secret doesn't exist
+    Returns:
+        Returns empty dict
+    """ 
+    datareq = request.get_json()
+    r = auth_passwordreset_reset_v1(datareq['reset_code'], datareq['new_password'])
+    #with open('store.json', 'w') as fp:
+    #    fp.write(dumps(data))  
+    return dumps(r)
+    
 ################################################################################
 #####################           USER ROUTES            #########################
 ################################################################################
