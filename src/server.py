@@ -53,12 +53,13 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-data = pickle.load(open("datastore.p", "rb"))
+def load_data():
+    global data
+    data = pickle.load(open("datastore.p", "rb"))
 def save_data():
     global data
     with open('datastore.p', 'wb') as FILE:
         pickle.dump(data, FILE)
-#load_data()
 # Example
 @APP.route("/echo", methods=['GET'])
 def echo():
@@ -449,3 +450,4 @@ def message_senddm():
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
+    #load_data()
