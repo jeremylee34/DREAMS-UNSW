@@ -312,13 +312,13 @@ def dm_messages_v1(token, dm_id, start):
     #Record components of each message while appending to messages list
     #End loop once start index matches end index or last message is reached
     for msgs in data['dms'][dm_id]['messages']:
-        tempmsg = {
-            'message_id': msgs['message_id'],
-            'u_id': msgs['u_id'],
-            'message': msgs['message'],
-            'time_created': msgs['time_created']
-        }
-        messages.append(tempmsg)
+        # tempmsg = {
+        #     'message_id': msgs['message_id'],
+        #     'u_id': msgs['u_id'],
+        #     'message': msgs['message'],
+        #     'time_created': msgs['time_created']
+        # }
+        messages.append(msgs)
         message_start = message_start + 1
         if message_start == message_end:
             break

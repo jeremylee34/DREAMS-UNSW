@@ -19,7 +19,7 @@ from src.channel import channel_removeowner_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.channels import channels_listall_v1
-from src import data
+from src.data import data
 from src.dm import dm_create_v1
 from src.dm import dm_details_v1
 from src.dm import dm_invite_v1
@@ -53,12 +53,12 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-def load_data():
-    data.data = pickle.load(open("datastore.p", "rb"))
+data = pickle.load(open("datastore.p", "rb"))
 def save_data():
+    global data
     with open('datastore.p', 'wb') as FILE:
-        pickle.dump(data.data, FILE)
-
+        pickle.dump(data, FILE)
+#load_data()
 # Example
 @APP.route("/echo", methods=['GET'])
 def echo():
@@ -130,9 +130,13 @@ def register():
         Returns the result of the auth_register_v1 function in json
     '''
     inputs = request.get_json()
+    
     r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
+    
+    data2 = pickle.load(open("datastore.p", "rb"))
+    print(data2)
+    #print(data.data)
     save_data()
-    print(data.data)
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
@@ -445,4 +449,3 @@ def message_senddm():
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
-    load_data()
