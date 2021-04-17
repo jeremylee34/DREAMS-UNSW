@@ -57,7 +57,6 @@ def admin_user_remove_v1(token, u_id):
         for message2 in dm_id['messages']:
             if message2['u_id'] == u_id:
                 message2['message'] = 'Removed user'
-
     return {}
 
 def admin_userpermission_change_v1(token, u_id, permission_id):
@@ -100,5 +99,4 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
         raise AccessError("Authorised user is not an owner")
         
     data['users'][u_id]['permission_id'] = permission_id
-    
     return {}

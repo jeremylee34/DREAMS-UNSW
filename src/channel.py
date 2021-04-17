@@ -73,7 +73,6 @@ def channel_invite_v1(token, channel_id, u_id):
     }
     data['notifications'].append(new_notification)
     data['channels'][channel_id]['all_members'].append(new_member)
-
     return {}
 
 
@@ -189,7 +188,6 @@ def channel_messages_v1(token, channel_id, start):
     # if reached end of messages before capturing 50 messages, set to -1
     if message_index != message_index_end:
         message_index_end = -1
-
     return {
         'messages': messages,
         'start': start,
@@ -211,7 +209,6 @@ def channel_leave_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -250,7 +247,6 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -297,7 +293,6 @@ def channel_addowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -343,7 +338,6 @@ def channel_removeowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -366,6 +360,5 @@ def channel_removeowner_v1(token, channel_id, u_id):
     for owner_member in data['channels'][channel_id]['owner_members']:
         if owner_member['u_id'] == u_id:
             data['channels'][channel_id]['owner_members'].remove(owner_member)
-
     return {
     }
