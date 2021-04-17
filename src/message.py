@@ -362,42 +362,58 @@ def message_senddm_v1(token, dm_id, message):
         'message_id': message_id
     }
 def message_sendlater_v1(token, channel_id, message, time_sent):
-    # valid_token = 0
-    # for tokens in data['token_list']:
-    #     if tokens == token:
-    #         valid_token = 1
-    # if valid_token != 1:
-    #     raise InputError('User does not exist')
-    # valid_channel = 0
-    # for channel in data['channels']:
-    #     if channel['channel_id'] == channel_id:
-    #         valid_channel = 1
-    # if valid_channel == 0:
-    #     raise InputError('Channel ID is not a valid channel')
-    # if len(message) > 1000:
-    #     raise InputError('Message is more than 1000 characters')
-    if time_sent < datetime.now():
+    valid_token = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid_token = 1
+    if valid_token != 1:
+        raise InputError('User does not exist')
+    valid_channel = 0
+    for channel in data['channels']:
+        if channel['channel_id'] == channel_id:
+            valid_channel = 1
+    if valid_channel == 0:
+        raise InputError('Channel ID is not a valid channel')
+    if len(message) > 1000:
+        raise InputError('Message is more than 1000 characters')
+    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
     auth_user_id = token_to_u_id(token)
     if check_user_in_channel(channel_id, auth_user_id) == False:
         raise AccessError('Authorised user has not joined the channel they are posting to')
-    time = time_sent - datetime.now()
+    time = time_sent - timestamp
     t = threading.Timer(time, message_send_v1, args=[token, channel_id, message])
     t.start()
     return {
-        'message_id': len(data['message_ids']) - 1
+        'message_id': len(data['message_ids'])
     }
 def message_sendlaterdm_v1(token, dm_id, message, time_sent):
-    if time_sent < datetime.now():
+    valid_token = 0
+    for tokens in data['token_list']:
+        if tokens == token:
+            valid_token = 1
+    if valid_token != 1:
+        raise InputError('User does not exist')
+    if len(message) > 1000:
+        raise InputError('Message is more than 1000 characters')
+    valid_dm = 0
+    for dm in data['dms']:
+        if dm['dm_id'] == dm_id:
+            valid_dm = 1
+    if valid_dm == 0:
+        raise InputError('dm_id is not a valid DM')
+    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
     auth_user_id = token_to_u_id(token)
-    if check_user_in_dm(dm_id, auth_user_id) == False:
+    if check_user_in_dm(auth_user_id, dm_id) == False:
         raise AccessError('Authorised user has not joined the DM they are posting to')
-    time = time_sent - datetime.now()
+    time = time_sent - timestamp
     t = threading.Timer(time, message_senddm_v1, args=[token, dm_id, message])
     t.start()
     return {
-        'message_id': len(data['message_ids']) - 1
+        'message_id': len(data['message_ids'])
     }
 def message_react_v1(token, message_id, react_id):
     valid_token = 0
@@ -420,7 +436,7 @@ def message_react_v1(token, message_id, react_id):
     if react_id != 1:
         raise InputError('react_id is not a valid react ID')
     auth_user_id = token_to_u_id(token)
-    already_reacted = 0
+    already_reacted = False
     valid_member = 0
     for channel2 in data['channels']:
         for message2 in channel2['messages']:
@@ -429,16 +445,16 @@ def message_react_v1(token, message_id, react_id):
                     if auth_user_id == member['u_id']:
                         valid_member = 1
                 if auth_user_id in message2['reacts'][0]['u_ids']:
-                    already_reacted = 1
+                    already_reacted = True
     for dm2 in data['dms']:
         for dm_message2 in dm2['messages']:
             if message_id == dm_message2['message_id']:
-                for member in dm2['all_members']:
+                for member in dm2['members']:
                     if auth_user_id == member['u_id']:
                         valid_member = 1
                 if auth_user_id in dm_message2['reacts'][0]['u_ids']:
-                    already_reacted = 1
-    if already_reacted == 0:
+                    already_reacted = True
+    if already_reacted == True:
         raise InputError('message_id already contains active react from authorised user')
     if valid_member == 0:
         raise AccessError('Authorised user is not a member of the channel or DM')
@@ -460,41 +476,48 @@ def message_unreact_v1(token, message_id, react_id):
     if valid_token != 1:
         raise InputError('User does not exist')
     valid_message = 0
+    channel_not_dm = False
     for channel1 in data['channels']:
         for message1 in channel1['messages']:
             if message_id == message1['message_id']:
                 valid_message = 1
+            channel_id = channel1['channel_id']
+            channel_not_dm = True
     for dm1 in data['dms']:
         for dm_message1 in dm1['messages']:
             if message_id == dm_message1['message_id']:
                 valid_message = 1
+            dm_id = dm1['dm_id']
+    auth_user_id = token_to_u_id(token)
+    valid_member = 0
+    if channel_not_dm == True:
+        for member in data['channels'][channel_id]['all_members']:
+            if member['u_id'] == auth_user_id:
+                valid_member = 1
+    else:
+        for dm_member in data['dms'][dm_id]['members']:
+            if dm_member['u_id'] == auth_user_id:
+                valid_member = 1
+    if valid_member == 0:
+        raise AccessError('Authorised user is not a member of the channel or DM')
     if valid_message == 0:
         raise InputError('Message_id is not a valid message within a channel or DM')
     if react_id != 1:
         raise InputError('react_id is not a valid react ID')
-    auth_user_id = token_to_u_id(token)
-    has_not_reacted = 0
-    valid_member = 0
+    has_not_reacted = False
     for channel2 in data['channels']:
         for message2 in channel2['messages']:
             if message_id == message2['message_id']:
-                for member in channel2['all_members']:
-                    if auth_user_id == member['u_id']:
-                        valid_member = 1
                 if auth_user_id not in message2['reacts'][0]['u_ids']:
-                    has_not_reacted = 1
+                    has_not_reacted = True
     for dm2 in data['dms']:
         for dm_message2 in dm2['messages']:
             if message_id == dm_message2['message_id']:
-                for member in dm2['members']:
-                    if auth_user_id == member['u_id']:
-                        valid_member = 1
                 if auth_user_id not in dm_message2['reacts'][0]['u_ids']:
-                    has_not_reacted = 1
-    if has_not_reacted == 1:
+                    has_not_reacted = True
+    if has_not_reacted == True:
         raise InputError('message_id does not contain an active react from authorised user')
-    if valid_member == 0:
-        raise AccessError('Authorised user is not a member of the channel or DM')
+
     for channel3 in data['channels']:
         for message3 in channel3['messages']:
             if message_id == message3['message_id']:
