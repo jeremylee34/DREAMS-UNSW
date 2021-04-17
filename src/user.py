@@ -6,8 +6,6 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 from flask import request
 import jwt
 from src.data import data
-# from src.server import returns
-# from src.server import save
 from src.error import InputError, AccessError
 import re
 
@@ -25,10 +23,9 @@ def user_profile_v1(token, u_id):
     Returns:
         Dictionary 'profile' containing u_id, email, name_first, name_last and handle
     """
-    # global data
-    # returns()
     valid = 0
     valid_token = 0
+    profile = {}
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
@@ -53,7 +50,6 @@ def user_profile_v1(token, u_id):
             raise InputError("Invalid user")
     else:
         raise InputError("Invalid token")
-    # save()
     return {'user': profile}
 
 def user_profile_setname_v1(token, name_first, name_last):
@@ -70,8 +66,6 @@ def user_profile_setname_v1(token, name_first, name_last):
     Returns:
         Empty dictionary
     """
-    # global data
-    # returns()
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -93,7 +87,6 @@ def user_profile_setname_v1(token, name_first, name_last):
                     x['name_last'] = name_last 
     else:
         raise InputError("Invalid token")
-    # save()
     return {}    
 
 def user_profile_setemail_v1(token, email):
@@ -109,8 +102,6 @@ def user_profile_setemail_v1(token, email):
     Returns:
         Empty dictionary
     """
-    # global data
-    # returns()
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -135,7 +126,6 @@ def user_profile_setemail_v1(token, email):
                         x['email'] = email
     else:
         raise InputError("Invalid token")
-    # save()
     return {}
         
 
@@ -151,9 +141,7 @@ def user_profile_sethandle_v1(token, handle_str):
         InputError - if handle_str is invalid (less than 3 characters or greater than 20 characters)
     Returns:
         Empty dictionary
-    """
-    # global data
-    # returns()     
+    """  
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -175,7 +163,6 @@ def user_profile_sethandle_v1(token, handle_str):
                         x['handle_str'] = handle_str
     else:
         raise InputError("Invalid token")
-    # save()
     return {}
 
 
@@ -190,8 +177,6 @@ def users_all_v1(token):
     Returns:
         A list containig all of the users and their information
     """
-    # global data
-    # returns()
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -211,5 +196,4 @@ def users_all_v1(token):
             all_users.append(info)
     else:
         raise InputError("Invalid token")  
-    # save()
     return {'users': all_users}

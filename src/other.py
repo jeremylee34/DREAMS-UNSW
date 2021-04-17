@@ -7,8 +7,6 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 import requests
 import jwt
 from src.data import data
-# from src.server import returns
-# from src.server import save
 from src.channel import channel_messages_v1
 from src.channels import channels_list_v1
 
@@ -24,9 +22,7 @@ def clear_v1():
         None
     Returns:
         Empty dictionary
-    """   
-    # global data
-    # data = returns()        
+    """         
     for x in data["users"]:
         x["session_ids"].clear()
     data['users'].clear()
@@ -35,7 +31,6 @@ def clear_v1():
     data['message_ids'].clear() 
     data['token_list'].clear()
     data['notifications'].clear()
-    # save()
     return {}
 
 def search_v1(token, query_str):
@@ -51,8 +46,6 @@ def search_v1(token, query_str):
     Returns:
         dictionary of message_id, u_id, message, time_created 
     """
-    # global data
-    # returns()
     valid = 0
     for tokens in data['token_list']:
         if tokens == token:
@@ -77,7 +70,6 @@ def search_v1(token, query_str):
                     for dm_message in dm['messages']:
                         if query_str == dm_message['message']:
                             msg_list.append(dm_message)
-    # save()
     return {
        'messages': msg_list
     } 
@@ -96,8 +88,6 @@ def notifications_get_v1(token):
     Returns:
         Blank dictionary
     """
-    # global data
-    # returns()
     valid = 0
     for tokens in data['token_list']:
         if tokens == token:
@@ -151,7 +141,6 @@ def notifications_get_v1(token):
                 }
             msg_list.append(new_dict)
         notification_num += 1
-    # save()
     return {
         'notifications': msg_list
     }
