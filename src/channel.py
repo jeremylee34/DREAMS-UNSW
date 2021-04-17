@@ -314,7 +314,8 @@ def channel_addowner_v1(token, channel_id, u_id):
     data['channels'][channel_id]['owner_members'].append(profile['user'])
 
     if check_user_in_channel(channel_id, u_id) is False:
-        data['channels'][channel_id]['all_members'].append(profile['user'])  
+        data['channels'][channel_id]['all_members'].append(profile['user'])
+        
     return {
     }
 

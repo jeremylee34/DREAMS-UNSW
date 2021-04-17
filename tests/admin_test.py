@@ -8,6 +8,7 @@ from src.channel import channel_messages_v1
 from src.channel import channel_join_v1
 from src.channels import channels_create_v1
 from src.dm import dm_create_v1
+from src.dm import dm_messages_v1
 from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.data import data
@@ -73,24 +74,20 @@ def test_admin_remove_channel(clear_data):
     '''
     user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
     user2 = auth_register_v1('Kanit@gmail.com', '12345678', 'Kanit', 'Liang')
-    user3 = auth_register_v1('asdf@gmail.com', '12345678', 'Lop', 'Ang')
     new_channel = channels_create_v1(user['token'], "Public channel", True)
     channel_id = new_channel['channel_id']
 
     channel_join_v1(user['token'], channel_id)
     channel_join_v1(user2['token'], channel_id)
-    channel_join_v1(user3['token'], channel_id)
 
     admin_userpermission_change_v1(user['token'], user2['auth_user_id'], 1)
-    admin_userpermission_change_v1(user['token'], user3['auth_user_id'], 1)
     message_send_v1(user2['token'], channel_id, "Hello")
-    message_send_v1(user3['token'], channel_id, "Bye byee")
 
+    channel_msg = channel_messages_v1(user2['token'], channel_id, 0)
     admin_user_remove_v1(user['token'], user2['auth_user_id'])
     
-    assert data['channels'][channel_id]['messages'][1]['u_id'] == user2['auth_user_id'] 
-    assert data['channels'][channel_id]['messages'][1]['message'] == 'Removed user'
-    assert data['channels'][channel_id]['messages'][0]['message'] == 'Bye byee'
+    channel_msg = channel_messages_v1(user['token'], channel_id, 0)
+    assert channel_msg['messages'][0]['message'] == 'Removed user'
 
 def test_admin_remove_dm(clear_data):
     '''
@@ -108,11 +105,11 @@ def test_admin_remove_dm(clear_data):
     message_senddm_v1(user2['token'], dm_id, "Hello")
     message_senddm_v1(user3['token'], dm_id, "Bye byee")
 
+    dm_detail = dm_messages_v1(user2['token'], dm_id, 0)
     admin_user_remove_v1(user['token'], user2['auth_user_id'])
-    
-    assert data['dms'][dm_id]['messages'][1]['u_id'] == user2['auth_user_id'] 
-    assert data['dms'][dm_id]['messages'][1]['message'] == 'Removed user'
-    assert data['dms'][dm_id]['messages'][0]['message'] == 'Bye byee'
+    dm_detail = dm_messages_v1(user3['token'], dm_id, 0)
+
+    assert dm_detail['messages'][1]['message'] == 'Removed user'
 
 def test_admin_userpermission_permission_id(clear_data):
     '''
