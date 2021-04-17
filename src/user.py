@@ -22,9 +22,10 @@ def user_profile_v1(token, u_id):
         InputError - if the u_id is not a valid user
     Returns:
         Dictionary 'profile' containing u_id, email, name_first, name_last and handle
-    """    
+    """
     valid = 0
     valid_token = 0
+    profile = {}
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
@@ -64,7 +65,7 @@ def user_profile_setname_v1(token, name_first, name_last):
         InputError - if name_last is invalid (less than 1 character or greater than 50 character)
     Returns:
         Empty dictionary
-    """       
+    """
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -100,7 +101,7 @@ def user_profile_setemail_v1(token, email):
         InputError - if email is already user by an existing user
     Returns:
         Empty dictionary
-    """           
+    """
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -140,7 +141,7 @@ def user_profile_sethandle_v1(token, handle_str):
         InputError - if handle_str is invalid (less than 3 characters or greater than 20 characters)
     Returns:
         Empty dictionary
-    """           
+    """  
     valid_token = 0
     for t in data["token_list"]:
         if token == t:

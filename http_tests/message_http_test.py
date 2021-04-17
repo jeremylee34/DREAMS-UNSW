@@ -156,7 +156,6 @@ def test_message_edit(clear):
         'message': 'Hello'
     })
     message_id = message_id.json()
-    print(message_id)
     requests.put(f"{url}/message/edit/v2", json={
         'token': register_info['token'],
         'message_id': message_id['message_id'],

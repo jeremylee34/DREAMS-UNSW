@@ -7,7 +7,6 @@ import pytest
 from src import config
 import src.auth
 import src.other
-import src.data
 from src.error import InputError, AccessError
 
 @pytest.fixture
