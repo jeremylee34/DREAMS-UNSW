@@ -483,28 +483,100 @@ def test_message_sendlaterdm_invalid_token(clear, user, user2, dm_info):
     with pytest.raises(AccessError):
         assert message_sendlaterdm_v1(7, dm_info['dm_id'], 'Hello', timestamp)
 def test_message_react_channel(clear, user, channel, message):
+    '''
+    Basic test for functionality of message_react in a channel
+    '''
     message_react_v1(user['token'], message['message_id'], 1)
     messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
     assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
     assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
 def test_message_react_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Basic test for functionality of message_react in a dm
+    '''
     message_react_v1(user['token'], dm_message['message_id'], 1)
     messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
     assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
     assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
 def test_message_react_invalid_message_id(clear, user, channel):
+    '''
+    Tests if an InputError is raised when the message id is invalid
+    '''
     with pytest.raises(InputError):
         assert message_react_v1(user['token'], 2, 1)
 def test_message_react_invalid_react_id(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when the react id is invalid
+    '''
     with pytest.raises(InputError):
         assert message_react_v1(user['token'], message['message_id'], 100)
 def test_message_react_already_reacted(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when a message has already been reacted by the user
+    '''
     message_react_v1(user['token'], message['message_id'], 1)
     with pytest.raises(InputError):
         assert message_react_v1(user['token'], message['message_id'], 1)
 def test_message_react_access_error(clear, user, user2, channel, message):
+    '''
+    Tests if an AccessError is raised when the user trying to react has not joined the channel
+    '''
     with pytest.raises(AccessError):
         assert message_react_v1(user2['token'], message['message_id'], 1)
 def test_message_react_invalid_token(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when an invalid token is entered
+    '''
     with pytest.raises(InputError):
         assert message_react_v1(3, message['message_id'], 1)
+
+
+
+def test_message_unreact_channel(clear, user, channel, message):
+    message_react_v1(user['token'], message['message_id'], 1)
+    message_unreact_v1(user['token'], message['message_id'], 1)
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
+    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
+def test_message_unreact_dm(clear, user, user2, dm_info, dm_message):
+    message_react_v1(user['token'], dm_message['message_id'], 1)
+    message_unreact_v1(user['token'], dm_message['message_id'], 1)
+    messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
+    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
+    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
+def test_message_unreact_invalid_message_id(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when the message id is invalid
+    '''
+    message_react_v1(user['token'], message['message_id'], 1)
+    with pytest.raises(InputError):
+        assert message_unreact_v1(user['token'], 10, 1)
+def test_message_unreact_invalid_react_id(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when the react id is invalid
+    '''
+    message_react_v1(user['token'], message['message_id'], 1)
+    with pytest.raises(InputError):
+        assert message_unreact_v1(user['token'], message['message_id'], 100)
+def test_message_unreact_already_reacted(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when a message has not been reacted by the user
+    '''
+    with pytest.raises(InputError):
+        assert message_unreact_v1(user['token'], message['message_id'], 1)
+def test_message_unreact_access_error(clear, user, user2, channel, message):
+    '''
+    Tests if an AccessError is raised when the user trying to unreact has not joined the channel
+    '''
+    with pytest.raises(AccessError):
+        assert message_unreact_v1(user2['token'], message['message_id'], 1)
+def test_message_unreact_invalid_token(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when an invalid token is entered
+    '''
+    with pytest.raises(InputError):
+        assert message_unreact_v1(3, message['message_id'], 1)
