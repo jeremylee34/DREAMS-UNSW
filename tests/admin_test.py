@@ -82,12 +82,14 @@ def test_admin_remove_channel(clear_data):
 
     admin_userpermission_change_v1(user['token'], user2['auth_user_id'], 1)
     message_send_v1(user2['token'], channel_id, "Hello")
+    message_send_v1(user['token'], channel_id, "Hello2")
 
     channel_msg = channel_messages_v1(user2['token'], channel_id, 0)
     admin_user_remove_v1(user['token'], user2['auth_user_id'])
     
     channel_msg = channel_messages_v1(user['token'], channel_id, 0)
-    assert channel_msg['messages'][0]['message'] == 'Removed user'
+    assert channel_msg['messages'][1]['message'] == 'Removed user'
+    assert channel_msg['messages'][0]['message'] == 'Hello2'
 
 def test_admin_remove_dm(clear_data):
     '''
