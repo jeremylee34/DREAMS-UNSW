@@ -353,3 +353,11 @@ def message_sendlaterdm_v1(token, dm_id, message, time_sent):
     return {
         'message_id': 1
     }
+def message_react_v1(token, message_id, react_id):
+    return {}
+def message_unreact_v1(token, message_id, react_id):
+    return {}
+def message_pin_v1(token, message_id):
+    return {}
+def message_unpin_v1(token, message_id):
+    return {}
