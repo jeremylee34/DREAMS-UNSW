@@ -345,3 +345,11 @@ def message_senddm_v1(token, dm_id, message):
     return {
         'message_id': message_id
     }
+def message_sendlater_v1(token, channel_id, message, time_sent):
+    return {
+        'message_id': 1
+    }
+def message_sendlaterdm_v1(token, dm_id, message, time_sent):
+    return {
+        'message_id': 1
+    }
