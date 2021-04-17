@@ -628,3 +628,50 @@ def test_message_pin_invalid_token(clear, user, channel, message):
     '''
     with pytest.raises(InputError):
         assert message_pin_v1(3, message['message_id'])
+
+
+def test_message_unpin_channel(clear, user, channel, message):
+    '''
+    Basic test for functionality of message_pin_v1 in a channel
+    '''
+    message_pin_v1(user['token'], message['message_id'])
+    message_unpin_v1(user['token'], message['message_id'])
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['is_pinned'] == False
+def test_message_unpin_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Basic test for functionality of message_pin_v1 in a dm
+    '''
+    message_pin_v1(user['token'], dm_message['message_id'])
+    message_unpin_v1(user['token'], dm_message['message_id'])
+    messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
+    assert messages['messages'][0]['is_pinned'] == False
+def test_message_unpin_invalid_message_id(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when an invalid message id is entered
+    '''
+    message_pin_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_unpin_v1(user['token'], 10)
+def test_message_unpin_already_pinned(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when message pin is called when a message is already unpinned
+    '''
+    message_pin_v1(user['token'], message['message_id'])
+    message_unpin_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_unpin_v1(user['token'], message['message_id'])
+def test_message_unpin_access_error(clear, user, user2, channel, join, message):
+    '''
+    Tests if an AccessError is raised when a user that is not an owner tries to unpin a message
+    '''
+    message_pin_v1(user['token'], message['message_id'])
+    with pytest.raises(AccessError):
+        assert message_unpin_v1(user2['token'], message['message_id'])
+def test_message_unpin_invalid_token(clear, user, channel, message):
+    '''
+    Tests if an InputError is raised when an invalid token is entered
+    '''
+    with pytest.raises(InputError):
+        assert message_unpin_v1(3, message['message_id'])
+
