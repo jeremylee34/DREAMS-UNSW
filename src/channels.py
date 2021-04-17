@@ -7,8 +7,6 @@ import jwt
 from src.error import InputError
 from src.error import AccessError
 from src.data import data
-# from src.server import returns
-# from src.server import save
 
 SECRET = 'HELLO'
 
@@ -22,8 +20,6 @@ def channels_list_v1(token):
     Return Value:
         Returns 'channels'
     '''
-    # global data
-    # returns()
     valid = 0
     # Checking if token is valid
     for tokens in data['token_list']:
@@ -51,7 +47,6 @@ def channels_list_v1(token):
                 channel_dict['channel_id'] = channel['channel_id']
                 channel_dict['name'] = channel['name']
                 channel_list.append(channel_dict)
-    # save()
     return {'channels': channel_list}
 
 def channels_listall_v1(token):
@@ -64,8 +59,6 @@ def channels_listall_v1(token):
     Return Value:
         Returns 'channels'
     '''
-    # global data
-    # returns()
     valid = 0
     # Checking if token is valid
     for tokens in data['token_list']:
@@ -80,7 +73,6 @@ def channels_listall_v1(token):
         channel_dict['channel_id'] = channel['channel_id']
         channel_dict['name'] = channel['name']
         channel_list.append(channel_dict)
-    # save()
     return {'channels': channel_list}
 
 def channels_create_v1(token, name, is_public):
@@ -97,8 +89,6 @@ def channels_create_v1(token, name, is_public):
     Return Value:
         Returns 'channel_id'
     '''
-    # global data
-    # returns()
     valid = 0
     # Checking if token is valid
     for tokens in data['token_list']:
@@ -147,5 +137,4 @@ def channels_create_v1(token, name, is_public):
     channel_id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
-    # save()
     return {'channel_id': channel_id}

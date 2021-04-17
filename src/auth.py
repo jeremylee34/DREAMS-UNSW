@@ -9,8 +9,6 @@ import re
 import jwt
 import hashlib
 from flask import request
-# from src.server import returns
-# from src.server import save
 SECRET = 'HELLO'
 
 session_id = 0
@@ -44,9 +42,6 @@ def auth_login_v1(email, password):
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
     """
-    # global data
-    # data = returns()
-    # data = data1
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
     if re.search(regex, email):
@@ -76,7 +71,6 @@ def auth_login_v1(email, password):
     #Generating new token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
-    # save()
     return {
         'token': token,
         'auth_user_id': count
@@ -103,8 +97,6 @@ def auth_register_v1(email, password, name_first, name_last):
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
     """ 
-    # global data
-    # data = returns()
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
     count = len(data['users'])
@@ -175,12 +167,11 @@ def auth_register_v1(email, password, name_first, name_last):
         register['permission_id'] = 2
     #creating session_id list for user
     register['session_ids'] = []
-    register['session_ids'].append(create_session_id())    
+    register['session_ids'].append(create_session_id())   
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
     data['users'].append(register)
-    # save()
     return {
         'token': token,
         'auth_user_id': count
@@ -198,9 +189,6 @@ def auth_logout_v1(token):
     Returns:
         Dictionary containing 'is_success'
     """
-    # global data
-    # data = returns()
-    # data = data1
     logout = False
     valid_token = 0
     #Decodes the token
@@ -219,7 +207,6 @@ def auth_logout_v1(token):
                     logout = True
     else:
         raise AccessError("Invalid token")
-    # save()
     return {
         'is_success': logout
     }
