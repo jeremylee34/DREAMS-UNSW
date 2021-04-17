@@ -12,7 +12,6 @@ from src.message import message_edit_v1
 from src.message import message_remove_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
-from src.message import message_sendlater_v1
 from src.error import InputError
 from src.error import AccessError
 from src.dm import dm_create_v1
@@ -359,60 +358,3 @@ def test_message_senddm_invalid_token(clear, user, user2, dm_info):
     '''
     with pytest.raises(InputError):
         assert message_senddm_v1(6, dm_info['dm_id'], 'Hello')
-
-def test_message_sendlater(clear, user, channel):
-    '''
-    Basic test for functionality of message_sendlater_v1
-    '''
-    time = datetime.now()
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    message_id = message_sendlater_v1(user['token'], channel['channel_id'], 'Hello', timestamp)
-    time.sleep(6)
-    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
-    assert messages['messages'][0]['message'] == 'Hello'
-def test_message_sendlater_invalid_channel(clear, user, channel):
-    '''
-    Tests if an InputError is raised when channel id is invalid
-    '''
-    time = datetime.now()
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    with pytest.raises(InputError):
-        assert message_sendlater_v1(user['token'], 4, 'Hello', timestamp)
-def test_message_sendlater_invalid_message(clear, user, channel):
-    '''
-    Tests if an InputError is raised when a message is over 1000 characters
-    '''
-    time = datetime.now()
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    with pytest.raises(InputError):
-        assert message_sendlater_v1(user['token'], channel['channel_id'], 'Hello' * 1000, timestamp)
-def test_message_sendlater_past_time(clear, user, channel):
-    '''
-    Tests if an InputError is raised when a time that has already past is entered 
-    '''
-    time = datetime(2020, 4, 20)
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    with pytest.raises(InputError):
-        assert message_sendlater_v1(user['token'], channel['channel_id'], 'Hello', timestamp)
-def test_message_sendlater_access_error(clear, user, user2, channel):
-    '''
-    Tests if an AccessError is raised when a user that is not in the channel tries to send a message later
-    '''
-    time = datetime.now()
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    with pytest.raises(AccessError):
-        assert message_sendlater_v1(user2['token'], channel['channel_id'], 'Hello', timestamp)
-def test_message_sendlater_invalid_token(clear, user, channel):
-    '''
-    Tests if an InputError is raised when an invalid token is entered
-    '''
-    time = datetime.now()
-    new_time = time + datetime.timedelta(seconds=5)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
-    with pytest.raises(InputError):
-        assert message_sendlater_v1(55, channel['channel_id'], 'Hello', timestamp)
