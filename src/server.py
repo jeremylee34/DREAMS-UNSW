@@ -414,8 +414,6 @@ def messages_dm():
 
 @APP.route("/message/send/v2", methods=['POST'])
 def message_send():
-    data2 = pickle.load(open("src/datastore.p", "rb"))
-    print(data2)
     message = request.get_json()
     message_id = message_send_v1(message['token'], message['channel_id'], message['message'])
     save_data()
