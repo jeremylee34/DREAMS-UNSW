@@ -364,6 +364,39 @@ def message_senddm_v1(token, dm_id, message):
     return {
         'message_id': message_id
     }
+def helper_sendlater(token, channel_id, message, message_id):
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data.data['users']:
+        for s_id in user['session_ids']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
+    current_time = datetime.now()
+    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    # Dictionary for new message
+    new_message = {
+        'message_id': message_id,
+        'u_id': auth_user_id,
+        'message': message,
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
+    }
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'channel_id': channel_id,
+            'dm_id': -1,
+            'u_id': auth_user_id
+        }
+        data.data['notifications'].append(new_notification)
+    # Inserts the message into the channel messages
+    data.data['channels'][channel_id]['messages'].insert(0, new_message)
+    data.data['users'][auth_user_id]['num_messages'] += 1
 def message_sendlater_v1(token, channel_id, message, time_sent):
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -386,11 +419,46 @@ def message_sendlater_v1(token, channel_id, message, time_sent):
     if check_user_in_channel(channel_id, auth_user_id) == False:
         raise AccessError('Authorised user has not joined the channel they are posting to')
     time = time_sent - timestamp
-    t = threading.Timer(time, message_send_v1, args=[token, channel_id, message])
+    message_id = len(data.data['message_ids'])
+    data.data['message_ids'].append(message_id)
+    t = threading.Timer(time, helper_sendlater, args=[token, channel_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
     }
+def helper_sendlaterdm(token, dm_id, message, message_id):
+    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
+    session_id = payload['session_id']
+    for user in data.data['users']:
+        for s_id in user['session_ids']:
+            if s_id == session_id:
+                auth_user_id = user['u_id']
+    current_time = datetime.now()
+    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    # Dictionary for new message
+    new_message = {
+        'message_id': message_id,
+        'u_id': auth_user_id,
+        'message': message,
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
+    }
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'channel_id': -1,
+            'dm_id': dm_id,
+            'u_id': auth_user_id
+        }
+        data.data['notifications'].append(new_notification)
+    # Inserts message into dms
+    data.data['dms'][dm_id]['messages'].insert(0, new_message)
+    data.data['users'][auth_user_id]['num_messages'] += 1
 def message_sendlaterdm_v1(token, dm_id, message, time_sent):
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -413,7 +481,9 @@ def message_sendlaterdm_v1(token, dm_id, message, time_sent):
     if check_user_in_dm(auth_user_id, dm_id) == False:
         raise AccessError('Authorised user has not joined the DM they are posting to')
     time = time_sent - timestamp
-    t = threading.Timer(time, message_senddm_v1, args=[token, dm_id, message])
+    message_id = len(data.data['message_ids'])
+    data.data['message_ids'].append(message_id)
+    t = threading.Timer(time, helper_sendlaterdm, args=[token, dm_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
