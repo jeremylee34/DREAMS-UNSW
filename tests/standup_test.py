@@ -140,7 +140,7 @@ def test_standup_active_v1_inactive(clear_data, user_token1, channel_id1):
     """
     length = 0.05
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
-    time.sleep(0.05)
+    time.sleep(0.06)
     activity = standup_active_v1(user_token1['token'], channel_id1['channel_id'])
     assert activity['is_active'] is False
     assert activity['time_finish'] is None
