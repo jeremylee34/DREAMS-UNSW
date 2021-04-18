@@ -35,6 +35,14 @@ from src.message import message_senddm_v1
 from src.message import message_share_v1
 from src.other import notifications_get_v1
 from src.other import search_v1
+from src.standup import standup_start_v1
+from src.standup import standup_active_v1
+from src.standup import standup_send_v1
+
+# with open('store.json', 'r') as fp:
+#    global data
+#    data = loads(fp.read())
+
 from src.other import clear_v1
 import pickle
 def defaultHandler(err):
@@ -438,6 +446,29 @@ def message_senddm():
     message_id = message_senddm_v1(message['token'], message['dm_id'], message['message'])
     save_data()
     return dumps(message_id)
+
+################################################################################
+#####################         MESSAGE ROUTES           #########################
+################################################################################
+
+@APP.route("/standup/start/v1", methods=['POST'])
+def standup_start():
+    data = request.get_json()
+    time_finish = standup_start_v1(data['token'], data['channel_id'], data['length'])
+    return dumps(time_finish)
+
+@APP.route("/standup/active/v1", methods=['GET'])
+def standup_active():
+    token = request.args.get('token')
+    channel_id = int(request.args.get('channel_id'))
+    standup_info = standup_active_v1(token, channel_id)
+    return dumps(standup_info)
+    
+@APP.route("/standup/send/v1", methods=['POST'])
+def standup_send():
+    data = request.get_json()
+    standup_send_v1(data['token'], data['channel_id'], data['message'])
+    return dumps({})
 
 ################################################################################
 #####################           MAIN APP.RUN           #########################

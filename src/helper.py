@@ -3,6 +3,8 @@ from src.error import AccessError
 from src.data import data
 
 import jwt
+import time
+import threading
 
 SECRET = "HELLO"
 OWNER_PERMISSION = 1
@@ -98,6 +100,17 @@ def check_if_owner(u_id, channel_id):
             is_owner = True
             break
     return is_owner
+
+
+    
+ 
+
+# def check_active_standup_in_channel(channel_id):
+#     if not data['channels'][channel_id]['standup']:
+#         active_standup = False
+#     elif data['channels'][channel_id]['is_active'] is True:
+#         active_standup = True
+#     return active_standup
 
 # def check_channel_owner(u_id, channel_id):
 #     channel_owner = False
