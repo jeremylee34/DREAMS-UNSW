@@ -3,8 +3,8 @@ Implementation of auth functions which includes auth_login_v1,
 auth_register_v1, auth_login_v1
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
-from data import data
-from error import InputError, AccessError
+from src.data import data
+from src.error import InputError, AccessError
 import re
 import jwt
 import hashlib

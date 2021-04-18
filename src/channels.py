@@ -4,9 +4,9 @@ channels_listall_v1 and channels_create_v1.
 Written by Gordon Liang
 '''
 import jwt
-from error import InputError
-from error import AccessError
-from data import data
+from src.error import InputError
+from src.error import AccessError
+from src.data import data
 
 SECRET = 'HELLO'
 

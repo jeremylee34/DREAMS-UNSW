@@ -1,6 +1,6 @@
-from error import InputError
-from error import AccessError
-from data import data
+from src.error import InputError
+from src.error import AccessError
+from src.data import data
 
 import jwt
 

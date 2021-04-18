@@ -5,19 +5,19 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from flask import request
 import jwt
-import data
-from error import InputError, AccessError
+import src.data as data
+from src.error import InputError, AccessError
 import re
-from auth import auth_register_v1
+from src.auth import auth_register_v1
 import os
 from PIL import Image
 import urllib.request
-from config import port
-from channels import channels_list_v1
-import dm
-from channels import channels_listall_v1
+from src.config import port
+from src.channels import channels_list_v1
+from src.channels import channels_listall_v1
 from datetime import datetime
 from datetime import timezone
+
 
 SECRET = 'HELLO'
 
@@ -229,7 +229,8 @@ def user_stats_v1(token):
         all_channels = channels_listall_v1(token)
         total_channels = len(all_channels['channels'])
         #Getting number of dms user is in
-        dms = dm.dm_list_v1(token)
+        from src.dm import dm_list_v1
+        dms = dm_list_v1(token)
         num_user_dms = len(dms['dms'])
         #Getting total number of dms
         total_dms = len(data.data['dms'])
@@ -384,14 +385,13 @@ def users_stats_v1(token):
                 new_stat = {'exist': existing_messages, 'time': message_time}
                 data.data['dreams_stats']['messages_exist'].append(new_stat)
             else:
-                new_stat = {'exist': num_user_dms, 'time': timestamp}
+                new_stat = {'exist': existing_messages, 'time': timestamp}
                 data.data['dreams_stats']['messages_exist'].append(new_stat)
     else:
         raise InputError("Invalid token")
     data.data['dreams_stats']['utilization_rate'] = utilization_rate
     return data.data['dreams_stats']
 
-import re
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     valid = 0
     #Checking to see if token is valid
@@ -436,43 +436,44 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
         raise InputError("Invalid token")
     return {}
     
-from message import message_send_v1, message_share_v1, message_remove_v1
-from channels import channels_create_v1
-IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
-if __name__ == '__main__':
-    r = auth_register_v1("tom@gmail.com", "hello1234", "tom", "brown")
-    s = auth_register_v1("tim@gmail.com", "hello1234", "tom", "brown")
-    k = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
-    channel = channels_create_v1(r['token'], "Channel1", True)
-    channels_create_v1(s['token'], "Channel2", True)
-    channels_create_v1(r['token'], "Channel3", True)
-    dms = dm.dm_create_v1(r['token'], [1])
-    dms1 = dm.dm_create_v1(s['token'], [0])
-    message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')
-    message_send_v1(r['token'], channel['channel_id'], 'Hello')
-    message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
-    message_share_v1(s['token'], message_id['message_id'], '', -1, dms1['dm_id'])
-    message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
-    dm.dm_remove_v1(r['token'], 0)
-    # message_remove_v1(r['token'], 4)
-    # message_remove_v1(r['token'], 3)
-    # message_remove_v1(r['token'], 2)
-    # message_remove_v1(r['token'], 1)
-    # message_remove_v1(r['token'], 0)
-    p = user_stats_v1(r['token'])
-    print(p)
-    dms3 = dm.dm_create_v1(r['token'], [1])
-    p = user_stats_v1(r['token'])
-    print(p)
-    t = user_stats_v1(s['token'])
-    print(t)
-    o = user_stats_v1(k['token'])
-    print(o)
-    e = users_stats_v1(r['token'])
-    user_profile_uploadphoto_v1(r['token'], IMG_URL, 0, 0, 1500, 1000)  
-    # y = user_stats_v1(s['token'])
-    # print(y)
-    # j = users_stats_v1(s['token'])
+
+# if __name__ == '__main__':
+#     from message import message_send_v1, message_share_v1, message_remove_v1
+#     from channels import channels_create_v1
+#     IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
+#     r = auth_register_v1("tom@gmail.com", "hello1234", "tom", "brown")
+#     s = auth_register_v1("tim@gmail.com", "hello1234", "tom", "brown")
+#     k = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+#     channel = channels_create_v1(r['token'], "Channel1", True)
+#     channels_create_v1(s['token'], "Channel2", True)
+#     channels_create_v1(r['token'], "Channel3", True)
+#     dms = dm.dm_create_v1(r['token'], [1])
+#     dms1 = dm.dm_create_v1(s['token'], [0])
+#     message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')
+#     message_send_v1(r['token'], channel['channel_id'], 'Hello')
+#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
+#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms1['dm_id'])
+#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
+#     dm.dm_remove_v1(r['token'], 0)
+#     # message_remove_v1(r['token'], 4)
+#     # message_remove_v1(r['token'], 3)
+#     # message_remove_v1(r['token'], 2)
+#     # message_remove_v1(r['token'], 1)
+#     # message_remove_v1(r['token'], 0)
+#     p = user_stats_v1(r['token'])
+#     print(p)
+#     dms3 = dm.dm_create_v1(r['token'], [1])
+#     p = user_stats_v1(r['token'])
+#     print(p)
+#     t = user_stats_v1(s['token'])
+#     print(t)
+#     o = user_stats_v1(k['token'])
+#     print(o)
+#     e = users_stats_v1(r['token'])
+#     user_profile_uploadphoto_v1(r['token'], IMG_URL, 0, 0, 1500, 500)  
+#     # y = user_stats_v1(s['token'])
+#     # print(y)
+#     # j = users_stats_v1(s['token'])
 
     ##############################
     ### ADD SRC AFTER FINISHED ###

@@ -6,9 +6,11 @@ import requests
 import pytest
 from src.config import url
 import src.auth
+import src.channels
+import src.dm
+import src.message
 import src.user
 import src.other
-import src.data
 from src.error import InputError, AccessError
 
 IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
@@ -17,7 +19,7 @@ FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
 @pytest.fixture
 #Clears all data
 def clear_data():
-    requests.delete(f'{url}clear/v1')
+    requests.delete(f'{url}/clear/v1')
 
 ##Tests for user/profile/v2
 #Tests whether input error is raised for invalid u_id
@@ -29,18 +31,18 @@ def test_invalid_uid(clear_data):
         'name_last': 'brown',
     })
     payload = r.json()
-    assert requests.get(f"{url}/user/profile/v2?token={payload['token']}&u_id=10000").status_code == InputError.code 
+    assert requests.get(f"{url}/user/profile/v2?token={payload['token']}&u_id=1000").status_code == InputError.code
 
-#Tests whether input error is raised for invalid token
+#Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):    
-    user = requests.post(f'{url}/auth/register/v2', json={
+    requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
-    }).json()
+    })
     
-    assert requests.get(f"{url}/user/profile/v2?token=invalid_token&u_id={user['auth_user_id']}").status_code == InputError.code
+    assert requests.get(f'{url}/user/profile/v2?token=invalid_token&u_id=0').status_code == InputError.code
    
 
 ##Tests for user/profile/setname/v2
@@ -74,7 +76,7 @@ def test_invalid_setname_lastname(clear_data):
         'name_last': '',
     }).status_code == InputError.code
 
-#Tests whether input error is raised for invalid token
+#Tests whether access error is raised for invalid token
 def test_invalid_token_setname(clear_data):    
     requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -83,7 +85,7 @@ def test_invalid_token_setname(clear_data):
         'name_last': 'brown',
     })
     assert requests.put(f'{url}/user/profile/setname/v2', json={
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
+        'token': 'invalid_token',
         'name_first': 'john',
         'name_last': 'smith',
     }).status_code == InputError.code    
@@ -123,7 +125,7 @@ def test_shared_setemail(clear_data):
         'email': 'rob@gmail.com'
     }).status_code == InputError.code 
 
-#Tests whether input error is raised for invalid token
+#Tests whether access error is raised for invalid token
 def test_invalid_token_setemail(clear_data):    
     requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -132,9 +134,9 @@ def test_invalid_token_setemail(clear_data):
         'name_last': 'brown',
     })
     assert requests.put(f'{url}/user/profile/setemail/v2', json={
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
+        'token': 'invalid_token',
         'email': 'rob@gmail.com'
-    }).status_code == InputError.code       
+    }).status_code == InputError.code         
 
 ##Tests for user/profile/sethandle/v1
 #Tests whether input error is raised for invalid handle
@@ -171,7 +173,7 @@ def test_shared_handle(clear_data):
         'handle_str': 'tombrown'
     }).status_code == InputError.code
 
-#Tests whether input error is raised for invalid token
+#Tests whether access error is raised for invalid token
 def test_invalid_token_sethandle(clear_data):    
     requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -180,9 +182,9 @@ def test_invalid_token_sethandle(clear_data):
         'name_last': 'brown',
     })
     assert requests.put(f'{url}/user/profile/sethandle/v1', json={
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo',
+        'token': 'invalid_token',
         'handle_str': 'robblue',
-    }).status_code == InputError.code     
+    }).status_code == InputError.code        
 
 ##Tests for users/all/v1
 #Tests whether all users are returned (successful implementation)
@@ -203,10 +205,9 @@ def test_all_users(clear_data):
     query_string = f"token={payload['token']}"
     users = requests.get(f'{url}/users/all/v1?{query_string}')
     payload2 = users.json()
-    assert len(payload2) == 2  
+    assert len(payload2['users']) == 2  
 
-#Tests whether input error is raised for invalid token
-#TODO: MAYBE CHANGING
+#Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):    
     requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -214,8 +215,8 @@ def test_invalid_token_users_all(clear_data):
         'name_first': 'tom',
         'name_last': 'brown',
     })
-    query_string = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
-    assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code   
+    query_string = 'token=invalid_token'
+    assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code    
 
 ##Tests for user/stats/v1
 #checks for how big is the dictionary to test if function is successful
@@ -226,9 +227,28 @@ def test_success_user_stats(clear_data):
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
+    }).json()
+    requests.post(f'{url}/auth/register/v2', json={
+        'email': 'tim@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'brown',
     })
-    payload = r.json()
-    assert requests.get(f"{url}user/stats/v1?token={payload['token']}").status_code == 200
+    c = requests.post(f'{url}/channels/create/v2', json={
+        'token': r['token'],
+        'name': 'channel1',
+        'is_public': True,
+    }).json()
+    requests.post(f'{url}/dm/create/v1', json={
+        'token': r['token'],
+        'u_ids': [1],
+    })
+    requests.post(f'{url}/message/send/v1', json={
+        'token': r['token'],
+        'channel_id': c['channel_id'],
+        'message': 'Hello'
+    })    
+    assert requests.get(f"{url}user/stats/v1?token={r['token']}").status_code == 200
 
 ##Tests for users/stats/v1
 #checks for how big is the dictionary to test if function is successful
@@ -238,21 +258,28 @@ def test_success_users_stats(clear_data):
         'password': 'hello1234',
         'name_first': 'tom',
         'name_last': 'brown',
-    })
-    payload = r.json()
+    }).json()
     requests.post(f'{url}/auth/register/v2', json={
-        'email': 'timmy@gmail.com',
+        'email': 'tim@gmail.com',
         'password': 'hello1234',
         'name_first': 'tim',
-        'name_last': 'blue',
-    }) 
-    requests.post(f'{url}/auth/register/v2', json={
-        'email': 'sam@gmail.com',
-        'password': 'hello1234',
-        'name_first': 'sam',
-        'name_last': 'red',
-    })        
-    assert requests.get(f"{url}users/stats/v1?token={payload['token']}").status_code == 200
+        'name_last': 'brown',
+    }).json()
+    c = requests.post(f'{url}/channels/create/v2', json={
+        'token': r['token'],
+        'name': 'channel1',
+        'is_public': True,
+    }).json()
+    requests.post(f'{url}/dm/create/v1', json={
+        'token': r['token'],
+        'u_ids': [1],
+    })
+    requests.post(f'{url}/message/send/v1', json={
+        'token': r['token'],
+        'channel_id': 0,
+        'message': 'Hello'
+    })         
+    assert requests.get(f"{url}users/stats/v1?token={r['token']}").status_code == 200
 
 ##Tests for /user/profile/uploadphoto/v1
 '''
@@ -274,7 +301,7 @@ def test_invalid_token_uploadphoto(clear_data):
         'y_start': 50,
         'x_end': 200,
         'y_end': 200,
-    }) == InputError.code
+    }).status_code == InputError.code
 
 def test_invalid_x_dim(clear_data):
     r = requests.post(f'{url}/auth/register/v2', json={
@@ -286,11 +313,11 @@ def test_invalid_x_dim(clear_data):
     assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
         'token': r['token'],
         'img_url': IMG_URL,
-        'x_start': 15000,
+        'x_start': 1800,
         'y_start': 50,
-        'x_end': 15000,
-        'y_end': 200,
-    }) == InputError.code   
+        'x_end': 200,
+        'y_end': 50,
+    }).status_code == InputError.code   
 
 def test_invalid_y_dim(clear_data):
     r = requests.post(f'{url}/auth/register/v2', json={
@@ -302,11 +329,11 @@ def test_invalid_y_dim(clear_data):
     assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
         'token': r['token'],
         'img_url': IMG_URL,
-        'x_start': 50,
+        'x_start': 150,
         'y_start': 20000,
-        'x_end': 50,
-        'y_end': 20000,
-    }) == InputError.code 
+        'x_end': 200,
+        'y_end': 200,
+    }).status_code == InputError.code 
 
 def test_invalid_img_url(clear_data):
     r = requests.post(f'{url}/auth/register/v2', json={
@@ -322,4 +349,4 @@ def test_invalid_img_url(clear_data):
         'y_start': 50,
         'x_end': 200,
         'y_end': 200,
-    }) == InputError.code
+    }).status_code == InputError.code
