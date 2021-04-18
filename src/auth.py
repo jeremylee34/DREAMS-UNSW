@@ -3,7 +3,7 @@ Implementation of auth functions which includes auth_login_v1,
 auth_register_v1, auth_login_v1
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
-from src.data import data
+import src.data as data
 from src.error import InputError, AccessError
 import re
 import jwt
@@ -55,11 +55,11 @@ def auth_login_v1(email, password):
     input_password = hashlib.sha256(password.encode()).hexdigest()
     i = 0
     count = 0
-    while i < len(data["users"]):
-        if data["users"][i]["email"] == email:
+    while i < len(data.data["users"]):
+        if data.data["users"][i]["email"] == email:
             correct_email = 1
             count = i   
-        if data["users"][i]["password"] == input_password:
+        if data.data["users"][i]["password"] == input_password:
             correct_password = 1
         i += 1
     if correct_email == 0:
@@ -67,10 +67,10 @@ def auth_login_v1(email, password):
     if correct_password == 0:
         raise InputError("Incorrect password")
     #Generating a new session_id
-    data["users"][count]["session_ids"].append(create_session_id())
+    data.data["users"][count]["session_ids"].append(create_session_id())
     #Generating new token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
-    data['token_list'].append(token)
+    data.data['token_list'].append(token)
     return {
         'token': token,
         'auth_user_id': count
@@ -99,14 +99,14 @@ def auth_register_v1(email, password, name_first, name_last):
     """ 
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
-    count = len(data['users'])
+    count = len(data.data['users'])
     register = {}
     register['u_id'] = count
     # Checks for valid email
     if not re.search(regex, email):
         raise InputError("Invalid email") 
     # If there are already thing in the dictionary
-    for y in data["users"]:
+    for y in data.data["users"]:
         if y["email"] == email:
             raise InputError("Email is already used")
     register["email"] = email
@@ -146,8 +146,8 @@ def auth_register_v1(email, password, name_first, name_last):
     number = 0
     i = 0
     length = 0
-    while i in range(len(data["users"])):
-        if handle == data['users'][i]["handle_str"]:
+    while i in range(len(data.data["users"])):
+        if handle == data.data['users'][i]["handle_str"]:
             handle.replace(str(number), "")
             if len(handle) + len(str(number)) > 20:
                 length = len(handle) + len(str(number)) - 20
@@ -161,7 +161,7 @@ def auth_register_v1(email, password, name_first, name_last):
       
     register["handle_str"] = handle 
     #setting DREAMS(admin) permission
-    if (len(data['users']) < 1):
+    if (len(data.data['users']) < 1):
         register['permission_id'] = 1
     else:
         register['permission_id'] = 2
@@ -170,11 +170,11 @@ def auth_register_v1(email, password, name_first, name_last):
     register['session_ids'].append(create_session_id())   
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
-    data['token_list'].append(token)
+    data.data['token_list'].append(token)
     register['num_channels'] = 0
     register['num_dms'] = 0
     register['num_messages'] = 0
-    data['users'].append(register)
+    data.data['users'].append(register)
     return {
         'token': token,
         'auth_user_id': count
@@ -197,13 +197,13 @@ def auth_logout_v1(token):
     #Decodes the token
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     #Removes token from token_list if it exists
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1
-            data['token_list'].remove(token) 
+            data.data['token_list'].remove(token) 
     #If the token is valid, then particular session_id is removed, otherwise AccessError is raised
     if valid_token == 1:
-        for x in data["users"]:
+        for x in data.data["users"]:
             for y in x["session_ids"]:
                 if decoded_token["session_id"] == y:
                     x["session_ids"].remove(y)
