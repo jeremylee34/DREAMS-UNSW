@@ -1,7 +1,9 @@
 import sys
+import src.data as data
+import pickle
 from flask import Flask, request
 from flask_cors import CORS
-from json import dumps, loads
+from json import dumps
 from src import config
 from src import user
 from src.admin import admin_user_remove_v1
@@ -19,7 +21,6 @@ from src.channel import channel_removeowner_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.channels import channels_listall_v1
-from src.data import data
 from src.dm import dm_create_v1
 from src.dm import dm_details_v1
 from src.dm import dm_invite_v1
@@ -36,7 +37,7 @@ from src.message import message_share_v1
 from src.other import notifications_get_v1
 from src.other import search_v1
 from src.other import clear_v1
-import pickle
+
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -53,13 +54,20 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-def load_data():
-    global data
-    data = pickle.load(open("datastore.p", "rb"))
+
+
+# Loading data from pickle file
+data.data = pickle.load(open("src/datastore.p", "rb"))
+
+
 def save_data():
-    global data
-    with open('datastore.p', 'wb') as FILE:
-        pickle.dump(data, FILE)
+    '''
+    Saves the current data into the pickle file
+    '''
+    with open('src/datastore.p', 'wb') as FILE:
+        pickle.dump(data.data, FILE)
+
+
 # Example
 @APP.route("/echo", methods=['GET'])
 def echo():
@@ -131,12 +139,7 @@ def register():
         Returns the result of the auth_register_v1 function in json
     '''
     inputs = request.get_json()
-    
     r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
-    
-    data2 = pickle.load(open("datastore.p", "rb"))
-    print(data2)
-    #print(data.data)
     save_data()
     return dumps(r)
 
@@ -411,6 +414,8 @@ def messages_dm():
 
 @APP.route("/message/send/v2", methods=['POST'])
 def message_send():
+    data2 = pickle.load(open("src/datastore.p", "rb"))
+    print(data2)
     message = request.get_json()
     message_id = message_send_v1(message['token'], message['channel_id'], message['message'])
     save_data()
@@ -450,4 +455,3 @@ def message_senddm():
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
-    #load_data()
