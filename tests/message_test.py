@@ -1,8 +1,7 @@
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import threading
 import time
-from datetime import timezone
 from src.auth import auth_register_v1
 from src.other import clear_v1
 from src.channel import channel_messages_v1
@@ -144,7 +143,7 @@ def sleep():
     '''
     Stops the thread for two seconds
     '''
-    time.sleep(2)
+    time.sleep(3)
 @pytest.fixture
 def react(user, message):
     '''
@@ -467,7 +466,7 @@ def test_message_sendlaterdm(clear, sendlaterdm, sleep, dm_messages):
     Basic test for functionality of message_sendlaterdm_v1
     '''
     assert dm_messages['messages'][0]['message'] == 'Hello'
-def test_message_sendlaterdm_invalid_dm(clear, user, user2, timestamp):
+def test_message_sendlaterdm_invalid_dm(clear, user, user2, dm_info, timestamp):
     '''
     Tests if an InputError is raised when an invalid dm is entered
     '''
@@ -498,7 +497,7 @@ def test_message_sendlaterdm_invalid_token(clear, user, user2, dm_info, timestam
     '''
     with pytest.raises(InputError):
         assert message_sendlaterdm_v1(7, dm_info['dm_id'], 'Hello', timestamp)
-def test_message_react_channel(clear, user, react, messages):
+def test_message_react_channel(clear, user, channel, message, react, messages):
     '''
     Basic test for functionality of message_react in a channel
     '''
@@ -514,7 +513,7 @@ def test_message_react_dm(clear, user, user2, dm_info, dm_message):
     assert messages['messages'][0]['reacts'][0]['react_id'] == 1
     assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
     # assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
-def test_message_react_invalid_message_id(clear, user, channel):
+def test_message_react_invalid_message_id(clear, user, channel, message):
     '''
     Tests if an InputError is raised when the message id is invalid
     '''
@@ -590,7 +589,7 @@ def test_message_unreact_access_error(clear, user, user2, channel, message, reac
     '''
     with pytest.raises(AccessError):
         assert message_unreact_v1(user2['token'], message['message_id'], 1)
-def test_message_unreact_invalid_token(clear, user, channel, message):
+def test_message_unreact_invalid_token(clear, user, channel, message, react):
     '''
     Tests if an InputError is raised when an invalid token is entered
     '''
