@@ -6,7 +6,6 @@ from src.other import clear_v1
 # from src import config
 from src.config import url
 from src.error import InputError, AccessError
-from src.data import data
 
 @pytest.fixture
 def clear_data():

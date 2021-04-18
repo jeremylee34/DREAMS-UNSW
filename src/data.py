@@ -4,8 +4,5 @@ data = {
     "dms": [],
     "message_ids" : [],
     "notifications" : [],
-    "token_list": []
+    "token_list": [],
 }
-
-
-    

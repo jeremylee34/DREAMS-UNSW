@@ -89,11 +89,11 @@ def dm_create_v1(token, u_ids):
         Returns a dict containing the new dm_id and dm_name
 
     """
-    if check_valid_token(token) == False:
+    if check_valid_token(token) is False:
         raise InputError("token does not refer to a valid token")
     # Check valid u_ids
     for u_id in u_ids:
-        if check_valid_user(u_id) == False:
+        if check_valid_user(u_id) is False:
             raise InputError("u_id does not refer to a valid user")
 
     owner_u_id = token_to_u_id(token)
@@ -164,7 +164,6 @@ def dm_remove_v1(token, dm_id):
         data['dms'][dm_id] = empty_dict
     else:
         raise AccessError("The user is not the original DM creator")
-
     return {
     }
 
@@ -219,7 +218,6 @@ def dm_invite_v1(token, dm_id, u_id):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
-
     return {}
        
        
