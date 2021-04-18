@@ -86,6 +86,7 @@ def message_send_v1(token, channel_id, message):
         data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
     data['channels'][channel_id]['messages'].insert(0, new_message)
+    data['users'][auth_user_id]['num_messages'] += 1
     return {
         'message_id': message_id
     }
@@ -289,6 +290,7 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     # Inserts new message into dms
     else:
         data['dms'][dm_id]['messages'].insert(0, new_message)
+    data['users'][auth_user_id]['num_messages'] += 1
     return {
         'shared_message_id': message_id
     }
@@ -358,6 +360,7 @@ def message_senddm_v1(token, dm_id, message):
         data['notifications'].append(new_notification)
     # Inserts message into dms
     data['dms'][dm_id]['messages'].insert(0, new_message)
+    data['users'][auth_user_id]['num_messages'] += 1
     return {
         'message_id': message_id
     }

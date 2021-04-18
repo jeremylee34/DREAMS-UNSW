@@ -171,6 +171,9 @@ def auth_register_v1(email, password, name_first, name_last):
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
+    register['num_channels'] = 0
+    register['num_dms'] = 0
+    register['num_messages'] = 0
     data['users'].append(register)
     return {
         'token': token,

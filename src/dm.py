@@ -128,6 +128,9 @@ def dm_create_v1(token, u_ids):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
+    data['users'][owner_u_id]['num_dms'] += 1
+    for user in u_ids:
+        data['users'][user]['num_dms'] += 1
     return {
         'dm_id': dm_id,
         'dm_name': handle_list_str
@@ -218,6 +221,7 @@ def dm_invite_v1(token, dm_id, u_id):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
+    data['users'][u_id]['num_dms'] += 1
     return {}
        
        
@@ -258,7 +262,8 @@ def dm_leave_v1(token, dm_id):
 
     handlelist.sort()
     handlelist_string = ', '.join(map(str, handlelist))
-    data['dms'][dm_id]['name'] = handlelist_string        
+    data['dms'][dm_id]['name'] = handlelist_string
+    data['users'][user]['num_dms'] -= 1        
     return{}
     
     

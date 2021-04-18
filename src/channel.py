@@ -73,6 +73,7 @@ def channel_invite_v1(token, channel_id, u_id):
     }
     data['notifications'].append(new_notification)
     data['channels'][channel_id]['all_members'].append(new_member)
+    data['users'][u_id]['num_channels'] += 1
     return {}
 
 
@@ -228,6 +229,7 @@ def channel_leave_v1(token, channel_id):
         if user['u_id'] == u_id:
             if len(data['channels'][channel_id]['all_members']) > 1:
                 data['channels'][channel_id]['all_members'].remove(user)
+    data['users'][u_id]['num_channels'] -= 1
     return {
     }
 
@@ -270,8 +272,10 @@ def channel_join_v1(token, channel_id):
             'name_last' : data['users'][u_id]['name_last'],
         }
         data['channels'][channel_id]['all_members'].append(user_to_append)
+        data['users'][u_id]['num_channels'] += 1
     else:
         pass
+    
     return {
     }
 
@@ -315,7 +319,7 @@ def channel_addowner_v1(token, channel_id, u_id):
 
     if check_user_in_channel(channel_id, u_id) is False:
         data['channels'][channel_id]['all_members'].append(profile['user'])
-        
+        data['users'][u_id]['num_channels'] += 1
     return {
     }
 

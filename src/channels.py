@@ -137,4 +137,5 @@ def channels_create_v1(token, name, is_public):
     channel_id = len(data['channels'])
     # Adds the new channel to the data list
     data['channels'].append(new_channel)
+    data['users'][auth_user_id]['num_channels'] += 1
     return {'channel_id': channel_id}
