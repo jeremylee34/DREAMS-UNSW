@@ -298,86 +298,95 @@ def user_stats_v1(token):
     return return_stat
 
 def users_stats_v1(token):
-    #Getting number of channels that currently exist
-    all_channels = channels_listall_v1(token)
-    total_channels = len(all_channels['channels'])
-    #Getting number of dms that currently exist
-    existing_dms = 0
-    for x in data["dms"]:
-        if x["dm_id"] != '':
-            existing_dms += 1
-    #Getting number of existing messages
-    existing_messages = 0
-    for y in data["channels"]:
-        for z in y["messages"]:
-            if z["message"] != '':
-                existing_messages += 1
-    for a in data["dms"]:
-        for b in a["messages"]:
-            if b["message"] != '':
-                existing_messages += 1
-    #Finding the users joined in at least one channel or dm
-    users_joined = []
-    for i in data["channels"]:
-        for j in i["all_members"]:
-            if users_joined == []:
-                users_joined.append(j["u_id"])
-            else:
-                joined = 0
-                for users in users_joined:
-                    if users == j["u_id"]:
-                        joined = 1
-                if joined == 0:
+    valid = 0
+    #Checking to see if token is valid
+    for t in data['token_list']:
+        if t == token:
+            valid = 1
+    #If token is valid then returns the users stats, otherwise raises input error
+    if valid == 1:    
+        #Getting number of channels that currently exist
+        all_channels = channels_listall_v1(token)
+        total_channels = len(all_channels['channels'])
+        #Getting number of dms that currently exist
+        existing_dms = 0
+        for x in data["dms"]:
+            if x["dm_id"] != '':
+                existing_dms += 1
+        #Getting number of existing messages
+        existing_messages = 0
+        for y in data["channels"]:
+            for z in y["messages"]:
+                if z["message"] != '':
+                    existing_messages += 1
+        for a in data["dms"]:
+            for b in a["messages"]:
+                if b["message"] != '':
+                    existing_messages += 1
+        #Finding the users joined in at least one channel or dm
+        users_joined = []
+        for i in data["channels"]:
+            for j in i["all_members"]:
+                if users_joined == []:
                     users_joined.append(j["u_id"])
+                else:
+                    joined = 0
+                    for users in users_joined:
+                        if users == j["u_id"]:
+                            joined = 1
+                    if joined == 0:
+                        users_joined.append(j["u_id"])
 
-    for i in data["dms"]:
-        for j in i["members"]:
-            if users_joined == []:
-                users_joined.append(j["u_id"])
-            else:
-                joined = 0
-                for users in users_joined:
-                    if users == j["u_id"]:
-                        joined = 1
-                if joined == 0:
+        for i in data["dms"]:
+            for j in i["members"]:
+                if users_joined == []:
                     users_joined.append(j["u_id"])
-    #Calculating utilization_rate
-    utilization_rate = float(len(users_joined) / len(data["users"]))
-    #Getting the timestamp
-    current_time = datetime.now()
-    timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
-    #Applying correct timestamps and adding new user_stats to data
-    new_stat = {}
-    count = 0
-    i = 0
-    if len(data["dreams_stats"]) == 0:
-        new_stat["channels_exist"] = [{'exist': total_channels, 'time': timestamp}]
-        new_stat["dms_exist"] = [{'exist': existing_dms, 'time': timestamp}]
-        new_stat["messages_exist"] = [{'exist': existing_messages, 'time': timestamp}]        
-        data["dreams_stats"] = new_stat
+                else:
+                    joined = 0
+                    for users in users_joined:
+                        if users == j["u_id"]:
+                            joined = 1
+                    if joined == 0:
+                        users_joined.append(j["u_id"])
+        #Calculating utilization_rate
+        utilization_rate = float(len(users_joined) / len(data["users"]))
+        #Getting the timestamp
+        current_time = datetime.now()
+        timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
+        #Applying correct timestamps and adding new users_stats to data
+        new_stat = {}
+        count = 0
+        i = 0
+        if len(data["dreams_stats"]) == 0:
+            new_stat["channels_exist"] = [{'exist': total_channels, 'time': timestamp}]
+            new_stat["dms_exist"] = [{'exist': existing_dms, 'time': timestamp}]
+            new_stat["messages_exist"] = [{'exist': existing_messages, 'time': timestamp}]        
+            data["dreams_stats"] = new_stat
+        else:
+            check = data['dreams_stats']
+            if check['channels_exist'][len(check['channels_exist'])-1]['exist'] == total_channels:
+                channel_time = check['channels_exist'][len(check['channels_exist'])-1]['time']
+                new_stat = {'exist': total_channels, 'time': channel_time}
+                data['dreams_stats']['channels_exist'].append(new_stat)
+            else:
+                new_stat = {'exist': total_channels, 'time': timestamp}
+                data['dreams_stats']['channels_exist'].append(new_stat)
+            if check['dms_exist'][len(check['dms_exist'])-1]['exist'] == existing_dms:
+                dm_time = check['dms_exist'][len(check['dms_exist'])-1]['time']
+                new_stat = {'exist': existing_dms, 'time': dm_time}
+                data['dreams_stats']['dms_exist'].append(new_stat)
+            else:
+                new_stat = {'exist': existing_dms, 'time': timestamp}
+                data['dreams_stats']['dms_exist'].append(new_stat) 
+            if check['messages_exist'][len(check['messages_exist'])-1]['exist'] == existing_messages:
+                message_time = check['messages_exist'][len(check['messages_exist'])-1]['time']
+                new_stat = {'exist': existing_messages, 'time': message_time}
+                data['dreams_stats']['messages_exist'].append(new_stat)
+            else:
+                new_stat = {'exist': num_user_dms, 'time': timestamp}
+                data['dreams_stats']['messages_exist'].append(new_stat)
     else:
-        check = data['dreams_stats']
-        if check['channels_exist'][len(check['channels_exist'])-1]['exist'] == total_channels:
-            channel_time = check['channels_exist'][len(check['channels_exist'])-1]['time']
-            new_stat = {'exist': total_channels, 'time': channel_time}
-            data['dreams_stats']['channels_exist'].append(new_stat)
-        else:
-            new_stat = {'exist': total_channels, 'time': timestamp}
-            data['dreams_stats']['channels_exist'].append(new_stat)
-        if check['dms_exist'][len(check['dms_exist'])-1]['exist'] == existing_dms:
-            dm_time = check['dms_exist'][len(check['dms_exist'])-1]['time']
-            new_stat = {'exist': existing_dms, 'time': dm_time}
-            data['dreams_stats']['dms_exist'].append(new_stat)
-        else:
-            new_stat = {'exist': existing_dms, 'time': timestamp}
-            data['dreams_stats']['dms_exist'].append(new_stat) 
-        if check['messages_exist'][len(check['messages_exist'])-1]['exist'] == existing_messages:
-            message_time = check['messages_exist'][len(check['messages_exist'])-1]['time']
-            new_stat = {'exist': existing_messages, 'time': message_time}
-            data['dreams_stats']['messages_exist'].append(new_stat)
-        else:
-            new_stat = {'exist': num_user_dms, 'time': timestamp}
-            data['dreams_stats']['messages_exist'].append(new_stat)   
+        raise InputError("Invalid token")
     return data['dreams_stats']
 
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
