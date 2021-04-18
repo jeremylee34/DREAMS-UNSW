@@ -1,6 +1,7 @@
 import sys
 import src.data as data
 import pickle
+import os.path
 from flask import Flask, request
 from flask_cors import CORS
 from json import dumps
@@ -55,17 +56,20 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
 
-
-# Loading data from pickle file
-data.data = pickle.load(open("src/datastore.p", "rb"))
-
-
 def save_data():
     '''
     Saves the current data into the pickle file
     '''
     with open('src/datastore.p', 'wb') as FILE:
         pickle.dump(data.data, FILE)
+
+
+# Loading data from pickle file
+if os.path.exists("src/datastore.p") == False:
+    save_data()
+data.data = pickle.load(open("src/datastore.p", "rb"))
+
+
 
 
 # Example
