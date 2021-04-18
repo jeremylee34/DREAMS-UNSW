@@ -216,7 +216,6 @@ def test_standup_send_v1_access_error(clear_data, user_token1, user_token2, chan
     Test when user is not in the channel
     """
     length = 1.0
-    message = 'hi'
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token2['token'],
         'channel_id': channel_id1['channel_id'],
