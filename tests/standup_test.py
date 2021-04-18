@@ -71,7 +71,7 @@ def test_standup_start_v1_input_error1(clear_data, user_token1):
     """
     Tests when channel_id is not valid
     """
-    length = 0.05
+    length = 2.0
     with pytest.raises(InputError):
         standup_start_v1(user_token1['token'], INVALID_ID, length)
 
@@ -80,7 +80,7 @@ def test_standup_start_v1_input_error2(clear_data, user_token1, channel_id1):
     Tests when a standup is trying to be started when there is already an 
     active standup in the channel
     """
-    length = 0.05
+    length = 2.0
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     with pytest.raises(InputError):
         standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
@@ -89,7 +89,7 @@ def test_standup_start_v1_access_error(clear_data, user_token2, channel_id1):
     """
     Tests when authorised user is not the channel
     """
-    length = 0.05
+    length = 2.0
     with pytest.raises(AccessError):
         standup_start_v1(user_token2['token'], channel_id1['channel_id'], length)
 
@@ -97,7 +97,7 @@ def test_standup_start_v1_invalid_token(clear_data, channel_id1):
     """
     Tests when an invalid token is passed in
     """
-    length = 0.05
+    length = 2.0
     with pytest.raises(InputError):
         standup_start_v1(INVALID_TOKEN, channel_id1['channel_id'], length)
 
@@ -106,7 +106,7 @@ def test_standup_start_v1_simple(clear_data, user_token1, channel_id1):
     No way to test that time finish is exactly precise, so just testing that
     no exceptions are raised.
     """
-    length = 0.05
+    length = 2.0
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     
 
@@ -128,7 +128,7 @@ def test_standup_active_v1_active(clear_data, user_token1, channel_id1):
     """
     Tests return values when there is an active standup
     """
-    length = 0.05
+    length = 2.0
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     activity = standup_active_v1(user_token1['token'], channel_id1['channel_id'])
     assert activity['is_active'] is True
@@ -138,9 +138,9 @@ def test_standup_active_v1_inactive(clear_data, user_token1, channel_id1):
     """
     Tests return values when the active standup has timed out
     """
-    length = 0.05
+    length = 2.0
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
-    time.sleep(0.06)
+    time.sleep(2.01)
     activity = standup_active_v1(user_token1['token'], channel_id1['channel_id'])
     assert activity['is_active'] is False
     assert activity['time_finish'] is None
@@ -149,7 +149,7 @@ def test_standup_send_v1_input_error1(clear_data, user_token1, channel_id1):
     """
     Tests when channel_id is not valid
     """
-    length = 0.05
+    length = 2.0
     message = 'hello'
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     with pytest.raises(InputError):
@@ -159,7 +159,7 @@ def test_standup_send_v1_input_error2(clear_data, user_token1, channel_id1):
     """
     Tests when message is over 1000 characters
     """
-    length = 0.05
+    length = 2.0
     message = 'a' * 1001
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     with pytest.raises(InputError):
@@ -177,7 +177,7 @@ def test_standup_send_v1_access_error(clear_data, user_token1, user_token2, chan
     """
     Test when user is not in the channel
     """
-    length = 0.05
+    length = 2.0
     message = 'hi'
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     with pytest.raises(AccessError):
@@ -187,11 +187,11 @@ def test_standup_send_v1(clear_data, user_token1, channel_id1):
     """
     Testing whether a standup message is collected and added to messages
     """
-    length = 0.05
+    length = 2.0
     message = 'hi'
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     standup_send_v1(user_token1['token'], channel_id1['channel_id'], message)
-    time.sleep(0.06)
+    time.sleep(2.01)
     msgs = channel_messages_v1(user_token1['token'], channel_id1['channel_id'], 0)
     assert len(msgs['messages']) == 1
 
@@ -200,7 +200,7 @@ def test_standup_send_v1_many_messages(clear_data, user_token1, channel_id1):
     Testing whether multiple standup messages are collected and added to messages
     correctly
     """
-    length = 0.05
+    length = 2.0
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     for i in range(0, 10):
         standup_send_v1(user_token1['token'], channel_id1['channel_id'], str(i))
@@ -208,7 +208,7 @@ def test_standup_send_v1_many_messages(clear_data, user_token1, channel_id1):
     for j in range(0,10):
         test_msg.append(f"rolandlin: {str(j)}")
     msg_block_joined = '\n'.join(test_msg)
-    time.sleep(0.06)
+    time.sleep(2.01)
     msgs = channel_messages_v1(user_token1['token'], channel_id1['channel_id'], 0)
     assert len(msgs['messages']) == 1
     assert msgs['messages'][0]['message'] == msg_block_joined
@@ -217,13 +217,13 @@ def test_standup_send_v1_multiple_standups(clear_data, user_token1, channel_id1)
     """
     Testing whether having standups run back-to-back adds to messages each time
     """
-    length = 0.05
+    length = 2.0
     message = 'hi'
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     standup_send_v1(user_token1['token'], channel_id1['channel_id'], message)
-    time.sleep(0.06)
+    time.sleep(2.01)
     standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
     standup_send_v1(user_token1['token'], channel_id1['channel_id'], message)
-    time.sleep(0.06)
+    time.sleep(2.01)
     msgs = channel_messages_v1(user_token1['token'], channel_id1['channel_id'], 0)
     assert len(msgs['messages']) == 2
