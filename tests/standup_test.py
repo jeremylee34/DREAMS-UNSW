@@ -227,3 +227,13 @@ def test_standup_send_v1_multiple_standups(clear_data, user_token1, channel_id1)
     time.sleep(2.01)
     msgs = channel_messages_v1(user_token1['token'], channel_id1['channel_id'], 0)
     assert len(msgs['messages']) == 2
+
+def test_standup_send_v1_invalid_token(clear_data, user_token1, channel_id1):
+    """
+    Testing when user token is invalid
+    """
+    length = 2.0
+    message = 'hi'
+    standup_start_v1(user_token1['token'], channel_id1['channel_id'], length)
+    with pytest.raises(InputError):
+        standup_send_v1(INVALID_TOKEN, channel_id1['channel_id'], message)
