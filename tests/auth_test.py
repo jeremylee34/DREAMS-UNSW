@@ -162,14 +162,14 @@ def test_invalid_reset_code(clear_data):
 
 #Tests whether input error is raised for invalid secretcode
 def test_reset_invalid_secretcode(clear_data):
-    user = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_passwordreset_request_v1("asdf@gmail.com")
     with pytest.raises(InputError):
         assert auth_passwordreset_reset_v1('1', 'hiasdasdasd')
 
 #Tests whether valid secret code actually is secret code or not
 def test_reset_valid_secretcode_but_wrong(clear_data):
-    user = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
+    auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_passwordreset_request_v1("asdf@gmail.com")
     with pytest.raises(InputError):
         assert auth_passwordreset_reset_v1('ASDFAS', 'hiasdasdasd')
