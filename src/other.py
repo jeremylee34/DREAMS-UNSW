@@ -23,8 +23,6 @@ def clear_v1():
     Returns:
         Empty dictionary
     """         
-    for x in data.data["users"]:
-        x["session_ids"].clear()
     data.data['users'].clear()
     data.data['channels'].clear()
     data.data['dms'].clear() 

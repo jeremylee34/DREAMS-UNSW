@@ -5,7 +5,7 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from flask import request
 import jwt
-from src.data import data
+import src.data as data
 from src.error import InputError, AccessError
 import re
 
@@ -26,14 +26,14 @@ def user_profile_v1(token, u_id):
     valid = 0
     valid_token = 0
     profile = {}
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1
     #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
         #Getting information for user profile
-        for x in data["users"]:
+        for x in data.data["users"]:
                 if u_id == x['u_id']:
                     valid = 1
                     for y in x["session_ids"]:
@@ -67,7 +67,7 @@ def user_profile_setname_v1(token, name_first, name_last):
         Empty dictionary
     """
     valid_token = 0
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1    
     #If token is valid, then profile dict is updated otherwise access error is thrown
@@ -80,7 +80,7 @@ def user_profile_setname_v1(token, name_first, name_last):
         if len(name_last) < 1 or len(name_last) > 50:
             raise InputError("Invalid lastname")        
         #Updating user firstname and lastname
-        for x in data["users"]:
+        for x in data.data["users"]:
             for y in x["session_ids"]:
                 if decoded_token["session_id"] == y:
                     x['name_first'] = name_first
@@ -103,7 +103,7 @@ def user_profile_setemail_v1(token, email):
         Empty dictionary
     """
     valid_token = 0
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1
     #If token is valid, then profile dict is updated otherwise access error is thrown
@@ -116,7 +116,7 @@ def user_profile_setemail_v1(token, email):
         else:    
             raise InputError("Invalid email")
         #checking for if email is already used
-        for x in data["users"]:
+        for x in data.data["users"]:
             if x["email"] == email:
                 raise InputError("Email is already used")
             else:
@@ -143,7 +143,7 @@ def user_profile_sethandle_v1(token, handle_str):
         Empty dictionary
     """  
     valid_token = 0
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1
     #If token is valid, then profile dict is updated otherwise access error is thrown
@@ -152,7 +152,7 @@ def user_profile_sethandle_v1(token, handle_str):
         #Checks if handle_str is valid
         if len(handle_str) < 3 or len(handle_str) > 20:
             raise InputError("Invalid handle")
-        for x in data['users']:
+        for x in data.data['users']:
             #Checks if handle is already used
             if x['handle_str'] == handle_str:
                 raise InputError("Handle already used")
@@ -178,7 +178,7 @@ def users_all_v1(token):
         A list containig all of the users and their information
     """
     valid_token = 0
-    for t in data["token_list"]:
+    for t in data.data["token_list"]:
         if token == t:
             valid_token = 1
     #If token is valid, then profile dict is updated otherwise access error is thrown
@@ -186,7 +186,7 @@ def users_all_v1(token):
         all_users = []
         info = {}
         #Gets the user information
-        for x in data["users"]:
+        for x in data.data["users"]:
             info['u_id'] = x['u_id']
             info['email'] = x['email']
             info['name_first'] = x['name_first']
