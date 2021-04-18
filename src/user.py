@@ -13,6 +13,11 @@ import os
 from PIL import Image
 import urllib.request
 from config import port
+from channels import channels_list_v1
+import dm
+from channels import channels_listall_v1
+from datetime import datetime
+from datetime import timezone
 
 SECRET = 'HELLO'
 
@@ -201,9 +206,6 @@ def users_all_v1(token):
         raise InputError("Invalid token")
     return all_users
 
-from channels import channels_list_v1
-import dm
-from channels import channels_listall_v1
 def user_stats_v1(token):
     valid = 0
     num_user_messages = 0
@@ -227,7 +229,7 @@ def user_stats_v1(token):
         total_channels = len(all_channels['channels'])
         #Getting number of dms user is in
         dms = dm.dm_list_v1(token)
-        num_user_dms = int(len(dms['dms']) - 1)
+        num_user_dms = len(dms['dms'])
         #Getting total number of dms
         total_dms = len(data['dms'])
         #Getting number of messages user has sent
@@ -235,6 +237,11 @@ def user_stats_v1(token):
             for y in x["messages"]:
                 if y['u_id'] == u_id:
                     num_user_messages += 1
+        # TODO TODO TODO TODO TODO TODO TODO TODO TODO #
+        #################################################
+        ### FIGURE OUT HOW TO GET DELETED DM MESSAGES ###
+        #################################################
+        # TODO TODO TODO TODO TODO TODO TODO TODO TODO #
         for y in data["dms"]:
             for z in y["messages"]:
                 if u_id == z["u_id"]:
@@ -245,14 +252,50 @@ def user_stats_v1(token):
         numerator = num_user_messages + num_user_dms + num_user_channels
         denominator = total_channels + total_dms + total_messages
         involvement_rate = float(numerator / denominator)
+        #Getting the timestamp
+        current_time = datetime.now()
+        timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
+        #Applying correct timestamps and adding new user_stats to data
+        new_stat = {}
+        count = 0
+        i = 0
+        if len(data["user_stats"]) == 0:
+            new_stat["channels_joined"] = [{'joined': num_user_channels, 'time': timestamp}]
+            new_stat["dms_joined"] = [{'joined': num_user_dms, 'time': timestamp}]
+            new_stat["messages_sent"] = [{'sent': num_user_messages, 'time': timestamp}]
+            new_stat["u_id"] = u_id          
+            data["user_stats"].append(new_stat)
+        else:
+            for check in data['user_stats']:
+                if check['u_id'] == u_id:
+                    count = i
+                    if check['channels_joined'][len(check['channels_joined'])-1]['joined'] == num_user_channels:
+                        channel_time = check['channels_joined'][len(check['channels_joined'])-1]['time']
+                        new_stat = {'joined': num_user_channels, 'time': channel_time}
+                        data['user_stats'][count]['channels_joined'].append(new_stat)
+                    else:
+                        new_stat = {'joined': num_user_channels, 'time': timestamp}
+                        data['user_stats'][count]['channels_joined'].append(new_stat)
+                    if check['dms_joined'][len(check['dms_joined'])-1]['joined'] == num_user_dms:
+                        dm_time = check['dms_joined'][len(check['dms_joined'])-1]['time']
+                        new_stat = {'joined': num_user_dms, 'time': dm_time}
+                        data['user_stats'][count]['dms_joined'].append(new_stat)
+                    else:
+                        new_stat = {'joined': num_user_dms, 'time': timestamp}
+                        data['user_stats'][count]['dms_joined'].append(new_stat) 
+                    if check['messages_sent'][len(check['messages_sent'])-1]['sent'] == num_user_messages:
+                        message_time = check['messages_sent'][len(check['messages_sent'])-1]['time']
+                        new_stat = {'sent': num_user_messages, 'time': message_time}
+                        data['user_stats'][count]['messages_sent'].append(new_stat)
+                    else:
+                        new_stat = {'sent': num_user_messages, 'time': timestamp}
+                        data['user_stats'][count]['messages_sent'].append(new_stat)                                               
+                i += 1
     else:
         raise InputError("Invalid token")
-    return {
-        'channels_joined': num_user_channels,
-        'dms_joined': num_user_dms,
-        'messages_sent': num_user_messages,
-        'involvement_rate': involvement_rate
-    }
+    return_stat = data['user_stats'][count].copy()
+    remove_u_id = return_stat.pop('u_id')
+    return return_stat
 
 def users_stats_v1(token):
     #Getting number of channels that currently exist
@@ -300,13 +343,42 @@ def users_stats_v1(token):
                     users_joined.append(j["u_id"])
     #Calculating utilization_rate
     utilization_rate = float(len(users_joined) / len(data["users"]))
-    return {
-        'channels_exist': total_channels,
-        'dms_exist': existing_dms,
-        'messages_exist': existing_messages,
-        'utilization_rate': utilization_rate,
-    }
-
+    #Getting the timestamp
+    current_time = datetime.now()
+    timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
+    #Applying correct timestamps and adding new user_stats to data
+    new_stat = {}
+    count = 0
+    i = 0
+    if len(data["dreams_stats"]) == 0:
+        new_stat["channels_exist"] = [{'exist': total_channels, 'time': timestamp}]
+        new_stat["dms_exist"] = [{'exist': existing_dms, 'time': timestamp}]
+        new_stat["messages_exist"] = [{'exist': existing_messages, 'time': timestamp}]        
+        data["dreams_stats"] = new_stat
+    else:
+        check = data['dreams_stats']
+        if check['channels_exist'][len(check['channels_exist'])-1]['exist'] == total_channels:
+            channel_time = check['channels_exist'][len(check['channels_exist'])-1]['time']
+            new_stat = {'exist': total_channels, 'time': channel_time}
+            data['dreams_stats']['channels_exist'].append(new_stat)
+        else:
+            new_stat = {'exist': total_channels, 'time': timestamp}
+            data['dreams_stats']['channels_exist'].append(new_stat)
+        if check['dms_exist'][len(check['dms_exist'])-1]['exist'] == existing_dms:
+            dm_time = check['dms_exist'][len(check['dms_exist'])-1]['time']
+            new_stat = {'exist': existing_dms, 'time': dm_time}
+            data['dreams_stats']['dms_exist'].append(new_stat)
+        else:
+            new_stat = {'exist': existing_dms, 'time': timestamp}
+            data['dreams_stats']['dms_exist'].append(new_stat) 
+        if check['messages_exist'][len(check['messages_exist'])-1]['exist'] == existing_messages:
+            message_time = check['messages_exist'][len(check['messages_exist'])-1]['time']
+            new_stat = {'exist': existing_messages, 'time': message_time}
+            data['dreams_stats']['messages_exist'].append(new_stat)
+        else:
+            new_stat = {'exist': num_user_dms, 'time': timestamp}
+            data['dreams_stats']['messages_exist'].append(new_stat)   
+    return data['dreams_stats']
 
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
@@ -335,27 +407,30 @@ if __name__ == '__main__':
     channel = channels_create_v1(r['token'], "Channel1", True)
     channels_create_v1(s['token'], "Channel2", True)
     channels_create_v1(r['token'], "Channel3", True)
-    dms = dm.dm_create_v1(r['token'], [0,1])
-    dms1 = dm.dm_create_v1(s['token'], [0,1])
+    dms = dm.dm_create_v1(r['token'], [1])
+    dms1 = dm.dm_create_v1(s['token'], [0])
     message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')
     message_send_v1(r['token'], channel['channel_id'], 'Hello')
     message_share_v1(r['token'], message_id['message_id'], '', -1, dms['dm_id'])
     message_share_v1(s['token'], message_id['message_id'], '', -1, dms1['dm_id'])
     message_share_v1(r['token'], message_id['message_id'], '', -1, dms['dm_id'])
-    dm.dm_remove_v1(r['token'], 0)
-    message_remove_v1(r['token'], 4)
-    message_remove_v1(r['token'], 3)
-    message_remove_v1(r['token'], 2)
-    message_remove_v1(r['token'], 1)
-    message_remove_v1(r['token'], 0)
-    t = user_stats_v1(r['token'])
+    #dm.dm_remove_v1(r['token'], 0)
+    # message_remove_v1(r['token'], 4)
+    # message_remove_v1(r['token'], 3)
+    # message_remove_v1(r['token'], 2)
+    # message_remove_v1(r['token'], 1)
+    # message_remove_v1(r['token'], 0)
+    p = user_stats_v1(r['token'])
+    print(p)
+    t = users_stats_v1(r['token'])
     print(t)
-    i = users_stats_v1(r['token'])
-    print(i)
-    y = user_stats_v1(s['token'])
-    print(y)
-    j = users_stats_v1(s['token'])
-    print(j)
+    channels_create_v1(r['token'], "Channelling", True)
+    e = users_stats_v1(r['token'])
+    print(e)
+    # i = users_stats_v1(r['token'])
+    # y = user_stats_v1(s['token'])
+    # print(y)
+    # j = users_stats_v1(s['token'])
 
     ##############################
     ### ADD SRC AFTER FINISHED ###
