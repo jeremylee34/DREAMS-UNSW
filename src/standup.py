@@ -5,7 +5,7 @@ from src.helper import token_to_u_id
 from src.helper import check_valid_channel
 from src.helper import check_valid_token
 from src.helper import check_user_in_channel
-from src.helper import end_standup
+# from src.helper import end_standup
 
 from datetime import datetime
 from datetime import timedelta
@@ -15,9 +15,9 @@ import time
 import threading
 
 def standup_start_v1(token, channel_id, length):
-
+    global t
     # record the finishing time, create standup in channels and sleep
-    time_finish = datetime.now() + timedelta(seconds=int(length))
+    time_finish = datetime.now() + timedelta(seconds=length)
     curr_time = time_finish.replace(tzinfo=timezone.utc).timestamp()
 
     if check_valid_token(token) == False:
@@ -37,13 +37,36 @@ def standup_start_v1(token, channel_id, length):
     
     data['channels'][channel_id]['active_standup'] = True
     data['channels'][channel_id]['standup_time_finish'] = curr_time
-
-    t = threading.Timer(int(length), end_standup, args=[channel_id, curr_time, owner_u_id])
-    t.start()
     
+    t = threading.Timer(length, end_standup, args=[channel_id, curr_time, owner_u_id])
+    t.start()
+
     return {
         'time_finish': curr_time
     }
+
+def end_standup(channel_id, curr_time, owner_u_id):
+    global t
+    if t.is_alive():
+        t.cancel()
+        temp_channel = data['channels'][channel_id]
+        data['channels'][channel_id]['standup'].clear
+        data['channels'][channel_id]['active_standup'] = False
+        data['channels'][channel_id]['standup_time_finish'] = 0
+        # once timer ends, run this code 
+        message_block = []
+        for msg in temp_channel['standup']:
+            new_msg = f"{msg['handle_str']}: {msg['message']}"
+            message_block.append(new_msg)
+        message_block_joined = '\n'.join(message_block)
+        standup_msg = {
+            'message_id': len(temp_channel['messages']),
+            'u_id': owner_u_id,
+            'time_created': curr_time,
+            'message': message_block_joined
+        }
+        data['channels'][channel_id]['messages'].append(standup_msg)
+    return{}
 
 def standup_active_v1(token, channel_id):
     if check_valid_token(token) == False:
