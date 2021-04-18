@@ -73,7 +73,7 @@ def channel_invite_v1(token, channel_id, u_id):
     }
     data['notifications'].append(new_notification)
     data['channels'][channel_id]['all_members'].append(new_member)
-
+    data['users'][u_id]['num_channels'] += 1
     return {}
 
 
@@ -115,6 +115,7 @@ def channel_details_v1(token, channel_id):
     #Make dictionary with required keys that is to be returned
     channel_info = {
         "name": "",
+        "is_public": data['channels'][channel_id]['is_public'],
         "owner_members": [],
         "all_members": []
     }
@@ -155,7 +156,14 @@ def channel_messages_v1(token, channel_id, start):
     if check_valid_channel(channel_id) is False:
         raise InputError("Channel ID is not a valid channel")
     # Check if start is greater than number of messages in channel
-    if start > (len(data['channels'][channel_id]['messages']) - 1):
+    length_messages = len(data['channels'][channel_id]['messages'])
+    if start == 0 and length_messages == 0:
+        return {
+            'messages': [],
+            'start': start,
+            'end': 0
+        }
+    if start >= length_messages:
         raise InputError("Start is greater than the total number of messages in the channel")
     u_id = token_to_u_id(token)
     # Check if user is in channel
@@ -166,13 +174,13 @@ def channel_messages_v1(token, channel_id, start):
     message_index = start
     message_index_end = start + 50
     for message in data['channels'][channel_id]['messages']:
-        temp_message = {
-            'message_id': message['message_id'],
-            'u_id': message['u_id'],
-            'message': message['message'],
-            'time_created': message['time_created']
-        }
-        messages.append(temp_message)
+        # temp_message = {
+        #     'message_id': message['message_id'],
+        #     'u_id': message['u_id'],
+        #     'message': message['message'],
+        #     'time_created': message['time_created']
+        # }
+        messages.append(message)
         # iterate to next index, if past 50 msgs, end loop
         message_index += 1
         if message_index == message_index_end:
@@ -181,7 +189,6 @@ def channel_messages_v1(token, channel_id, start):
     # if reached end of messages before capturing 50 messages, set to -1
     if message_index != message_index_end:
         message_index_end = -1
-
     return {
         'messages': messages,
         'start': start,
@@ -203,7 +210,6 @@ def channel_leave_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -223,6 +229,7 @@ def channel_leave_v1(token, channel_id):
         if user['u_id'] == u_id:
             if len(data['channels'][channel_id]['all_members']) > 1:
                 data['channels'][channel_id]['all_members'].remove(user)
+    data['users'][u_id]['num_channels'] -= 1
     return {
     }
 
@@ -242,7 +249,6 @@ def channel_join_v1(token, channel_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
@@ -266,8 +272,10 @@ def channel_join_v1(token, channel_id):
             'name_last' : data['users'][u_id]['name_last'],
         }
         data['channels'][channel_id]['all_members'].append(user_to_append)
+        data['users'][u_id]['num_channels'] += 1
     else:
         pass
+    
     return {
     }
 
@@ -289,7 +297,6 @@ def channel_addowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -308,11 +315,11 @@ def channel_addowner_v1(token, channel_id, u_id):
     s_id = data['users'][u_id]['session_ids'][0]
     s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
     profile = user_profile_v1(s_token, u_id)
-    data['channels'][channel_id]['owner_members'].append(profile)
+    data['channels'][channel_id]['owner_members'].append(profile['user'])
 
     if check_user_in_channel(channel_id, u_id) is False:
-        data['channels'][channel_id]['all_members'].append(profile)
-        
+        data['channels'][channel_id]['all_members'].append(profile['user'])
+        data['users'][u_id]['num_channels'] += 1
     return {
     }
 
@@ -335,7 +342,6 @@ def channel_removeowner_v1(token, channel_id, u_id):
     Return Value:
         Returns nothing on all cases
     """
-    
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     author_id = token_to_u_id(token)
@@ -358,6 +364,5 @@ def channel_removeowner_v1(token, channel_id, u_id):
     for owner_member in data['channels'][channel_id]['owner_members']:
         if owner_member['u_id'] == u_id:
             data['channels'][channel_id]['owner_members'].remove(owner_member)
-
     return {
     }

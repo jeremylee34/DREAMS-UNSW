@@ -11,6 +11,9 @@ import src.other
 import src.data
 from src.error import InputError, AccessError
 
+IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
+FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
+
 @pytest.fixture
 #Clears all data
 def clear_data():
@@ -257,3 +260,66 @@ def test_success_users_stats(clear_data):
     InputError - x_start, y_start, x_end, y_end are not within the dimensions of the image at the url
     InputError - image uploaded is not a JPEG
 '''
+def test_invalid_token_uploadphoto(clear_data):
+    requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    })  
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': 'invalid_token',
+        'img_url': IMG_URL,
+        'x_start': 50,
+        'y_start': 50,
+        'x_end': 200,
+        'y_end': 200,
+    }) == InputError.code
+
+def test_invalid_x_dim(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }).json() 
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': r['token'],
+        'img_url': IMG_URL,
+        'x_start': 15000,
+        'y_start': 50,
+        'x_end': 15000,
+        'y_end': 200,
+    }) == InputError.code   
+
+def test_invalid_y_dim(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }).json() 
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': r['token'],
+        'img_url': IMG_URL,
+        'x_start': 50,
+        'y_start': 20000,
+        'x_end': 50,
+        'y_end': 20000,
+    }) == InputError.code 
+
+def test_invalid_img_url(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }).json() 
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': r['token'],
+        'img_url': FAKE_URL,
+        'x_start': 50,
+        'y_start': 50,
+        'x_end': 200,
+        'y_end': 200,
+    }) == InputError.code

@@ -11,9 +11,15 @@ from src.user import user_profile_setname_v1
 from src.user import user_profile_setemail_v1
 from src.user import user_profile_sethandle_v1
 from src.user import users_all_v1
+from src.user import user_stats_v1
+from src.user import users_stats_v1
+from src.user import user_profile_uploadphoto_v1
 from src.error import InputError, AccessError
 from src.other import clear_v1
 from src.data import data
+
+IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
+FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
 
 @pytest.fixture
 #Clears all data
@@ -144,13 +150,21 @@ def test_all_users(clear_data):
 def test_invalid_token_users_all(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     with pytest.raises(InputError):
-        assert users_all_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE') 
+        assert users_all_v1('invalid_token') 
 
 ##Tests for user/stats/v1
-#checks for how big is the dictionary to test if function is successful
+#checks for invalid token
+def user_stat_invalid_token(clear_data):
+    auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert user_stats_v1('invalid_token')
 
 ##Tests for users/stats/v1
 #checks for how big is the dictionary to test if function is successful
+def users_stat_invalid_token(clear_data):
+    auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert users_stats_v1('invalid_token')
 
 ##Tests for /user/profile/uploadphoto/v1
 '''
@@ -158,3 +172,22 @@ def test_invalid_token_users_all(clear_data):
     InputError - x_start, y_start, x_end, y_end are not within the dimensions of the image at the url
     InputError - image uploaded is not a JPEG
 '''
+def user_uploadphoto_invalid_token(clear_data):
+    auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert user_profile_uploadphoto_v1('invalid_token', IMG_URL, 50, 50, 200, 200)
+
+def invalid_x_dimensions(clear):
+    r = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert user_profile_uploadphoto_v1(r['token'], IMG_URL, 1500, 50, 1500, 50)
+
+def invalid_y_dimensions(clear):
+    r = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert user_profile_uploadphoto_v1(r['token'], IMG_URL, 150, 1550, 150, 1550)   
+
+def not_jpeg(clear_data):
+    r = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    with pytest.raises(InputError):
+        assert user_profile_uploadphoto_v1(r['token'], FAKE_URL, 50, 50, 200, 200)          

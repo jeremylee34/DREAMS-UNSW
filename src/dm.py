@@ -89,11 +89,11 @@ def dm_create_v1(token, u_ids):
         Returns a dict containing the new dm_id and dm_name
 
     """
-    if check_valid_token(token) == False:
+    if check_valid_token(token) is False:
         raise InputError("token does not refer to a valid token")
     # Check valid u_ids
     for u_id in u_ids:
-        if check_valid_user(u_id) == False:
+        if check_valid_user(u_id) is False:
             raise InputError("u_id does not refer to a valid user")
 
     owner_u_id = token_to_u_id(token)
@@ -107,7 +107,7 @@ def dm_create_v1(token, u_ids):
         s_id = data['users'][u_id]['session_ids'][0]
         s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
         profile = user_profile_v1(s_token, u_id)
-        member_list.append(profile)
+        member_list.append(profile['user'])
 
     # sort and concatenate
     handle_list.sort()
@@ -128,6 +128,9 @@ def dm_create_v1(token, u_ids):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
+    data['users'][owner_u_id]['num_dms'] += 1
+    for user in u_ids:
+        data['users'][user]['num_dms'] += 1
     return {
         'dm_id': dm_id,
         'dm_name': handle_list_str
@@ -164,7 +167,6 @@ def dm_remove_v1(token, dm_id):
         data['dms'][dm_id] = empty_dict
     else:
         raise AccessError("The user is not the original DM creator")
-
     return {
     }
 
@@ -204,7 +206,7 @@ def dm_invite_v1(token, dm_id, u_id):
     s_id = data['users'][u_id]['session_ids'][0]
     s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
     profile = user_profile_v1(s_token, u_id)
-    data['dms'][dm_id]['members'].append(profile)
+    data['dms'][dm_id]['members'].append(profile['user'])
     handlelist = data['dms'][dm_id]['name'].split(", ")
     handlelist.append(data['users'][u_id]['handle_str'])
 
@@ -219,7 +221,7 @@ def dm_invite_v1(token, dm_id, u_id):
         "dm_id": dm_id
     }
     data['notifications'].append(new_notification)
-
+    data['users'][u_id]['num_dms'] += 1
     return {}
        
        
@@ -253,14 +255,15 @@ def dm_leave_v1(token, dm_id):
             s_id = users['session_ids'][0]
             s_token = jwt.encode({'session_id': s_id}, SECRET, algorithm='HS256')
             profile = user_profile_v1(s_token, user)
-            data['dms'][dm_id]['members'].remove(profile)
+            data['dms'][dm_id]['members'].remove(profile['user'])
             stringU = users['handle_str']                   
             handlelist = data['dms'][dm_id]['name'].split(", ")
             handlelist.remove(stringU)
 
     handlelist.sort()
     handlelist_string = ', '.join(map(str, handlelist))
-    data['dms'][dm_id]['name'] = handlelist_string        
+    data['dms'][dm_id]['name'] = handlelist_string
+    data['users'][user]['num_dms'] -= 1        
     return{}
     
     
@@ -291,7 +294,14 @@ def dm_messages_v1(token, dm_id, start):
         raise InputError("dm_id does not refer to an existing dm")
     #Check if start is greater tham total messages in the DM
     #Raise InputError if it is 
-    if start > (len(data['dms'][dm_id]['messages']) - 1):
+    length_messages = len(data['dms'][dm_id]['messages'])
+    if start == 0 and length_messages == 0:
+        return {
+            'messages': [],
+            'start': start,
+            'end': 0
+        }
+    if start >= length_messages:
         raise InputError("Start is greater tham total messages in the DM")
 
     user = token_to_u_id(token)
@@ -307,13 +317,13 @@ def dm_messages_v1(token, dm_id, start):
     #Record components of each message while appending to messages list
     #End loop once start index matches end index or last message is reached
     for msgs in data['dms'][dm_id]['messages']:
-        tempmsg = {
-            'message_id': msgs['message_id'],
-            'u_id': msgs['u_id'],
-            'message': msgs['message'],
-            'time_created': msgs['time_created']
-        }
-        messages.append(tempmsg)
+        # tempmsg = {
+        #     'message_id': msgs['message_id'],
+        #     'u_id': msgs['u_id'],
+        #     'message': msgs['message'],
+        #     'time_created': msgs['time_created']
+        # }
+        messages.append(msgs)
         message_start = message_start + 1
         if message_start == message_end:
             break
@@ -326,6 +336,7 @@ def dm_messages_v1(token, dm_id, start):
         'start': start,
         'end': message_end        
     }
+
 
     ##############################
     ### ADD SRC AFTER FINISHED ###
