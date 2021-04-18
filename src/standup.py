@@ -77,7 +77,6 @@ def standup_active_v1(token, channel_id):
         raise InputError('channel_id does not refer to a valid channel')
     active_status = data['channels'][channel_id]['active_standup']
     if active_status is False:
-        active_status = False
         time_finish = None
     else:
         time_finish = data['channels'][channel_id]['standup_time_finish']

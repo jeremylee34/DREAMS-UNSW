@@ -418,7 +418,7 @@ def standup_start():
 @APP.route("/standup/active/v1", methods=['GET'])
 def standup_active():
     token = request.args.get('token')
-    channel_id = request.args.get('channel_id')
+    channel_id = int(request.args.get('channel_id'))
     standup_info = standup_active_v1(token, channel_id)
     return dumps(standup_info)
     
