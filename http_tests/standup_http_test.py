@@ -67,7 +67,7 @@ def test_standup_start_v1_input_error1(clear_data, user_token1):
     """
     Tests when channel_id is not valid
     """
-    length = 2.0
+    length = 0.1
     assert requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': INVALID_ID,
@@ -79,7 +79,7 @@ def test_standup_start_v1_input_error2(clear_data, user_token1, channel_id1):
     Tests when a standup is trying to be started when there is already an 
     active standup in the channel
     """
-    length = 2.0
+    length = 0.1
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
@@ -95,7 +95,7 @@ def test_standup_start_v1_access_error(clear_data, user_token2, channel_id1):
     """
     Tests when authorised user is not the channel
     """
-    length = 2.0
+    length = 0.1
     assert requests.post(f"{url}/standup/start/v1", json={
         'token': user_token2['token'],
         'channel_id': channel_id1['channel_id'],
@@ -106,7 +106,7 @@ def test_standup_start_v1_invalid_token(clear_data, channel_id1):
     """
     Tests when an invalid token is passed in
     """
-    length = 2.0
+    length = 0.1
     assert requests.post(f"{url}/standup/start/v1", json={
         'token': INVALID_TOKEN,
         'channel_id': channel_id1['channel_id'],
@@ -118,12 +118,13 @@ def test_standup_start_v1_simple(clear_data, user_token1, channel_id1):
     No way to test that time finish is exactly precise, so just testing that
     no exceptions are raised.
     """
-    length = 2.0
+    length = 0.1
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
         'length': length
     })
+    time.sleep(0.1)
 
 def test_standup_active_v1_input_error1(clear_data, user_token1):
     """
@@ -141,7 +142,7 @@ def test_standup_active_v1_active(clear_data, user_token1, channel_id1):
     """
     Tests return values when there is an active standup
     """
-    length = 2.0
+    length = 0.1
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
@@ -150,18 +151,19 @@ def test_standup_active_v1_active(clear_data, user_token1, channel_id1):
     activity = requests.get(f"{url}/standup/active/v1?token={user_token1['token']}&channel_id={channel_id1['channel_id']}").json()
     assert activity['is_active'] is True
     assert activity['time_finish'] is not None
+    time.sleep(0.1)
 
 def test_standup_active_v1_inactive(clear_data, user_token1, channel_id1):
     """
     Tests return values when the active standup has timed out
     """
-    length = 2.0
+    length = 0.1
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
         'length': length
     })
-    time.sleep(2.01)
+    time.sleep(0.1)
     activity = requests.get(f"{url}/standup/active/v1?token={user_token1['token']}&channel_id={channel_id1['channel_id']}").json()
     assert activity['is_active'] is False
     assert activity['time_finish'] is None
@@ -170,7 +172,7 @@ def test_standup_send_v1_input_error1(clear_data, user_token1, channel_id1):
     """
     Tests when channel_id is not valid
     """
-    length = 2.0
+    length = 0.1
     message = 'hello'
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
@@ -182,12 +184,13 @@ def test_standup_send_v1_input_error1(clear_data, user_token1, channel_id1):
         'channel_id': INVALID_ID,
         'message': message
     }).status_code == INPUT_ERROR
+    time.sleep(0.1)
 
 def test_standup_send_v1_input_error2(clear_data, user_token1, channel_id1):
     """
     Tests when message is over 1000 characters
     """
-    length = 2.0
+    length = 0.1
     message = 'a' * 1001
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
@@ -199,6 +202,7 @@ def test_standup_send_v1_input_error2(clear_data, user_token1, channel_id1):
         'channel_id': channel_id1['channel_id'],
         'message': message
     }).status_code == INPUT_ERROR
+    time.sleep(0.1)
 
 def test_standup_send_v1_input_error3(clear_data, user_token1, channel_id1):
     """
@@ -215,18 +219,26 @@ def test_standup_send_v1_access_error(clear_data, user_token1, user_token2, chan
     """
     Test when user is not in the channel
     """
-    length = 2.0
+    length = 0.1
+    message = 'hi'
     requests.post(f"{url}/standup/start/v1", json={
-        'token': user_token2['token'],
+        'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
         'length': length
     })
+    assert requests.post(f"{url}/standup/send/v1", json={
+        'token': user_token2['token'],
+        'channel_id': channel_id1['channel_id'],
+        'message': message
+    }).status_code == ACCESS_ERROR
+    time.sleep(0.1)
+    
 
 def test_standup_send_v1(clear_data, user_token1, channel_id1):
     """
     Testing whether a standup message is collected and added to messages
     """
-    length = 2.0
+    length = 0.1
     message = 'hi'
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
@@ -238,7 +250,7 @@ def test_standup_send_v1(clear_data, user_token1, channel_id1):
         'channel_id': channel_id1['channel_id'],
         'message': message
     })
-    time.sleep(2.01)
+    time.sleep(0.1)
     msgs = requests.get(f"{url}/channel/messages/v2?token={user_token1['token']}&channel_id={channel_id1['channel_id']}&start={0}").json()
     assert len(msgs['messages']) == 1
 
@@ -247,7 +259,7 @@ def test_standup_send_v1_many_messages(clear_data, user_token1, channel_id1):
     Testing whether multiple standup messages are collected and added to messages
     correctly
     """
-    length = 2.0
+    length = 1.0
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
@@ -263,7 +275,7 @@ def test_standup_send_v1_many_messages(clear_data, user_token1, channel_id1):
     for j in range(0,10):
         test_msg.append(f"godanliang: {str(j)}")
     msg_block_joined = '\n'.join(test_msg)
-    time.sleep(2.01)
+    time.sleep(1.0)
     msgs = requests.get(f"{url}/channel/messages/v2?token={user_token1['token']}&channel_id={channel_id1['channel_id']}&start={0}").json()
     assert len(msgs['messages']) == 1
     assert msgs['messages'][0]['message'] == msg_block_joined
@@ -272,7 +284,7 @@ def test_standup_send_v1_multiple_standups(clear_data, user_token1, channel_id1)
     """
     Testing whether having standups run back-to-back adds to messages each time
     """
-    length = 2.0
+    length = 0.1
     message = 'hi'
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
@@ -284,7 +296,7 @@ def test_standup_send_v1_multiple_standups(clear_data, user_token1, channel_id1)
         'channel_id': channel_id1['channel_id'],
         'message': message
     })
-    time.sleep(2.01)
+    time.sleep(0.1)
     requests.post(f"{url}/standup/start/v1", json={
         'token': user_token1['token'],
         'channel_id': channel_id1['channel_id'],
@@ -295,6 +307,6 @@ def test_standup_send_v1_multiple_standups(clear_data, user_token1, channel_id1)
         'channel_id': channel_id1['channel_id'],
         'message': message
     })
-    time.sleep(2.01)
+    time.sleep(0.1)
     msgs = requests.get(f"{url}/channel/messages/v2?token={user_token1['token']}&channel_id={channel_id1['channel_id']}&start={0}").json()
     assert len(msgs['messages']) == 2

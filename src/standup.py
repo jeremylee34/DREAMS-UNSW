@@ -1,6 +1,7 @@
 from src.error import InputError, AccessError
 from src.data import data
 from src.user import user_profile_v1
+from src.message import message_send_v1
 from src.helper import token_to_u_id
 from src.helper import check_valid_channel
 from src.helper import check_valid_token
@@ -15,7 +16,7 @@ import time
 import threading
 
 def standup_start_v1(token, channel_id, length):
-    global t
+
     # record the finishing time, create standup in channels and sleep
     time_finish = datetime.now() + timedelta(seconds=length)
     curr_time = time_finish.replace(tzinfo=timezone.utc).timestamp()
@@ -38,22 +39,25 @@ def standup_start_v1(token, channel_id, length):
     data['channels'][channel_id]['active_standup'] = True
     data['channels'][channel_id]['standup_time_finish'] = curr_time
     
-    t = threading.Timer(length, end_standup, args=[channel_id, curr_time, owner_u_id])
+    t = threading.Timer(length, end_standup, args=[channel_id, curr_time, owner_u_id, token])
+    if t.is_alive():
+        t.cancel()
     t.start()
 
     return {
         'time_finish': curr_time
     }
 
-def end_standup(channel_id, curr_time, owner_u_id):
-    global t
-    if t.is_alive():
-        t.cancel()
-        temp_channel = data['channels'][channel_id]
-        data['channels'][channel_id]['standup'].clear
-        data['channels'][channel_id]['active_standup'] = False
-        data['channels'][channel_id]['standup_time_finish'] = 0
-        # once timer ends, run this code 
+def end_standup(channel_id, curr_time, owner_u_id, token):
+    if check_valid_channel is False:
+        raise InputError('channel_id does not refer to a valid channel')
+    temp_channel = data['channels'][channel_id]
+    data['channels'][channel_id]['standup'].clear
+    data['channels'][channel_id]['active_standup'] = False
+    data['channels'][channel_id]['standup_time_finish'] = 0
+    # once timer ends, run this code 
+    if data['channels'][channel_id]['standup']:
+
         message_block = []
         for msg in temp_channel['standup']:
             new_msg = f"{msg['handle_str']}: {msg['message']}"
@@ -65,7 +69,7 @@ def end_standup(channel_id, curr_time, owner_u_id):
             'time_created': curr_time,
             'message': message_block_joined
         }
-        data['channels'][channel_id]['messages'].append(standup_msg)
+        message_send_v1(token, channel_id, message_block_joined)
     return{}
 
 def standup_active_v1(token, channel_id):
