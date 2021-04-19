@@ -5,7 +5,7 @@ Written by Gordon Liang
 '''
 import jwt
 import threading
-import time
+from time import time
 from src.error import InputError
 from src.error import AccessError
 import src.data as data
@@ -61,8 +61,7 @@ def message_send_v1(token, channel_id, message):
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Gets the current time
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -81,7 +80,8 @@ def message_send_v1(token, channel_id, message):
             'message': message,
             'channel_id': channel_id,
             'dm_id': -1,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
@@ -270,19 +270,28 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         for message2 in channel['messages']:
             if message2['message_id'] == og_message_id:
                 shared_message = message2['message']
+    for dm in data.data['dms']:
+        for dm_message2 in dm['messages']:
+            if dm_message2['message_id'] == og_message_id:
+                shared_message = dm_message2['message']
     # Appends the optional message to shared message
     shared_message += message
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Finds current time that message is shared
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
-        'message_id': len(data.data['message_ids']),
+        'message_id': message_id,
         'u_id': auth_user_id,
         'message': shared_message,
-        'time_created': timestamp
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
     }
     # Inserts new message into channel messages
     if channel_id != -1:
@@ -335,8 +344,7 @@ def message_senddm_v1(token, dm_id, message):
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Finds current time the message is sent
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -355,7 +363,8 @@ def message_senddm_v1(token, dm_id, message):
             'message': message,
             'channel_id': -1,
             'dm_id': dm_id,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts message into dms
@@ -365,14 +374,9 @@ def message_senddm_v1(token, dm_id, message):
         'message_id': message_id
     }
 def helper_sendlater(token, channel_id, message, message_id):
-    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
-    session_id = payload['session_id']
-    for user in data.data['users']:
-        for s_id in user['session_ids']:
-            if s_id == session_id:
-                auth_user_id = user['u_id']
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    # Gets auth_user_id from token
+    auth_user_id = token_to_u_id(token)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -386,55 +390,61 @@ def helper_sendlater(token, channel_id, message, message_id):
         }],
         'is_pinned': False
     }
+    # Adds to notifications list if @ is in the message
     if '@' in message:
         new_notification = {
             'message': message,
             'channel_id': channel_id,
             'dm_id': -1,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
     data.data['channels'][channel_id]['messages'].insert(0, new_message)
     data.data['users'][auth_user_id]['num_messages'] += 1
 def message_sendlater_v1(token, channel_id, message, time_sent):
+    # Checks if user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token != 1:
         raise InputError('User does not exist')
+    # Checks if the channel_id is valid
     valid_channel = 0
     for channel in data.data['channels']:
         if channel['channel_id'] == channel_id:
             valid_channel = 1
     if valid_channel == 0:
         raise InputError('Channel ID is not a valid channel')
+    # Checks if message is more than 1000 characters
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
-    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    # Checks if the time has already past
+    timestamp = int(time())
     if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
+    # Converts token to auth_user_id
     auth_user_id = token_to_u_id(token)
+    # Checks if the user has joined the channel
     if check_user_in_channel(channel_id, auth_user_id) == False:
         raise AccessError('Authorised user has not joined the channel they are posting to')
-    time = time_sent - timestamp
+    time_diff = time_sent - timestamp
+    # Adds to the message_ids list in data
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
-    t = threading.Timer(time, helper_sendlater, args=[token, channel_id, message, message_id])
+    # Starts a timer to delay the message
+    t = threading.Timer(time_diff, helper_sendlater, args=[token, channel_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
     }
 def helper_sendlaterdm(token, dm_id, message, message_id):
-    payload = jwt.decode(token, SECRET, algorithms=['HS256'])
-    session_id = payload['session_id']
-    for user in data.data['users']:
-        for s_id in user['session_ids']:
-            if s_id == session_id:
-                auth_user_id = user['u_id']
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    # Converts token to auth_user_id
+    auth_user_id = token_to_u_id(token)
+    # Gets the current time
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -448,53 +458,66 @@ def helper_sendlaterdm(token, dm_id, message, message_id):
         }],
         'is_pinned': False
     }
+    # Adds message to notifications list if @ is found in the message
     if '@' in message:
         new_notification = {
             'message': message,
             'channel_id': -1,
             'dm_id': dm_id,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts message into dms
     data.data['dms'][dm_id]['messages'].insert(0, new_message)
     data.data['users'][auth_user_id]['num_messages'] += 1
 def message_sendlaterdm_v1(token, dm_id, message, time_sent):
+    # Checks if user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token != 1:
         raise InputError('User does not exist')
+    # Checks if messager is greater than 1000 characters and raises InputError if it is
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
+    # Checks if dm_id refers to a valid DM
     valid_dm = 0
     for dm in data.data['dms']:
         if dm['dm_id'] == dm_id:
             valid_dm = 1
     if valid_dm == 0:
         raise InputError('dm_id is not a valid DM')
-    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    # Gets current time
+    timestamp = int(time())
+    # Checks if time_sent has already past
     if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
+    # Converts token to auth_user_id
     auth_user_id = token_to_u_id(token)
+    # Checks if the user has joined the DM
     if check_user_in_dm(auth_user_id, dm_id) == False:
         raise AccessError('Authorised user has not joined the DM they are posting to')
-    time = time_sent - timestamp
+    time_diff = time_sent - timestamp
+    # Adds message_id to the message_ids list
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
-    t = threading.Timer(time, helper_sendlaterdm, args=[token, dm_id, message, message_id])
+    # Starts the timer for the delay to send a message
+    t = threading.Timer(time_diff, helper_sendlaterdm, args=[token, dm_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
     }
 def message_react_v1(token, message_id, react_id):
+    # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token != 1:
         raise InputError('User does not exist')
+    # Checks if the message_id refers to a valid message
     valid_message = 0
     for channel1 in data.data['channels']:
         for message1 in channel1['messages']:
@@ -506,10 +529,12 @@ def message_react_v1(token, message_id, react_id):
                 valid_message = 1
     if valid_message == 0:
         raise InputError('Message_id is not a valid message within a channel or DM')
+    # Checks if react_id refers to a valid react
     if react_id != 1:
         raise InputError('react_id is not a valid react ID')
     auth_user_id = token_to_u_id(token)
     already_reacted = False
+    # CHecks if the user is a part of the dm or channel and if the user has already reacted
     valid_member = 0
     for channel2 in data.data['channels']:
         for message2 in channel2['messages']:
@@ -531,17 +556,34 @@ def message_react_v1(token, message_id, react_id):
         raise InputError('message_id already contains active react from authorised user')
     if valid_member == 0:
         raise AccessError('Authorised user is not a member of the channel or DM')
+    # Adds the user to the list of u_ids that have reacted to the message
     for channel3 in data.data['channels']:
         for message3 in channel3['messages']:
             if message_id == message3['message_id']:
                 message3['reacts'][0]['u_ids'].append(auth_user_id)
+                channel_id = channel3['channel_id']
+                dm_id = -1
     for dm3 in data.data['dms']:
         for dm_message3 in dm3['messages']:
             if message_id == dm_message3['message_id']:
                 dm_message3['reacts'][0]['u_ids'].append(auth_user_id)
+                channel_id = -1
+                dm_id = dm3['dm_id']
+    # Adds to the notification to let the sender of the message know that someone has reacted
+    new_notification = {
+        'message': 'reacted',
+        'channel_id': channel_id,
+        'dm_id': dm_id,
+        'u_id': auth_user_id,
+        'reacts': [{
+            'react_id': 1,
+        }]
+    }
+    data.data['notifications'].append(new_notification)
     return {
     }
 def message_unreact_v1(token, message_id, react_id):
+    # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
@@ -549,6 +591,7 @@ def message_unreact_v1(token, message_id, react_id):
     if valid_token != 1:
         raise InputError('User does not exist')
     valid_message = 0
+    # Checks if the message_id refers to a valid message
     channel_not_dm = False
     for channel1 in data.data['channels']:
         for message1 in channel1['messages']:
@@ -561,7 +604,14 @@ def message_unreact_v1(token, message_id, react_id):
             if message_id == dm_message1['message_id']:
                 valid_message = 1
             dm_id = dm1['dm_id']
+    if valid_message == 0:
+        raise InputError('Message_id is not a valid message within a channel or DM')
+    # Checks if react_id is a valid react
+    if react_id != 1:
+        raise InputError('react_id is not a valid react ID')
+    # Converts token to auth_user_id
     auth_user_id = token_to_u_id(token)
+    # Checks if the user has joined the channel or dm
     valid_member = 0
     if channel_not_dm == True:
         for member in data.data['channels'][channel_id]['all_members']:
@@ -573,10 +623,7 @@ def message_unreact_v1(token, message_id, react_id):
                 valid_member = 1
     if valid_member == 0:
         raise AccessError('Authorised user is not a member of the channel or DM')
-    if valid_message == 0:
-        raise InputError('Message_id is not a valid message within a channel or DM')
-    if react_id != 1:
-        raise InputError('react_id is not a valid react ID')
+    # Checks if the user has reacted to the message or not
     has_not_reacted = False
     for channel2 in data.data['channels']:
         for message2 in channel2['messages']:
@@ -590,23 +637,27 @@ def message_unreact_v1(token, message_id, react_id):
                     has_not_reacted = True
     if has_not_reacted == True:
         raise InputError('message_id does not contain an active react from authorised user')
-
+    # Removes the user from the list of u_ids that has reacted to the message
     for channel3 in data.data['channels']:
         for message3 in channel3['messages']:
             if message_id == message3['message_id']:
                 message3['reacts'][0]['u_ids'].remove(auth_user_id)
+                message3['reacts'][0]['is_this_user_reacted'] = False
     for dm3 in data.data['dms']:
         for dm_message3 in dm3['messages']:
             if message_id == dm_message3['message_id']:
                 dm_message3['reacts'][0]['u_ids'].remove(auth_user_id)
+                dm_message3['reacts'][0]['is_this_user_reacted'] = False
     return {}
 def message_pin_v1(token, message_id):
+    # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token != 1:
         raise InputError('User does not exist')
+    # Converts the token to auth_user_id
     auth_user_id = token_to_u_id(token)
     if message_id not in data.data['message_ids']:
         raise InputError('message_id is not a valid message')
@@ -616,10 +667,13 @@ def message_pin_v1(token, message_id):
     for channel in data.data['channels']:
         for message in channel['messages']:
             if message_id == message['message_id']:
+                # Checks if the message has been removed
                 if message['message'] == '':
                     raise InputError('message_id is not a valid message')
+                # Checks if the message is already pinned
                 if message['is_pinned'] == True:
                     raise InputError('message is already pinned')
+                # Checks if the user is an owner of the channel
                 for owner in channel['owner_members']:
                     if owner['u_id'] == auth_user_id:
                         valid_owner = 1
@@ -631,10 +685,13 @@ def message_pin_v1(token, message_id):
     for dm in data.data['dms']:
         for dm_message in dm['messages']:
             if message_id == dm_message['message_id']:
+                # Checks if the message has been removed
                 if dm_message['message'] == '':
                     raise InputError('message_id is not a valid message')
+                # Checks if the message has already been pinned
                 if dm_message['is_pinned'] == True:
                     raise InputError('message is already pinned')
+                # Checks if the user is an owner of the DM
                 if dm['owner'] == auth_user_id:
                     valid_owner = 1
                 channel_not_dm = False
@@ -643,19 +700,23 @@ def message_pin_v1(token, message_id):
             count += 1
     if valid_owner == 0:
         raise AccessError('Authorised user is not an owner of the channel or DM')
+    # Pins the messaage in the DM or channel
     if channel_not_dm == True:
         data.data['channels'][channel_id]['messages'][message_position]['is_pinned'] = True
     else:
         data.data['dms'][dm_id]['messages'][dm_message_position]['is_pinned'] = True
     return {}
 def message_unpin_v1(token, message_id):
+    # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token != 1:
         raise InputError('User does not exist')
+    # Converts the token to auth_user_id
     auth_user_id = token_to_u_id(token)
+    # Checks if the message_id refers to a valid message
     if message_id not in data.data['message_ids']:
         raise InputError('message_id is not a valid message')
     valid_owner = 0
@@ -663,10 +724,13 @@ def message_unpin_v1(token, message_id):
     for channel in data.data['channels']:
         for message in channel['messages']:
             if message_id == message['message_id']:
+                # Checks if the message has already been removed
                 if message['message'] == '':
                     raise InputError('message_id is not a valid message')
+                # Checks if the message is not pinned
                 if message['is_pinned'] == False:
                     raise InputError('message is not pinned')
+                # Checks if the user is an owner of the channel
                 for owner in channel['owner_members']:
                     if owner['u_id'] == auth_user_id:
                         valid_owner = 1
@@ -678,10 +742,13 @@ def message_unpin_v1(token, message_id):
     for dm in data.data['dms']:
         for dm_message in dm['messages']:
             if message_id == dm_message['message_id']:
+                # Checks if the message has already been removed
                 if dm_message['message'] == '':
                     raise InputError('message_id is not a valid message')
+                # Checks if the message is not pinned
                 if dm_message['is_pinned'] == False:
                     raise InputError('message is not pinned')
+                # Checks if the user is an owner of the DM
                 if dm['owner'] == auth_user_id:
                     valid_owner = 1
                 channel_not_dm = False
@@ -690,9 +757,9 @@ def message_unpin_v1(token, message_id):
             count += 1
     if valid_owner == 0:
         raise AccessError('Authorised user is not an owner of the channel or DM')
+    # Unpins the message in the DM of channel
     if channel_not_dm == True:
         data.data['channels'][channel_id]['messages'][message_position]['is_pinned'] = False
     else:
         data.data['dms'][dm_id]['messages'][dm_message_position]['is_pinned'] = False
     return {}
-

@@ -6,7 +6,7 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 import requests
 import jwt
-from src.data import data
+import src.data as data
 from src.channel import channel_messages_v1
 from src.channels import channels_list_v1
 
@@ -23,14 +23,12 @@ def clear_v1():
     Returns:
         Empty dictionary
     """         
-    for x in data["users"]:
-        x["session_ids"].clear()
-    data['users'].clear()
-    data['channels'].clear()
-    data['dms'].clear() 
-    data['message_ids'].clear() 
-    data['token_list'].clear()
-    data['notifications'].clear()
+    data.data['users'].clear()
+    data.data['channels'].clear()
+    data.data['dms'].clear() 
+    data.data['message_ids'].clear() 
+    data.data['token_list'].clear()
+    data.data['notifications'].clear()
     return {}
 
 def search_v1(token, query_str):
@@ -47,7 +45,7 @@ def search_v1(token, query_str):
         dictionary of message_id, u_id, message, time_created 
     """
     valid = 0
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
@@ -59,14 +57,14 @@ def search_v1(token, query_str):
     if len(query_str) > 1000:
         raise InputError("query_str is above 1000 characters")
 
-    for user in data['users']:
+    for user in data.data['users']:
         for session in user['session_ids']:
             if session == token["session_id"]:
-                for channel in data['channels']:
+                for channel in data.data['channels']:
                     for message in channel['messages']:
                         if query_str == message['message']:
                             msg_list.append(message)
-                for dm in data['dms']:
+                for dm in data.data['dms']:
                     for dm_message in dm['messages']:
                         if query_str == dm_message['message']:
                             msg_list.append(dm_message)
@@ -89,7 +87,7 @@ def notifications_get_v1(token):
         Blank dictionary
     """
     valid = 0
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
@@ -99,45 +97,60 @@ def notifications_get_v1(token):
     msg_list = []
     notification_num = 0
     #check if valid
-    for user in data['users']:
+    for user in data.data['users']:
         for session in user['session_ids']:
             if session == decoded_token["session_id"]:
                 handle = user['handle_str']
-    for notification in data['notifications']:
+    for notification in data.data['notifications']:
         if notification_num == 20:
             break
-        handle_from = data['users'][notification['u_id']]['handle_str']
+        handle_from = data.data['users'][notification['u_id']]['handle_str']
         if f'@{handle}' in notification['message']:
             if notification['channel_id'] == -1:
-                dm_name = data['dms'][notification['channel_id']]['name']
+                dm_name = data.data['dms'][notification['dm_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} tagged you in {dm_name}: {notification['message'][:20]}",
                 }
             else:
-                channel_name = data['channels'][notification['channel_id']]['name']
+                channel_name = data.data['channels'][notification['channel_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
                 }
             msg_list.append(new_dict)
-        #notification['message'] == '' and not @:
-        else:
+        if notification['message'] == '':
             if notification['channel_id'] == -1:
-                dm_name = data['dms'][notification['channel_id']]['name']
+                dm_name = data.data['dms'][notification['dm_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} added you to {dm_name}"
                 }
             else:
-                channel_name = data['channels'][notification['channel_id']]['name']
+                channel_name = data.data['channels'][notification['channel_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} added you to {channel_name}"
+                }
+            msg_list.append(new_dict)
+        if notification['reacts'] != []:
+            if notification['channel_id'] == -1:
+                dm_name = data.data['dms'][notification['dm_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} reacted to your message in {dm_name}"
+                }
+            else:
+                channel_name = data.data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} reacted to your message in {channel_name}"
                 }
             msg_list.append(new_dict)
         notification_num += 1

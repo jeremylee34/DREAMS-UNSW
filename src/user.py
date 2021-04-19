@@ -9,16 +9,14 @@ import jwt
 import src.data as data
 from src.error import InputError, AccessError
 import re
-from src.auth import auth_register_v1
 import os
 from PIL import Image
 import urllib.request
 from src.config import port
-from src.channels import channels_list_v1
-from src.channels import channels_listall_v1
 from datetime import datetime
 from datetime import timezone
 import requests
+import time
 
 SECRET = 'HELLO'
 
@@ -230,89 +228,48 @@ def user_stats_v1(token):
     for t in data.data['token_list']:
         if t == token:
             valid = 1
-    #If token is valid then returns the user stats, otherwise raises input error
-    if valid == 1:
-        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-        #Finding the user
-        for i in data.data["users"]:
-            for j in i["session_ids"]:
-                if decoded_token["session_id"] == j:
-                    u_id = i['u_id']
-        #Getting number of channels user is in
-        num_user_channels = data.data['users'][u_id]['num_channels']
-        #Getting total number of channels
-        all_channels = channels_listall_v1(token)
-        total_channels = len(all_channels['channels'])
-        #Getting number of dms user is in
-        from src.dm import dm_list_v1
-        dms = dm_list_v1(token)
-        num_user_dms = len(dms['dms'])
-        #Getting total number of dms
-        total_dms = len(data.data['dms'])
-        #Getting number of messages user has sent
-        num_user_messages = data.data['users'][u_id]['num_messages']
-        #Getting total number of messages
-        total_messages = len(data.data["message_ids"])
-        #Calculating involvement rate
-        numerator = num_user_messages + num_user_dms + num_user_channels
-        denominator = total_channels + total_dms + total_messages
-        involvement_rate = 0
-        if denominator != 0:
-            involvement_rate = float(numerator / denominator)
-        #Getting the timestamp
-        current_time = datetime.now()
-        timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
-        #Applying correct timestamps and adding new user_stats to data
-        new_stat = {}
-        count = 0
-        i = 0
-        num_stats = False
-        if len(data.data["user_stats"]) == 0:
-            new_stat["channels_joined"] = [{'joined': num_user_channels, 'time': timestamp}]
-            new_stat["dms_joined"] = [{'joined': num_user_dms, 'time': timestamp}]
-            new_stat["messages_sent"] = [{'sent': num_user_messages, 'time': timestamp}]
-            new_stat["u_id"] = u_id          
-            data.data["user_stats"].append(new_stat)
-        else:   
-            for check in data.data['user_stats']:
-                if check['u_id'] == u_id:
-                    count = i
-                    num_stats = True
-                    if check['channels_joined'][len(check['channels_joined'])-1]['joined'] == num_user_channels:
-                        channel_time = check['channels_joined'][len(check['channels_joined'])-1]['time']
-                        new_stat = {'joined': num_user_channels, 'time': channel_time}
-                        data.data['user_stats'][count]['channels_joined'].append(new_stat)
-                    else:
-                        new_stat = {'joined': num_user_channels, 'time': timestamp}
-                        data.data['user_stats'][count]['channels_joined'].append(new_stat)
-                    if check['dms_joined'][len(check['dms_joined'])-1]['joined'] == num_user_dms:
-                        dm_time = check['dms_joined'][len(check['dms_joined'])-1]['time']
-                        new_stat = {'joined': num_user_dms, 'time': dm_time}
-                        data.data['user_stats'][count]['dms_joined'].append(new_stat)
-                    else:
-                        new_stat = {'joined': num_user_dms, 'time': timestamp}
-                        data.data['user_stats'][count]['dms_joined'].append(new_stat) 
-                    if check['messages_sent'][len(check['messages_sent'])-1]['sent'] == num_user_messages:
-                        message_time = check['messages_sent'][len(check['messages_sent'])-1]['time']
-                        new_stat = {'sent': num_user_messages, 'time': message_time}
-                        data.data['user_stats'][count]['messages_sent'].append(new_stat)
-                    else:
-                        new_stat = {'sent': num_user_messages, 'time': timestamp}
-                        data.data['user_stats'][count]['messages_sent'].append(new_stat)                     
-                i += 1
-            if num_stats == False:
-                new_stat["channels_joined"] = [{'joined': num_user_channels, 'time': timestamp}]
-                new_stat["dms_joined"] = [{'joined': num_user_dms, 'time': timestamp}]
-                new_stat["messages_sent"] = [{'sent': num_user_messages, 'time': timestamp}]
-                new_stat["u_id"] = u_id          
-                data.data["user_stats"].append(new_stat) 
-                count = i
-    else:
+    if valid != 1:
         raise InputError("Invalid token")
-    return_stat = data.data['user_stats'][count].copy()
-    return_stat.pop('u_id')
-    return_stat['involvement_rate'] = involvement_rate
-    return {'user_stats': return_stat}
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+    #Finding the user
+    for i in data.data["users"]:
+        for j in i["session_ids"]:
+            if decoded_token["session_id"] == j:
+                u_id = i['u_id']
+    #Getting number of channels user is in
+    num_user_channels = data.data['users'][u_id]['num_channels']
+    #Getting total number of channels
+    total_channels = len(data.data['channels'])
+    #Getting number of dms user is in
+    num_user_dms = data.data['users'][u_id]['num_dms']
+    #Getting total number of dms
+    total_dms = len(data.data['dms'])
+    #Getting number of messages user has sent
+    num_user_messages = data.data['users'][u_id]['num_messages']
+    #Getting total number of messages
+    total_messages = len(data.data["message_ids"])
+    #Calculating involvement rate
+    numerator = num_user_messages + num_user_dms + num_user_channels
+    denominator = total_channels + total_dms + total_messages
+    involvement_rate = 0
+    if denominator != 0:
+        involvement_rate = float(numerator / denominator)
+    #Getting the timestamp
+    timestamp = int(time.time())
+    new_stat = data.data['users'][u_id]['user_stats']
+    if num_user_channels != data.data['users'][u_id]['user_stats']['channels_joined'][0]:
+        new_stat['channels_joined'][0]['num_channels_joined'] = num_user_channels
+        new_stat['channels_joined'][0]['timestamp'] = timestamp
+    if num_user_dms != data.data['users'][u_id]['user_stats']['dms_joined'][0]:
+        new_stat['dms_joined'][0]['num_dms_joined'] = num_user_dms
+        new_stat['dms_joined'][0]['timestamp'] = timestamp
+    if num_user_messages != data.data['users'][u_id]['user_stats']['messages_sent'][0]:
+        new_stat['messages_sent'][0]['num_messages_sent'] = num_user_messages
+        new_stat['messages_sent'][0]['timestamp'] = timestamp
+    new_stat['involvement_rate'] = involvement_rate
+    #Applying correct timestamps and adding new user_stats to data
+    data.data['users'][u_id]['user_stats'] = new_stat
+    return {'user_stats': new_stat}
 
 def users_stats_v1(token):
     """
@@ -330,90 +287,65 @@ def users_stats_v1(token):
     for t in data.data['token_list']:
         if t == token:
             valid = 1
-    #If token is valid then returns the users stats, otherwise raises input error
-    if valid == 1:    
-        #Getting number of channels that currently exist
-        all_channels = channels_listall_v1(token)
-        total_channels = len(all_channels['channels'])
-        #Getting number of dms that currently exist
-        existing_dms = 0
-        for x in data.data["dms"]:
-            if x["dm_id"] != '':
-                existing_dms += 1
-        #Getting number of existing messages
-        existing_messages = 0
-        for y in data.data["channels"]:
-            for z in y["messages"]:
-                if z["message"] != '':
-                    existing_messages += 1
-        for a in data.data["dms"]:
-            for b in a["messages"]:
-                if b["message"] != '':
-                    existing_messages += 1
-        #Finding the users joined in at least one channel or dm
-        users_joined = []
-        for i in data.data["channels"]:
-            for j in i["all_members"]:
-                if users_joined == []:
-                    users_joined.append(j["u_id"])
-                else:
-                    joined = 0
-                    for users in users_joined:
-                        if users == j["u_id"]:
-                            joined = 1
-                    if joined == 0:
-                        users_joined.append(j["u_id"])
-
-        for i in data.data["dms"]:
-            for j in i["members"]:
-                if users_joined == []:
-                    users_joined.append(j["u_id"])
-                else:
-                    joined = 0
-                    for users in users_joined:
-                        if users == j["u_id"]:
-                            joined = 1
-                    if joined == 0:
-                        users_joined.append(j["u_id"])
-        #Calculating utilization_rate
-        utilization_rate = float(len(users_joined) / len(data.data["users"]))
-        #Getting the timestamp
-        current_time = datetime.now()
-        timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
-        #Applying correct timestamps and adding new users_stats to data
-        new_stat = {}
-        if len(data.data["dreams_stats"]) == 0:
-            new_stat["channels_exist"] = [{'exist': total_channels, 'time': timestamp}]
-            new_stat["dms_exist"] = [{'exist': existing_dms, 'time': timestamp}]
-            new_stat["messages_exist"] = [{'exist': existing_messages, 'time': timestamp}]        
-            data.data["dreams_stats"] = new_stat
-        else:
-            check = data.data['dreams_stats']
-            if check['channels_exist'][len(check['channels_exist'])-1]['exist'] == total_channels:
-                channel_time = check['channels_exist'][len(check['channels_exist'])-1]['time']
-                new_stat = {'exist': total_channels, 'time': channel_time}
-                data.data['dreams_stats']['channels_exist'].append(new_stat)
-            else:
-                new_stat = {'exist': total_channels, 'time': timestamp}
-                data.data['dreams_stats']['channels_exist'].append(new_stat)
-            if check['dms_exist'][len(check['dms_exist'])-1]['exist'] == existing_dms:
-                dm_time = check['dms_exist'][len(check['dms_exist'])-1]['time']
-                new_stat = {'exist': existing_dms, 'time': dm_time}
-                data.data['dreams_stats']['dms_exist'].append(new_stat)
-            else:
-                new_stat = {'exist': existing_dms, 'time': timestamp}
-                data.data['dreams_stats']['dms_exist'].append(new_stat) 
-            if check['messages_exist'][len(check['messages_exist'])-1]['exist'] == existing_messages:
-                message_time = check['messages_exist'][len(check['messages_exist'])-1]['time']
-                new_stat = {'exist': existing_messages, 'time': message_time}
-                data.data['dreams_stats']['messages_exist'].append(new_stat)
-            else:
-                new_stat = {'exist': existing_messages, 'time': timestamp}
-                data.data['dreams_stats']['messages_exist'].append(new_stat)
-    else:
+    if valid != 1:
         raise InputError("Invalid token")
-    data.data['dreams_stats']['utilization_rate'] = utilization_rate
-    return {'dreams_stats': data.data['dreams_stats']}
+    #Getting number of channels that currently exist
+    total_channels = len(data.data['channels'])
+    #Getting number of dms that currently exist
+    existing_dms = 0
+    for dm in data.data["dms"]:
+        if dm["dm_id"] != '':
+            existing_dms += 1
+    #Getting number of existing messages
+    existing_messages = 0
+    for channel in data.data["channels"]:
+        for message in channel["messages"]:
+            if message["message"] != '':
+                existing_messages += 1
+    for dm2 in data.data["dms"]:
+        for dm_message in dm2["messages"]:
+            if dm_message["message"] != '':
+                existing_messages += 1
+    #Finding the users joined in at least one channel or dm
+    num_users_in_channel_or_dm = 0
+    for user in data.data['users']:
+        if user['num_channels'] >= 1:
+            num_users_in_channel_or_dm += 1
+        elif user['num_dms'] >= 1:
+            num_users_in_channel_or_dm += 1
+    total_num_users = len(data.data['users'])
+    utilization_rate = float(num_users_in_channel_or_dm / total_num_users)
+    timestamp = int(time.time())
+    if data.data['dreams_stats'] == {}:
+        dreams_stats = {
+            'channels_exist': [{
+                'num_channels_exist': total_channels,
+                'timestamp': timestamp
+            }],
+            'dms_exist': [{
+                'num_dms_exist': existing_dms,
+                'timestamp': timestamp
+            }],
+            'messages_exist': [{
+                'num_messages_exist': existing_messages,
+                'timestamp': timestamp
+            }],
+            'utilization_rate': utilization_rate
+        }
+        data.data['dreams_stats'] = dreams_stats
+    else:
+        if total_channels != data.data['dreams_stats']['channels_exist'][0]['num_channels_exist']:
+            data.data['dreams_stats']['channels_exist'][0]['num_channels_exist'] = total_channels
+            data.data['dreams_stats']['channels_exist'][0]['timestamp'] = timestamp
+        if existing_dms != data.data['dreams_stats']['dms_exist'][0]['num_dms_exist']:
+            data.data['dreams_stats']['dms_exist'][0]['num_dms_exist'] = existing_dms
+            data.data['dreams_stats']['dms_exist'][0]['timestamp'] = timestamp
+        if existing_messages != data.data['dreams_stats']['messages_exist'][0]['num_messages_exist']:
+            data.data['dreams_stats']['messages_exist'][0]['num_messages_exist'] = existing_messages
+            data.data['dreams_stats']['messages_exist'][0]['timestamp'] = timestamp
+        data.data['dreams_stats']['utilization_rate'] = utilization_rate
+    new_stats = data.data['dreams_stats']
+    return {'dreams_stats': new_stats}
 
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     """

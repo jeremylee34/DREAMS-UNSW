@@ -125,7 +125,8 @@ def dm_create_v1(token, u_ids):
         "u_id": owner_u_id,
         "message": "",
         "channel_id": -1,
-        "dm_id": dm_id
+        "dm_id": dm_id,
+        'reacts': []
     }
     data.data['notifications'].append(new_notification)
     data.data['users'][owner_u_id]['num_dms'] += 1
@@ -218,7 +219,8 @@ def dm_invite_v1(token, dm_id, u_id):
         "u_id": user,
         "message": "",
         "channel_id": -1,
-        "dm_id": dm_id
+        "dm_id": dm_id,
+        'reacts': []
     }
     data.data['notifications'].append(new_notification)
     data.data['users'][u_id]['num_dms'] += 1
@@ -321,9 +323,13 @@ def dm_messages_v1(token, dm_id, start):
         #     'message_id': msgs['message_id'],
         #     'u_id': msgs['u_id'],
         #     'message': msgs['message'],
-        #     'time_created': msgs['time_created']
+        #     'time_created': msgs['time_created'],
+        #     'reacts': msgs['reacts'],
+        #     'is_pinned': msgs['is_pinned']
         # }
         messages.append(msgs)
+        if user in messages[-1]['reacts'][0]['u_ids']:
+            messages[-1]['reacts'][0]['is_this_user_reacted'] = True
         message_start = message_start + 1
         if message_start == message_end:
             break

@@ -6,7 +6,7 @@ Written by Gordon Liang
 import jwt
 from src.error import InputError
 from src.error import AccessError
-from src.data import data
+import src.data as data
 
 SECRET = 'HELLO'
 
@@ -22,7 +22,7 @@ def channels_list_v1(token):
     '''
     valid = 0
     # Checking if token is valid
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
@@ -30,14 +30,14 @@ def channels_list_v1(token):
     # Getting auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
-    for user in data['users']:
+    for user in data.data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
     # List of channels that user is in
     channel_list = []
     # Loops through channel list
-    for channel in data['channels']:
+    for channel in data.data['channels']:
         member_list = channel.get('all_members')
         # Loops through all members and checks if auth_user_id is included
         for member in member_list:
@@ -61,14 +61,14 @@ def channels_listall_v1(token):
     '''
     valid = 0
     # Checking if token is valid
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
         raise InputError('User does not exist')
     channel_list = []
-    # Loops through the data and adds every into the channel list
-    for channel in data['channels']:
+    # Loops through the data.data and adds every into the channel list
+    for channel in data.data['channels']:
         channel_dict = {}
         channel_dict['channel_id'] = channel['channel_id']
         channel_dict['name'] = channel['name']
@@ -91,7 +91,7 @@ def channels_create_v1(token, name, is_public):
     '''
     valid = 0
     # Checking if token is valid
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid = 1
     if valid != 1:
@@ -99,7 +99,7 @@ def channels_create_v1(token, name, is_public):
     # Gets auth_user_id from token
     payload = jwt.decode(token, SECRET, algorithms=['HS256'])
     session_id = payload['session_id']
-    for user in data['users']:
+    for user in data.data['users']:
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
@@ -113,32 +113,32 @@ def channels_create_v1(token, name, is_public):
     new_channel = {
         "name": name,
         "is_public": is_public,
-        "channel_id": len(data['channels']),
+        "channel_id": len(data.data['channels']),
         'active_standup': False,
         'standup_time_finish': 0,   
         'standup': [],
         "owner_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['name_first'],
-                'name_last': data['users'][auth_user_id]['name_last'],
-                'email': data['users'][auth_user_id]['email'],
-                'handle_str': data['users'][auth_user_id]['handle_str']
+                'name_first': data.data['users'][auth_user_id]['name_first'],
+                'name_last': data.data['users'][auth_user_id]['name_last'],
+                'email': data.data['users'][auth_user_id]['email'],
+                'handle_str': data.data['users'][auth_user_id]['handle_str']
             }
         ],
         "all_members": [
             {
                 'u_id': auth_user_id,
-                'name_first': data['users'][auth_user_id]['name_first'],
-                'name_last': data['users'][auth_user_id]['name_last'],
-                'email': data['users'][auth_user_id]['email'],
-                'handle_str': data['users'][auth_user_id]['handle_str']
+                'name_first': data.data['users'][auth_user_id]['name_first'],
+                'name_last': data.data['users'][auth_user_id]['name_last'],
+                'email': data.data['users'][auth_user_id]['email'],
+                'handle_str': data.data['users'][auth_user_id]['handle_str']
             }
         ],
         "messages": []
     }
-    channel_id = len(data['channels'])
-    # Adds the new channel to the data list
-    data['channels'].append(new_channel)
-    data['users'][auth_user_id]['num_channels'] += 1
+    channel_id = len(data.data['channels'])
+    # Adds the new channel to the data.data list
+    data.data['channels'].append(new_channel)
+    data.data['users'][auth_user_id]['num_channels'] += 1
     return {'channel_id': channel_id}

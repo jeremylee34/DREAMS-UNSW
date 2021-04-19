@@ -1,7 +1,10 @@
 import sys
+import src.data as data
+import pickle
+import os.path
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
-from json import dumps, loads
+from json import dumps
 from src import config
 from src import user
 from src.admin import admin_user_remove_v1
@@ -21,7 +24,6 @@ from src.channel import channel_removeowner_v1
 from src.channels import channels_create_v1
 from src.channels import channels_list_v1
 from src.channels import channels_listall_v1
-from src import data
 from src.dm import dm_create_v1
 from src.dm import dm_details_v1
 from src.dm import dm_invite_v1
@@ -35,15 +37,19 @@ from src.message import message_remove_v1
 from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
+from src.message import message_sendlater_v1
+from src.message import message_sendlaterdm_v1
+from src.message import message_react_v1
+from src.message import message_unreact_v1
+from src.message import message_pin_v1
+from src.message import message_unpin_v1
 from src.other import notifications_get_v1
 from src.other import search_v1
 from src.standup import standup_start_v1
 from src.standup import standup_active_v1
 from src.standup import standup_send_v1
-
-
 from src.other import clear_v1
-import pickle
+
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -60,11 +66,19 @@ CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, defaultHandler)
-def load_data():
-    data.data = pickle.load(open("datastore.p", "rb"))
+
 def save_data():
-    with open('datastore.p', 'wb') as FILE:
+    '''
+    Saves the current data into the pickle file
+    '''
+    with open('src/datastore.p', 'wb') as FILE:
         pickle.dump(data.data, FILE)
+
+
+# Loading data from pickle file
+if os.path.exists("src/datastore.p") == False:
+    save_data()
+data.data = pickle.load(open("src/datastore.p", "rb"))
 
 @APP.route('/static/<path:path>')
 def send__js(path):
@@ -145,7 +159,6 @@ def register():
     inputs = request.get_json()
     r = auth_register_v1(inputs['email'], inputs['password'], inputs['name_first'], inputs['name_last'])
     save_data()
-    print(data.data)
     return dumps(r)
 
 @APP.route('/auth/logout/v1', methods=['POST'])
@@ -309,6 +322,7 @@ def user_stats():
     """      
     token = request.args.get('token')
     r = user.user_stats_v1(token)
+    save_data()
     return dumps(r)
 
 @APP.route('/users/stats/v1', methods=['GET']) 
@@ -325,6 +339,7 @@ def users_stats():
     """     
     token = request.args.get('token')
     r = user.users_stats_v1(token)
+    save_data()
     return dumps(r)   
 
 @APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
@@ -341,6 +356,7 @@ def uploadphoto():
     """      
     info = request.get_json()
     r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
+    save_data()
     return dumps(r)    
 
 ################################################################################
@@ -539,7 +555,42 @@ def message_senddm():
     message_id = message_senddm_v1(message['token'], message['dm_id'], message['message'])
     save_data()
     return dumps(message_id)
-
+@APP.route("/message/sendlater/v1", methods=['POST'])
+def message_sendlater():
+    message = request.get_json()
+    message_id = message_sendlater_v1(message['token'], message['channel_id'], message['message'], message['time_sent'])
+    save_data()
+    return dumps(message_id)
+@APP.route("/message/sendlaterdm/v1", methods=['POST'])
+def message_sendlaterdm():
+    message = request.get_json()
+    message_id = message_sendlaterdm_v1(message['token'], message['dm_id'], message['message'], message['time_sent'])
+    save_data()
+    return dumps(message_id)
+@APP.route("/message/react/v1", methods=['POST'])
+def message_react():
+    message = request.get_json()
+    message_react_v1(message['token'], message['message_id'], message['react_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/unreact/v1", methods=['POST'])
+def message_unreact():
+    message = request.get_json()
+    message_unreact_v1(message['token'], message['message_id'], message['react_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/pin/v1", methods=['POST'])
+def message_pin():
+    message = request.get_json()
+    message_pin_v1(message['token'], message['message_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/unpin/v1", methods=['POST'])
+def message_unpin():
+    message = request.get_json()
+    message_unpin_v1(message['token'], message['message_id'])
+    save_data()
+    return dumps({})
 ################################################################################
 #####################         MESSAGE ROUTES           #########################
 ################################################################################
@@ -548,6 +599,7 @@ def message_senddm():
 def standup_start():
     data = request.get_json()
     time_finish = standup_start_v1(data['token'], data['channel_id'], data['length'])
+    save_data()
     return dumps(time_finish)
 
 @APP.route("/standup/active/v1", methods=['GET'])
@@ -555,12 +607,14 @@ def standup_active():
     token = request.args.get('token')
     channel_id = int(request.args.get('channel_id'))
     standup_info = standup_active_v1(token, channel_id)
+    save_data()
     return dumps(standup_info)
     
 @APP.route("/standup/send/v1", methods=['POST'])
 def standup_send():
     data = request.get_json()
     standup_send_v1(data['token'], data['channel_id'], data['message'])
+    save_data()
     return dumps({})
 
 ################################################################################
@@ -569,4 +623,3 @@ def standup_send():
 
 if __name__ == "__main__":
     APP.run(port=config.port) # Do not edit this port
-    load_data()
