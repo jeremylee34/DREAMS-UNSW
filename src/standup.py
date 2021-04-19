@@ -63,12 +63,6 @@ def end_standup(channel_id, curr_time, owner_u_id, token):
             new_msg = f"{msg['handle_str']}: {msg['message']}"
             message_block.append(new_msg)
         message_block_joined = '\n'.join(message_block)
-        standup_msg = {
-            'message_id': len(temp_channel['messages']),
-            'u_id': owner_u_id,
-            'time_created': curr_time,
-            'message': message_block_joined
-        }
         message_send_v1(token, channel_id, message_block_joined)
     return{}
 
