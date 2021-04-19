@@ -219,7 +219,6 @@ def test_invalid_token_users_all(clear_data):
         'name_first': 'tom',
         'name_last': 'brown',
     })
-<<<<<<< HEAD
     query_string = 'token=invalid_token'
     assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code    
 
@@ -386,7 +385,3 @@ def test_invalid_img_url2(clear_data):
         'x_end': 200,
         'y_end': 200,
     }).status_code == InputError.code   
-=======
-    query_string = 'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
-    assert requests.get(f'{url}/users/all/v1?{query_string}').status_code == InputError.code       
->>>>>>> master
