@@ -57,7 +57,6 @@ def end_standup(channel_id, curr_time, owner_u_id, token):
     data['channels'][channel_id]['standup_time_finish'] = 0
     # once timer ends, run this code 
     if data['channels'][channel_id]['standup']:
-
         message_block = []
         for msg in temp_channel['standup']:
             new_msg = f"{msg['handle_str']}: {msg['message']}"
