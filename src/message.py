@@ -14,6 +14,8 @@ from datetime import timezone
 from src.helper import token_to_u_id
 from src.helper import check_user_in_channel
 from src.helper import check_user_in_dm
+from src.helper import helper_sendlater
+from src.helper import helper_sendlaterdm
 # Key to decode token
 SECRET = 'HELLO'
 
@@ -373,37 +375,22 @@ def message_senddm_v1(token, dm_id, message):
     return {
         'message_id': message_id
     }
-def helper_sendlater(token, channel_id, message, message_id):
-    # Gets auth_user_id from token
-    auth_user_id = token_to_u_id(token)
-    timestamp = int(time())
-    # Dictionary for new message
-    new_message = {
-        'message_id': message_id,
-        'u_id': auth_user_id,
-        'message': message,
-        'time_created': timestamp,
-        'reacts': [{
-            'react_id': 1,
-            'u_ids': [],
-            'is_this_user_reacted': False
-        }],
-        'is_pinned': False
-    }
-    # Adds to notifications list if @ is in the message
-    if '@' in message:
-        new_notification = {
-            'message': message,
-            'channel_id': channel_id,
-            'dm_id': -1,
-            'u_id': auth_user_id,
-            'reacts': []
-        }
-        data.data['notifications'].append(new_notification)
-    # Inserts the message into the channel messages
-    data.data['channels'][channel_id]['messages'].insert(0, new_message)
-    data.data['users'][auth_user_id]['num_messages'] += 1
+
 def message_sendlater_v1(token, channel_id, message, time_sent):
+    '''
+    Sends a message to the channel at the given time
+    Arguments:
+        token (str) - user id of a user
+        channel_id (int) - id of a channel
+        message (str) - message that user wants to send
+        time_sent (int) - time that the user wants to send the message
+    Exceptions:
+        InputError - when user does not exist, channel id is not a valid channel, 
+                     message is more than 1000 characters, time sent is a time in the past
+        AccessError - when user has not joined the channel they are posting to
+    Return Value:
+        returns {message_id} - message_id of the new message
+    '''
     # Checks if user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -440,38 +427,21 @@ def message_sendlater_v1(token, channel_id, message, time_sent):
     return {
         'message_id': len(data.data['message_ids'])
     }
-def helper_sendlaterdm(token, dm_id, message, message_id):
-    # Converts token to auth_user_id
-    auth_user_id = token_to_u_id(token)
-    # Gets the current time
-    timestamp = int(time())
-    # Dictionary for new message
-    new_message = {
-        'message_id': message_id,
-        'u_id': auth_user_id,
-        'message': message,
-        'time_created': timestamp,
-        'reacts': [{
-            'react_id': 1,
-            'u_ids': [],
-            'is_this_user_reacted': False
-        }],
-        'is_pinned': False
-    }
-    # Adds message to notifications list if @ is found in the message
-    if '@' in message:
-        new_notification = {
-            'message': message,
-            'channel_id': -1,
-            'dm_id': dm_id,
-            'u_id': auth_user_id,
-            'reacts': []
-        }
-        data.data['notifications'].append(new_notification)
-    # Inserts message into dms
-    data.data['dms'][dm_id]['messages'].insert(0, new_message)
-    data.data['users'][auth_user_id]['num_messages'] += 1
 def message_sendlaterdm_v1(token, dm_id, message, time_sent):
+    '''
+    Sends a message to a dm at the given time
+    Arguments:
+        token (str) - user id of a user
+        dm_id (int) - id of a dm
+        message (str) - message that user wants to send
+        time_sent (int) - time that the user wants to send the message
+    Exceptions:
+        InputError - when user does not exist, dn id is not a valid dm, 
+                     message is more than 1000 characters, time sent is a time in the past
+        AccessError - when user has not joined the dm they are posting to
+    Return Value:
+        returns {message_id} - message_id of the new message
+    '''
     # Checks if user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -510,6 +480,19 @@ def message_sendlaterdm_v1(token, dm_id, message, time_sent):
         'message_id': len(data.data['message_ids'])
     }
 def message_react_v1(token, message_id, react_id):
+    '''
+    Reacts to a message with the react id
+    Arguments:
+        token (str) - user id of a user
+        message_id (int) - id of the message
+        react_id (int) - id of the react
+    Exceptions:
+        InputError - when user does not exist, message id is not a valid message, 
+                     react_id is not a valid react ID, message_id already has a react
+        AccessError - when user has not joined the dm or channel they are posting to
+    Return Value:
+        returns {}
+    '''
     # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -583,6 +566,19 @@ def message_react_v1(token, message_id, react_id):
     return {
     }
 def message_unreact_v1(token, message_id, react_id):
+    '''
+    Unreacts to a message with the react id
+    Arguments:
+        token (str) - user id of a user
+        message_id (int) - id of the message
+        react_id (int) - id of the react
+    Exceptions:
+        InputError - when user does not exist, message id is not a valid message, 
+                     react_id is not a valid react ID, message_id is already unreacted
+        AccessError - when user has not joined the dm or channel they are posting to
+    Return Value:
+        returns {}
+    '''
     # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -650,6 +646,18 @@ def message_unreact_v1(token, message_id, react_id):
                 dm_message3['reacts'][0]['is_this_user_reacted'] = False
     return {}
 def message_pin_v1(token, message_id):
+    '''
+    Pins a message in a dm or channel
+    Arguments:
+        token (str) - user id of a user
+        message_id (int) - id of the message
+    Exceptions:
+        InputError - when user does not exist, message id is not a valid message, 
+                     message_id is already pinned
+        AccessError - when user has not joined the dm or channel they are posting to
+    Return Value:
+        returns {}
+    '''
     # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
@@ -707,6 +715,18 @@ def message_pin_v1(token, message_id):
         data.data['dms'][dm_id]['messages'][dm_message_position]['is_pinned'] = True
     return {}
 def message_unpin_v1(token, message_id):
+    '''
+    Unpins a message in a dm or channel
+    Arguments:
+        token (str) - user id of a user
+        message_id (int) - id of the message
+    Exceptions:
+        InputError - when user does not exist, message id is not a valid message, 
+                     message_id is already unpinned
+        AccessError - when user has not joined the dm or channel they are posting to
+    Return Value:
+        returns {}
+    '''
     # Checks if the user is a valid user
     valid_token = 0
     for tokens in data.data['token_list']:
