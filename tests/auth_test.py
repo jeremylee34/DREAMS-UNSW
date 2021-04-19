@@ -121,6 +121,16 @@ def test_lastname_length(clear_data):
     with pytest.raises(InputError):
         assert auth_register_v1("honey@outlook.com", "12345678", "Tim", "")
 
+def test_handle(clear_data):
+    '''
+    Test whether handle_str will append number or not
+    '''
+    auth_register_v1("timothy@gmail.com", "hello1234", "timothy","brown")
+    auth_register_v1("tim@gmail.com", "hello1234", "timothy","brown")
+    user3 = auth_register_v1("timmy@gmail.com", "hello1234", "timothy","brown")
+    result = user_profile_v1(user3['token'], 2)
+    assert result['user']['handle_str'] == 'timothybrown01'
+
 ########### Tests for login   ###########  
 
 def test_login_incorrect_password(clear_data, user_token1):
