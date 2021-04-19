@@ -19,8 +19,6 @@ from datetime import datetime
 from datetime import timezone
 import requests
 
-
-
 SECRET = 'HELLO'
 
 def user_profile_v1(token, u_id):

@@ -2,7 +2,6 @@
 Implementation of tests for user functions
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
-
 import pytest
 import re
 from src.auth import auth_register_v1

@@ -211,7 +211,7 @@ def test_success_users_stats(clear_data, user, user2):
     })
     requests.post(f'{url}/message/send/v2', json={
         'token': user['token'],
-        'channel_id': 0,
+        'channel_id': c['channel_id'],
         'message': 'Hello'
     })         
     assert requests.get(f"{url}users/stats/v1?token={user['token']}").status_code == 200
