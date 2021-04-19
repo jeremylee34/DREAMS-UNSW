@@ -225,7 +225,7 @@ def auth_passwordreset_request_v1(email):
     '''
     #check if user is registered user
     valid_email = 0
-    for user in data['users']:
+    for user in data.data['users']:
         if user['email'] == email:
             valid_email = 1
     if valid_email == 0:
@@ -270,7 +270,7 @@ def auth_passwordreset_reset_v1(reset_code, new_password):
         raise InputError('Reset code invalid')
 
     #check if reset code match
-    for user in data['users']:
+    for user in data.data['users']:
         if user['secret_code'] == reset_code:
             if len(new_password) >= 6:
                 user["password"] = hashlib.sha256(new_password.encode()).hexdigest()

@@ -128,7 +128,7 @@ def generate_secret_code(email):
     ''' 
     #loop through and see if email match any in database 
     valid_mail = 0
-    for user in data['users']:
+    for user in data.data['users']:
         if user['email'] == email:
             valid_mail = 1
     
@@ -138,7 +138,7 @@ def generate_secret_code(email):
         random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
         #attach random_str to user data
-        for user in data['users']:
+        for user in data.data['users']:
             if user['email'] == email:
                 user['secret_code'] = random_str
 
@@ -161,7 +161,7 @@ def get_secret_code(u_id):
     Return user's secret code if any
     '''
     secret_code_exist = 0
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             secret_code = user['secret_code']
             secret_code_exist = 1
