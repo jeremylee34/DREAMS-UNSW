@@ -13,12 +13,9 @@ import src.user
 import src.other
 from src.error import InputError, AccessError
 
-<<<<<<< HEAD
 IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
 FAKE_URL2 = "https://cdn.mos.cms/YB6aQqKZBVjtt3PuDSkJKe.jpg"
-=======
->>>>>>> master
 
 @pytest.fixture
 #Clears all data
