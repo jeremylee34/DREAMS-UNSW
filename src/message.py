@@ -695,3 +695,4 @@ def message_unpin_v1(token, message_id):
     else:
         data.data['dms'][dm_id]['messages'][dm_message_position]['is_pinned'] = False
     return {}
+
