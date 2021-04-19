@@ -35,6 +35,12 @@ from src.message import message_remove_v1
 from src.message import message_send_v1
 from src.message import message_senddm_v1
 from src.message import message_share_v1
+from src.message import message_sendlater_v1
+from src.message import message_sendlaterdm_v1
+from src.message import message_react_v1
+from src.message import message_unreact_v1
+from src.message import message_pin_v1
+from src.message import message_unpin_v1
 from src.other import notifications_get_v1
 from src.other import search_v1
 from src.other import clear_v1
@@ -450,7 +456,42 @@ def message_senddm():
     message_id = message_senddm_v1(message['token'], message['dm_id'], message['message'])
     save_data()
     return dumps(message_id)
-
+@APP.route("/message/sendlater/v1", methods=['POST'])
+def message_sendlater():
+    message = request.get_json()
+    message_id = message_sendlater_v1(message['token'], message['channel_id'], message['message'], message['time_sent'])
+    save_data()
+    return dumps(message_id)
+@APP.route("/message/sendlaterdm/v1", methods=['POST'])
+def message_sendlaterdm():
+    message = request.get_json()
+    message_id = message_sendlaterdm_v1(message['token'], message['channel_id'], message['message'], message['time_sent'])
+    save_data()
+    return dumps(message_id)
+@APP.route("/message/react/v1", methods=['POST'])
+def message_react():
+    message = request.get_json()
+    message_react_v1(message['token'], message['message_id'], message['react_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/unreact/v1", methods=['POST'])
+def message_unreact():
+    message = request.get_json()
+    message_unreact_v1(message['token'], message['message_id'], message['react_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/pin/v1", methods=['POST'])
+def message_pin():
+    message = request.get_json()
+    message_pin_v1(message['token'], message['message_id'])
+    save_data()
+    return dumps({})
+@APP.route("/message/unpin/v1", methods=['POST'])
+def message_unpin():
+    message = request.get_json()
+    message_unpin_v1(message['token'], message['message_id'])
+    save_data()
+    return dumps({})
 ################################################################################
 #####################           MAIN APP.RUN           #########################
 ################################################################################
