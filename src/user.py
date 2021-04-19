@@ -297,7 +297,7 @@ def user_stats_v1(token):
     else:
         raise InputError("Invalid token")
     return_stat = data.data['user_stats'][count].copy()
-    remove_u_id = return_stat.pop('u_id')
+    return_stat.pop('u_id')
     return_stat['involvement_rate'] = involvement_rate
     return return_stat
 
@@ -359,8 +359,6 @@ def users_stats_v1(token):
         timestamp = current_time.replace(tzinfo=timezone.utc).timestamp()
         #Applying correct timestamps and adding new users_stats to data
         new_stat = {}
-        count = 0
-        i = 0
         if len(data.data["dreams_stats"]) == 0:
             new_stat["channels_exist"] = [{'exist': total_channels, 'time': timestamp}]
             new_stat["dms_exist"] = [{'exist': existing_dms, 'time': timestamp}]
@@ -416,9 +414,9 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
             raise InputError("Invalid image url")
         #Checking if img_url return a 200 http_status
         try: 
-            request = requests.get(img_url)
-        except requests.exceptions.ConnectionError:    
-            raise InputError("Image_url doesn't have a HTTP status of 200")
+            requests.get(img_url)
+        except requests.exceptions.ConnectionError as invalid_url:    
+            raise InputError("Image_url doesn't have a HTTP status of 200") from invalid_url
         #Downloaded the photo
         fullfilename = os.path.join("static", f"user{u_id}_photo.jpg")
         urllib.request.urlretrieve(img_url, fullfilename)

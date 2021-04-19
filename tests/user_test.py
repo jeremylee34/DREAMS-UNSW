@@ -176,7 +176,7 @@ def test_multiple_stats(clear_data):
     user_stats_v1(r['token'])
     channel = channels_create_v1(r['token'], "Channel1", True)
     message_send_v1(r['token'], channel['channel_id'], 'Hello')
-    dm = dm_create_v1(r['token'], [1])
+    dm_create_v1(r['token'], [1])
     assert len(user_stats_v1(r['token'])) == 4
 
 def test_multiple_user_stat(clear_data):
@@ -185,7 +185,7 @@ def test_multiple_user_stat(clear_data):
     user_stats_v1(r['token'])
     channel = channels_create_v1(r['token'], "Channel1", True)
     message_send_v1(r['token'], channel['channel_id'], 'Hello')
-    dm = dm_create_v1(r['token'], [1])
+    dm_create_v1(r['token'], [1])
     assert len(user_stats_v1(s['token'])) == 4
 
 ##Tests for users/stats/v1
@@ -201,7 +201,7 @@ def test_multiple(clear_data):
     channel = channels_create_v1(r['token'], "Channel1", True)
     message_send_v1(r['token'], channel['channel_id'], 'Hello')
     users_stats_v1(r['token'])
-    dm = dm_create_v1(r['token'], [1])
+    dm_create_v1(r['token'], [1])
     assert len(users_stats_v1(r['token'])) == 4
 
 def test_removing_dm_and_messages(clear_data):
@@ -227,20 +227,20 @@ def test_removing_dm_and_messages(clear_data):
 def test_users_joined_channels(clear_data):
     r =  auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
     s = auth_register_v1("tim@gmail.com", "hello1234", "tim", "brown")
-    channel = channels_create_v1(r['token'], "Channel1", True)
+    channels_create_v1(r['token'], "Channel1", True)
     channel_join_v1(s['token'], 0)
     channels_create_v1(r['token'], "Channel2", True)
     assert len(users_stats_v1(r['token'])) == 4
 
 def test_users_joined_dms(clear_data):   
     r =  auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
-    s = auth_register_v1("tim@gmail.com", "hello1234", "tim", "brown")
+    auth_register_v1("tim@gmail.com", "hello1234", "tim", "brown")
     dm_create_v1(r['token'], [1])  
     assert len(users_stats_v1(r['token'])) == 4   
 
 def test_empty_messages_dms(clear_data):
     r =  auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
-    s = auth_register_v1("tim@gmail.com", "hello1234", "tim", "brown")
+    auth_register_v1("tim@gmail.com", "hello1234", "tim", "brown")
     channel = channels_create_v1(r['token'], "Channel1", True) 
     dms = dm_create_v1(r['token'], [1])
     message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')

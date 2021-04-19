@@ -265,7 +265,7 @@ def test_success_users_stats(clear_data):
         'name_first': 'tim',
         'name_last': 'brown',
     }).json()
-    c = requests.post(f'{url}/channels/create/v2', json={
+    requests.post(f'{url}/channels/create/v2', json={
         'token': r['token'],
         'name': 'channel1',
         'is_public': True,
