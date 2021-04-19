@@ -1,6 +1,6 @@
 from src.error import InputError
 from src.error import AccessError
-from src.data import data
+import src.data as data
 
 import jwt
 import random
@@ -16,7 +16,7 @@ def check_valid_channel(channel_id):
     Checks if channel_id is a valid channel
     """
     valid_channel = False
-    for channels in data['channels']:
+    for channels in data.data['channels']:
         if channels['channel_id'] == channel_id:
             valid_channel = True
             break
@@ -27,7 +27,7 @@ def check_public_channel(channel_id):
     """
     Checks if a channel is public
     """
-    if data['channels'][channel_id]['is_public'] is False:
+    if data.data['channels'][channel_id]['is_public'] is False:
         return False
     else:
         return True
@@ -37,7 +37,7 @@ def check_user_in_channel(channel_id, u_id):
     Checks whether a user is in a channel
     """
     user_in_channel = False
-    for member in data['channels'][channel_id]['all_members']:
+    for member in data.data['channels'][channel_id]['all_members']:
         ## if u_id matches the member
         if member['u_id'] == u_id:
             user_in_channel = True
@@ -49,7 +49,7 @@ def check_valid_user(u_id):
     Checks whether a u_id refers to a valid user
     """
     valid_user = False
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             valid_user = True
             break
@@ -58,7 +58,7 @@ def check_valid_user(u_id):
 def token_to_u_id(token):
     # find u_id related to token
     session_id = jwt.decode(token, SECRET, algorithms=['HS256'])
-    for user in data['users']:
+    for user in data.data['users']:
         for session in user['session_ids']:
             if session == session_id['session_id']:
                 u_id = user['u_id']
@@ -66,7 +66,7 @@ def token_to_u_id(token):
 
 def check_valid_dm(dm_id):
     valid_dm = False
-    for dm in data['dms']:
+    for dm in data.data['dms']:
         if dm['dm_id'] == dm_id:
             valid_dm = True
             break
@@ -74,23 +74,22 @@ def check_valid_dm(dm_id):
 
 def check_user_in_dm(u_id, dm_id):
     user_in_dm = False
-    for member in data['dms'][dm_id]['members']:
+    for member in data.data['dms'][dm_id]['members']:
         if member['u_id'] == u_id:
             user_in_dm = True
             break
     return user_in_dm
 
 def check_valid_token(token):
-    global data
     valid_token = False
-    for token_hash in data['token_list']:
+    for token_hash in data.data['token_list']:
         if token_hash == token:
             valid_token = True
     return valid_token
 
 def check_owner_perm(u_id):
     is_owner = False
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             if user['permission_id'] == OWNER_PERMISSION:
                 is_owner = True
@@ -98,7 +97,7 @@ def check_owner_perm(u_id):
 
 def check_if_owner(u_id, channel_id):
     is_owner = False
-    for user in data['channels'][channel_id]['owner_members']:
+    for user in data.data['channels'][channel_id]['owner_members']:
         if user['u_id'] == u_id:
             is_owner = True
             break
@@ -117,7 +116,7 @@ def check_if_owner(u_id, channel_id):
 
 # def check_channel_owner(u_id, channel_id):
 #     channel_owner = False
-#     for owner in data['channels'][channel_id]['owner_members']:
+#     for owner in data.data['channels'][channel_id]['owner_members']:
 #         if owner['u_id'] == u_id:
 #             channel_owner = True
 #     return channel_owner
@@ -129,7 +128,7 @@ def generate_secret_code(email):
     ''' 
     #loop through and see if email match any in database 
     valid_mail = 0
-    for user in data['users']:
+    for user in data.data['users']:
         if user['email'] == email:
             valid_mail = 1
     
@@ -139,7 +138,7 @@ def generate_secret_code(email):
         random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
         #attach random_str to user data
-        for user in data['users']:
+        for user in data.data['users']:
             if user['email'] == email:
                 user['secret_code'] = random_str
 
@@ -162,7 +161,7 @@ def get_secret_code(u_id):
     Return user's secret code if any
     '''
     secret_code_exist = 0
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             secret_code = user['secret_code']
             secret_code_exist = 1

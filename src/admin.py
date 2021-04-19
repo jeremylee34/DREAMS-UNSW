@@ -1,5 +1,5 @@
 import jwt
-from src.data import data
+import src.data as data
 from src.error import InputError
 from src.error import AccessError
 
@@ -21,13 +21,13 @@ def admin_user_remove_v1(token, u_id):
     """
     valid_token = 0
     valid = 0
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token == 0:
         raise AccessError('Invalid token')
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             valid = 1
         for s_id in user['session_ids']:
@@ -36,24 +36,24 @@ def admin_user_remove_v1(token, u_id):
     if valid == 0:
         raise InputError("Invalid user")
     num_owners = 0
-    for user2 in data['users']:
+    for user2 in data.data['users']:
         if user2['permission_id'] == 1:
             num_owners += 1
-    if num_owners == 1 and data['users'][auth_user_id]['permission_id'] == 1:
+    if num_owners == 1 and data.data['users'][auth_user_id]['permission_id'] == 1:
         raise InputError("User is the only owner")
-    if data['users'][auth_user_id]['permission_id'] == 2:
+    if data.data['users'][auth_user_id]['permission_id'] == 2:
         raise AccessError("Authorised user is not an owner")
 
-    for x in data['users']: 
+    for x in data.data['users']: 
         if x['u_id'] == u_id:
-            data['users'].remove(x)
+            data.data['users'].remove(x)
     
-    for channel_id in data['channels']:
+    for channel_id in data.data['channels']:
         for messages in channel_id['messages']:
             if messages['u_id'] == u_id:
                 messages['message'] = 'Removed user'
 
-    for dm_id in data['dms']:
+    for dm_id in data.data['dms']:
         for message2 in dm_id['messages']:
             if message2['u_id'] == u_id:
                 message2['message'] = 'Removed user'
@@ -81,13 +81,13 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
         raise AccessError('Permission_id is not valid') 
     valid = 0
     valid_token = 0
-    for tokens in data['token_list']:
+    for tokens in data.data['token_list']:
         if tokens == token:
             valid_token = 1
     if valid_token == 0:
         raise AccessError('Invalid token')
     decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-    for user in data['users']:
+    for user in data.data['users']:
         if user['u_id'] == u_id:
             valid = 1
         for s_id in user['session_ids']:
@@ -95,8 +95,8 @@ def admin_userpermission_change_v1(token, u_id, permission_id):
                 auth_user_id = user['u_id']
     if valid == 0:
         raise InputError("Invalid user")
-    if data['users'][auth_user_id]['permission_id'] == 2:
+    if data.data['users'][auth_user_id]['permission_id'] == 2:
         raise AccessError("Authorised user is not an owner")
         
-    data['users'][u_id]['permission_id'] = permission_id
+    data.data['users'][u_id]['permission_id'] = permission_id
     return {}

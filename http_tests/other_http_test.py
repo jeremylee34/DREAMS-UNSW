@@ -73,13 +73,13 @@ def test_search_v2_input_token(clear_data):
     '''
     Test for invalid input token in search function
     '''
-    assert requests.get(config.url + 'search/v2?token=6&query_str=Hello').status_code == AccessError.code
+    assert requests.get(config.url + 'search/v2?token=6&query_str=Hello').status_code == InputError.code
 
 def test_notifications_get_invalid_token(clear_data):
     '''
     Test for invalid input token in notification function
     '''
-    assert requests.get(config.url + 'notifications/get/v1?token=6').status_code == AccessError.code
+    assert requests.get(config.url + 'notifications/get/v1?token=6').status_code == InputError.code
 
 def test_notifications_get_tag(clear_data):
     '''
