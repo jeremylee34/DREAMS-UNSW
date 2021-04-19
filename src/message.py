@@ -270,6 +270,10 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
         for message2 in channel['messages']:
             if message2['message_id'] == og_message_id:
                 shared_message = message2['message']
+    for dm in data.data['dms']:
+        for dm_message2 in dm['messages']:
+            if dm_message2['message_id'] == og_message_id:
+                shared_message = dm_message2['message']
     # Appends the optional message to shared message
     shared_message += message
     message_id = len(data.data['message_ids'])
@@ -278,7 +282,7 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     timestamp = int(time())
     # Dictionary for new message
     new_message = {
-        'message_id': len(data.data['message_ids']),
+        'message_id': message_id,
         'u_id': auth_user_id,
         'message': shared_message,
         'time_created': timestamp,
@@ -549,7 +553,7 @@ def message_react_v1(token, message_id, react_id):
                 dm_message3['reacts'][0]['u_ids'].append(auth_user_id)
                 channel_id = -1
                 dm_id = dm3['dm_id']
-                message = message3['message']
+                message = dm_message3['message']
     new_notification = {
         'message': message,
         'channel_id': channel_id,
@@ -557,7 +561,6 @@ def message_react_v1(token, message_id, react_id):
         'u_id': auth_user_id,
         'reacts': [{
             'react_id': 1,
-            'u_ids': message3['reacts'][0]['u_ids']
         }]
     }
     data.data['notifications'].append(new_notification)
@@ -583,6 +586,10 @@ def message_unreact_v1(token, message_id, react_id):
             if message_id == dm_message1['message_id']:
                 valid_message = 1
             dm_id = dm1['dm_id']
+    if valid_message == 0:
+        raise InputError('Message_id is not a valid message within a channel or DM')
+    if react_id != 1:
+        raise InputError('react_id is not a valid react ID')
     auth_user_id = token_to_u_id(token)
     valid_member = 0
     if channel_not_dm == True:
@@ -595,10 +602,6 @@ def message_unreact_v1(token, message_id, react_id):
                 valid_member = 1
     if valid_member == 0:
         raise AccessError('Authorised user is not a member of the channel or DM')
-    if valid_message == 0:
-        raise InputError('Message_id is not a valid message within a channel or DM')
-    if react_id != 1:
-        raise InputError('react_id is not a valid react ID')
     has_not_reacted = False
     for channel2 in data.data['channels']:
         for message2 in channel2['messages']:
@@ -617,10 +620,12 @@ def message_unreact_v1(token, message_id, react_id):
         for message3 in channel3['messages']:
             if message_id == message3['message_id']:
                 message3['reacts'][0]['u_ids'].remove(auth_user_id)
+                message3['reacts'][0]['is_this_user_reacted'] = False
     for dm3 in data.data['dms']:
         for dm_message3 in dm3['messages']:
             if message_id == dm_message3['message_id']:
                 dm_message3['reacts'][0]['u_ids'].remove(auth_user_id)
+                dm_message3['reacts'][0]['is_this_user_reacted'] = False
     return {}
 def message_pin_v1(token, message_id):
     valid_token = 0

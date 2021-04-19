@@ -319,15 +319,15 @@ def dm_messages_v1(token, dm_id, start):
     #Record components of each message while appending to messages list
     #End loop once start index matches end index or last message is reached
     for msgs in data.data['dms'][dm_id]['messages']:
-        tempmsg = {
-            'message_id': msgs['message_id'],
-            'u_id': msgs['u_id'],
-            'message': msgs['message'],
-            'time_created': msgs['time_created'],
-            'reacts': msgs['reacts'],
-            'is_pinned': msgs['is_pinned']
-        }
-        messages.append(tempmsg)
+        # tempmsg = {
+        #     'message_id': msgs['message_id'],
+        #     'u_id': msgs['u_id'],
+        #     'message': msgs['message'],
+        #     'time_created': msgs['time_created'],
+        #     'reacts': msgs['reacts'],
+        #     'is_pinned': msgs['is_pinned']
+        # }
+        messages.append(msgs)
         if user in messages[-1]['reacts'][0]['u_ids']:
             messages[-1]['reacts'][0]['is_this_user_reacted'] = True
         message_start = message_start + 1
