@@ -113,9 +113,7 @@ def timestamp():
     '''
     Creates a time two seconds from the present as a unix timestamp
     '''
-    curr = datetime.now()
-    new_time = curr + timedelta(seconds=2)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
+    timestamp = int(time.time())
     return timestamp
 @pytest.fixture
 def past_time():
@@ -424,7 +422,7 @@ def test_message_senddm_invalid_token(clear, user, user2, dm_info):
     with pytest.raises(InputError):
         assert message_senddm_v1(6, dm_info['dm_id'], 'Hello')
 
-def test_message_sendlater(clear, sendlater, sleep, messages):
+def test_message_sendlater(clear, user, channel, timestamp, sendlater, sleep, messages):
     '''
     Basic test for functionality of message_sendlater_v1
     '''
@@ -461,7 +459,7 @@ def test_message_sendlater_invalid_token(clear, user, channel, timestamp):
     with pytest.raises(InputError):
         assert message_sendlater_v1(55, channel['channel_id'], 'Hello', timestamp)
 
-def test_message_sendlaterdm(clear, sendlaterdm, sleep, dm_messages):
+def test_message_sendlaterdm(clear, user, user2, timestamp, sendlaterdm, sleep, dm_messages):
     '''
     Basic test for functionality of message_sendlaterdm_v1
     '''

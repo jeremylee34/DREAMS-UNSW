@@ -5,7 +5,7 @@ Written by Gordon Liang
 '''
 import jwt
 import threading
-import time
+from time import time
 from src.error import InputError
 from src.error import AccessError
 import src.data as data
@@ -61,8 +61,7 @@ def message_send_v1(token, channel_id, message):
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Gets the current time
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -275,14 +274,19 @@ def message_share_v1(token, og_message_id, message, channel_id, dm_id):
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Finds current time that message is shared
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': len(data.data['message_ids']),
         'u_id': auth_user_id,
         'message': shared_message,
-        'time_created': timestamp
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
     }
     # Inserts new message into channel messages
     if channel_id != -1:
@@ -335,8 +339,7 @@ def message_senddm_v1(token, dm_id, message):
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
     # Finds current time the message is sent
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -371,8 +374,7 @@ def helper_sendlater(token, channel_id, message, message_id):
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -412,16 +414,16 @@ def message_sendlater_v1(token, channel_id, message, time_sent):
         raise InputError('Channel ID is not a valid channel')
     if len(message) > 1000:
         raise InputError('Message is more than 1000 characters')
-    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    timestamp = int(time())
     if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
     auth_user_id = token_to_u_id(token)
     if check_user_in_channel(channel_id, auth_user_id) == False:
         raise AccessError('Authorised user has not joined the channel they are posting to')
-    time = time_sent - timestamp
+    time_diff = time_sent - timestamp
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
-    t = threading.Timer(time, helper_sendlater, args=[token, channel_id, message, message_id])
+    t = threading.Timer(time_diff, helper_sendlater, args=[token, channel_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
@@ -433,8 +435,7 @@ def helper_sendlaterdm(token, dm_id, message, message_id):
         for s_id in user['session_ids']:
             if s_id == session_id:
                 auth_user_id = user['u_id']
-    current_time = datetime.now()
-    timestamp = round(current_time.replace(tzinfo=timezone.utc).timestamp(), 1)
+    timestamp = int(time())
     # Dictionary for new message
     new_message = {
         'message_id': message_id,
@@ -474,16 +475,16 @@ def message_sendlaterdm_v1(token, dm_id, message, time_sent):
             valid_dm = 1
     if valid_dm == 0:
         raise InputError('dm_id is not a valid DM')
-    timestamp = (datetime.now()).replace(tzinfo=timezone.utc).timestamp()
+    timestamp = int(time())
     if time_sent < timestamp:
         raise InputError('Time sent is a time in the past')
     auth_user_id = token_to_u_id(token)
     if check_user_in_dm(auth_user_id, dm_id) == False:
         raise AccessError('Authorised user has not joined the DM they are posting to')
-    time = time_sent - timestamp
+    time_diff = time_sent - timestamp
     message_id = len(data.data['message_ids'])
     data.data['message_ids'].append(message_id)
-    t = threading.Timer(time, helper_sendlaterdm, args=[token, dm_id, message, message_id])
+    t = threading.Timer(time_diff, helper_sendlaterdm, args=[token, dm_id, message, message_id])
     t.start()
     return {
         'message_id': len(data.data['message_ids'])
