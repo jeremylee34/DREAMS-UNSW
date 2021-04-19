@@ -193,8 +193,6 @@ def passwordreset_request():
     """ 
     datareq = request.get_json()
     r = auth_passwordreset_request_v1(datareq['email'])
-    #with open('store.json', 'w') as fp:
-    #    fp.write(dumps(data))  
     return dumps(r)
 
 @APP.route('/auth/passwordreset/reset/v1', methods=['POST'])
@@ -214,8 +212,6 @@ def passwordreset_reset():
     """ 
     datareq = request.get_json()
     r = auth_passwordreset_reset_v1(datareq['reset_code'], datareq['new_password'])
-    #with open('store.json', 'w') as fp:
-    #    fp.write(dumps(data))  
     return dumps(r)
     
 ################################################################################

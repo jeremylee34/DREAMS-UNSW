@@ -136,14 +136,11 @@ def generate_secret_code(email):
         raise InputError('Invalid email')
     else:
         random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-
         #attach random_str to user data
         for user in data.data['users']:
             if user['email'] == email:
-                user['secret_code'] = random_str
-
+                data.data['users'][user['u_id']]['secret_code'] = random_str
         return random_str
-
 def check_secret_code(secret):
     '''
     check if secret code is valid, 

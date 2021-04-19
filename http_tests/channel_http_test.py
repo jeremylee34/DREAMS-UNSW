@@ -1003,15 +1003,6 @@ def test_channel_leave_v1_LeaveOwner(clear, channel_id1, user_token1, user_token
     assert channel_details1['all_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['owner_members'][0]['u_id'] == user_token1['auth_user_id']
-
-def test_channel_leave_v1_last_owner(clear, user_token1, channel_id1):
-    requests.post(f"{url}/channel/leave/v1", json={
-        'token': user_token1['token'],
-        'channel_id': channel_id1['channel_id']
-    })
-    channel_details1 = requests.get(f"{url}/channel/details/v2?token={user_token1['token']}&channel_id={channel_id1['channel_id']}").json()
-    assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
-    
 def test_channel_leave_invalid_token(clear, channel_id1):
     assert requests.post(f"{url}/channel/leave/v1", json={
         'token': INVALID_TOKEN,
