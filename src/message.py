@@ -546,16 +546,16 @@ def message_react_v1(token, message_id, react_id):
                 message3['reacts'][0]['u_ids'].append(auth_user_id)
                 channel_id = channel3['channel_id']
                 dm_id = -1
-                message = message3['message']
+                # message = message3['message']
     for dm3 in data.data['dms']:
         for dm_message3 in dm3['messages']:
             if message_id == dm_message3['message_id']:
                 dm_message3['reacts'][0]['u_ids'].append(auth_user_id)
                 channel_id = -1
                 dm_id = dm3['dm_id']
-                message = dm_message3['message']
+                # message = dm_message3['message']
     new_notification = {
-        'message': message,
+        'message': 'reacted',
         'channel_id': channel_id,
         'dm_id': dm_id,
         'u_id': auth_user_id,

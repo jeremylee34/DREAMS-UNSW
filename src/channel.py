@@ -175,22 +175,14 @@ def channel_messages_v1(token, channel_id, start):
     message_index = start
     message_index_end = start + 50
     for message in data.data['channels'][channel_id]['messages']:
-        # temp_message = {
-        #     'message_id': message['message_id'],
-        #     'u_id': message['u_id'],
-        #     'message': message['message'],
-        #     'time_created': message['time_created'],
-        #     'reacts': message['reacts'],
-        #     'is_pinned': message['is_pinned']
-        # }
-        messages.append(message)
-        if u_id in messages[-1]['reacts'][0]['u_ids']:
-            messages[-1]['reacts'][0]['is_this_user_reacted'] = True
-        # iterate to next index, if past 50 msgs, end loop
-        message_index += 1
-        if message_index == message_index_end:
-            break
-
+        if message['message'] != '':
+            messages.append(message)
+            if u_id in messages[-1]['reacts'][0]['u_ids']:
+                messages[-1]['reacts'][0]['is_this_user_reacted'] = True
+            # iterate to next index, if past 50 msgs, end loop
+            message_index += 1
+            if message_index == message_index_end:
+                break
     # if reached end of messages before capturing 50 messages, set to -1
     if message_index != message_index_end:
         message_index_end = -1

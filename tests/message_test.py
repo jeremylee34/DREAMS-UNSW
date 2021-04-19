@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 import threading
 import time
 from src.auth import auth_register_v1
+from src.auth import auth_login_v1
 from src.other import clear_v1
 from src.channel import channel_messages_v1
 from src.channel import channel_join_v1
@@ -161,11 +162,13 @@ def unpin(user, message):
     '''
     message_unpin_v1(user['token'], message['message_id'])
 # Tests for message_send_v1
-def test_message_send(clear, user, channel, message, messages):
+def test_message_send(clear, user, channel, message):
     '''
     Basic test for functionality of message_send_v1
     '''
-    assert messages['messages'][0]['message'] == 'Hello'
+    message_send_v1(user['token'], channel['channel_id'], '@Hello')
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][1]['message'] == 'Hello'
 def test_message_send_input_error(clear, user, channel):
     '''
     Testing for messages more than 1000 characters
@@ -278,7 +281,7 @@ def test_message_remove(clear, user, channel, message, remove):
     Basic test for functionality of message_remove_v1
     '''
     messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
-    assert messages['messages'][0]['message'] == ''
+    assert messages['messages'] == []
 def test_message_remove_input_error(clear, user, channel, message, remove):
     '''
     Tests if an InputError is raised when message is already deleted
@@ -302,10 +305,7 @@ def test_message_remove_multiple(clear, user, channel, message, remove):
     message_remove_v1(user['token'], message3['message_id'])
     message_remove_v1(user['token'], message4['message_id'])
     messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
-    assert messages['messages'][0]['message'] == ''
-    assert messages['messages'][1]['message'] == ''
-    assert messages['messages'][2]['message'] == ''
-    assert messages['messages'][3]['message'] == ''
+    assert messages['messages'] == []
 def test_message_remove_invalid_token(clear, user, channel, message):
     '''
     Tests for invalid token
@@ -336,12 +336,14 @@ def test_message_share_access_error(clear, user, user2, channel, channel2, messa
     channel_id2 = channels_create_v1(user2['token'], "Channel2", True)
     with pytest.raises(AccessError):
         assert message_share_v1(user['token'], message['message_id'], '', channel_id2['channel_id'], -1)
-def test_message_share_dm(clear, user, user2, channel, message, dm_info):
+def test_message_share_dm(clear, user, user2, user3, dm_info, dm_message):
     '''
     Tests for sharing message to a dm
     '''
-    message_share_v1(user['token'], message['message_id'], '', -1, dm_info['dm_id'])
-    messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
+    message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello2')
+    dm_info2 = dm_create_v1(user['token'], [user3['auth_user_id']])
+    message_share_v1(user['token'], dm_message['message_id'], '', -1, dm_info2['dm_id'])
+    messages = dm_messages_v1(user['token'], dm_info2['dm_id'], 0)
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_share_dm_access_error(clear, user, user2, user3, dm_info, dm_message):
     '''
@@ -391,8 +393,9 @@ def test_message_senddm_v1(clear, user, user2, dm_info, dm_message):
     '''
     Basic test for functionality of message_senddm_v1
     '''
+    message_senddm_v1(user['token'], dm_info['dm_id'], '@Hello')
     messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
-    assert messages['messages'][0]['message'] == 'Hello'
+    assert messages['messages'][1]['message'] == 'Hello'
 def test_message_senddm_input_error(clear, user, user2, dm_info):
     '''
     Tests if an InputError is raised when message is more than 1000 characters
@@ -458,7 +461,14 @@ def test_message_sendlater_invalid_token(clear, user, channel, timestamp):
     '''
     with pytest.raises(InputError):
         assert message_sendlater_v1(55, channel['channel_id'], 'Hello', timestamp)
-
+def test_message_sendlater_notifications(clear, user):
+    channel = channels_create_v1(user['token'], "Channel1", True)
+    timestamp = int(time.time())
+    user_login = auth_login_v1('gordonl@gmail.com', '1234567')
+    message_sendlater_v1(user_login['token'], channel['channel_id'], '@Hello', timestamp)
+    time.sleep(3)
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][0]['message'] == '@Hello'
 def test_message_sendlaterdm(clear, user, user2, timestamp, sendlaterdm, sleep, dm_messages):
     '''
     Basic test for functionality of message_sendlaterdm_v1
@@ -495,22 +505,39 @@ def test_message_sendlaterdm_invalid_token(clear, user, user2, dm_info, timestam
     '''
     with pytest.raises(InputError):
         assert message_sendlaterdm_v1(7, dm_info['dm_id'], 'Hello', timestamp)
-def test_message_react_channel(clear, user, channel, message, react, messages):
+def test_message_sendlaterdm_notifications(clear, user, user2):
+    dm_info = dm_create_v1(user['token'], [user2['auth_user_id']])
+    timestamp = int(time.time())
+    user_login = auth_login_v1('gordonl@gmail.com', '1234567')
+    message_sendlaterdm_v1(user_login['token'], dm_info['dm_id'], '@Hello', timestamp)
+    time.sleep(3)
+    messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
+    assert messages['messages'][0]['message'] == '@Hello'
+
+
+
+def test_message_react_channel(clear, user, channel, message):
     '''
     Basic test for functionality of message_react in a channel
     '''
-    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
-    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
-    # assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
+    message_send_v1(user['token'], channel['channel_id'], 'Hello1')
+    message_send_v1(user['token'], channel['channel_id'], 'Hello2')
+    message_send_v1(user['token'], channel['channel_id'], 'ABC')
+    message_react_v1(user['token'], message['message_id'], 1)
+    messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
+    assert messages['messages'][3]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][3]['reacts'][0]['u_ids']
+    assert messages['messages'][3]['reacts'][0]['is_this_user_reacted'] == True
 def test_message_react_dm(clear, user, user2, dm_info, dm_message):
     '''
     Basic test for functionality of message_react in a dm
     '''
+    message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello1')
     message_react_v1(user['token'], dm_message['message_id'], 1)
     messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
-    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
-    assert user['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
-    # assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == True
+    assert messages['messages'][1]['reacts'][0]['react_id'] == 1
+    assert user['auth_user_id'] in messages['messages'][1]['reacts'][0]['u_ids']
+    assert messages['messages'][1]['reacts'][0]['is_this_user_reacted'] == True
 def test_message_react_invalid_message_id(clear, user, channel, message):
     '''
     Tests if an InputError is raised when the message id is invalid
@@ -529,6 +556,13 @@ def test_message_react_already_reacted(clear, user, channel, message, react):
     '''
     with pytest.raises(InputError):
         assert message_react_v1(user['token'], message['message_id'], 1)
+def test_message_react_already_reacted_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an InputError is raised when a message has already been reacted by the user
+    '''
+    message_react_v1(user['token'], dm_message['message_id'], 1)
+    with pytest.raises(InputError):
+        assert message_react_v1(user['token'], dm_message['message_id'], 1)
 def test_message_react_access_error(clear, user, user2, channel, message):
     '''
     Tests if an AccessError is raised when the user trying to react has not joined the channel
@@ -548,21 +582,23 @@ def test_message_unreact_channel(clear, user, channel, message, react):
     '''
     Basic test for functionality of message_unreact_v1 in a channel
     '''
+    message_send_v1(user['token'], channel['channel_id'], 'Hello1')
     message_unreact_v1(user['token'], message['message_id'], 1)
     messages = channel_messages_v1(user['token'], channel['channel_id'], 0)
-    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
-    assert messages['messages'][0]['reacts'][0]['u_ids'] == []
-    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
+    assert messages['messages'][1]['reacts'][0]['react_id'] == 1
+    assert messages['messages'][1]['reacts'][0]['u_ids'] == []
+    assert messages['messages'][1]['reacts'][0]['is_this_user_reacted'] == False
 def test_message_unreact_dm(clear, user, user2, dm_info, dm_message):
     '''
     Basic test for functionality of message_unreact_v1 in a dm
     '''
+    message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello1')
     message_react_v1(user['token'], dm_message['message_id'], 1)
     message_unreact_v1(user['token'], dm_message['message_id'], 1)
     messages = dm_messages_v1(user['token'], dm_info['dm_id'], 0)
-    assert messages['messages'][0]['reacts'][0]['react_id'] == 1
-    assert messages['messages'][0]['reacts'][0]['u_ids'] == []
-    assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
+    assert messages['messages'][1]['reacts'][0]['react_id'] == 1
+    assert messages['messages'][1]['reacts'][0]['u_ids'] == []
+    assert messages['messages'][1]['reacts'][0]['is_this_user_reacted'] == False
 def test_message_unreact_invalid_message_id(clear, user, channel, message, react):
     '''
     Tests if an InputError is raised when the message id is invalid
@@ -581,6 +617,12 @@ def test_message_unreact_already_unreacted(clear, user, channel, message):
     '''
     with pytest.raises(InputError):
         assert message_unreact_v1(user['token'], message['message_id'], 1)
+def test_message_unreact_already_unreacted_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an InputError is raised when a message has not been reacted by the user
+    '''
+    with pytest.raises(InputError):
+        assert message_unreact_v1(user['token'], dm_message['message_id'], 1)
 def test_message_unreact_access_error(clear, user, user2, channel, message, react):
     '''
     Tests if an AccessError is raised when the user trying to unreact has not joined the channel
@@ -615,18 +657,49 @@ def test_message_pin_invalid_message_id(clear, user, channel, message):
     '''
     with pytest.raises(InputError):
         assert message_pin_v1(user['token'], 10)
+def test_message_pin_invalid_message(clear, user, channel):
+    '''
+    Tests if an InputError is raised when an invalid message id is entered
+    '''
+    message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
+    message_send_v1(user['token'], channel['channel_id'], '2Hello')
+    message_remove_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_pin_v1(user['token'], message['message_id'])
+def test_message_pin_invalid_message_dm(clear, user, user2, dm_info):
+    '''
+    Tests if an InputError is raised when an invalid message id is entered
+    '''
+    message = message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello')
+    message_senddm_v1(user['token'], dm_info['dm_id'], '2Hello')
+    message_remove_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_pin_v1(user['token'], message['message_id'])
 def test_message_pin_already_pinned(clear, user, channel, message, pin):
     '''
     Tests if an InputError is raised when message pin is called when a message is already pinned
     '''
     with pytest.raises(InputError):
         assert message_pin_v1(user['token'], message['message_id'])
+def test_message_pin_already_pinned_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an InputError is raised when message pin is called when a message is already pinned
+    '''
+    message_pin_v1(user['token'], dm_message['message_id'])
+    with pytest.raises(InputError):
+        assert message_pin_v1(user['token'], dm_message['message_id'])
 def test_message_pin_access_error(clear, user, user2, channel, join, message):
     '''
     Tests if an AccessError is raised when a user that is not an owner tries to pin a message
     '''
     with pytest.raises(AccessError):
         assert message_pin_v1(user2['token'], message['message_id'])
+def test_message_pin_access_error_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an AccessError is raised when a user that is not an owner tries to pin a message
+    '''
+    with pytest.raises(AccessError):
+        assert message_pin_v1(user2['token'], dm_message['message_id'])
 def test_message_pin_invalid_token(clear, user, channel, message):
     '''
     Tests if an InputError is raised when an invalid token is entered
@@ -655,18 +728,51 @@ def test_message_unpin_invalid_message_id(clear, user, channel, message, pin):
     '''
     with pytest.raises(InputError):
         assert message_unpin_v1(user['token'], 10)
+def test_message_unpin_invalid_message(clear, user, channel):
+    '''
+    Tests if an InputError is raised when an invalid message id is entered
+    '''
+    message = message_send_v1(user['token'], channel['channel_id'], 'Hello')
+    message_send_v1(user['token'], channel['channel_id'], '2Hello')
+    message_pin_v1(user['token'], message['message_id'])
+    message_remove_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_unpin_v1(user['token'], message['message_id'])
+def test_message_unpin_invalid_message_dm(clear, user, user2, dm_info):
+    '''
+    Tests if an InputError is raised when an invalid message id is entered
+    '''
+    message = message_senddm_v1(user['token'], dm_info['dm_id'], 'Hello')
+    message_senddm_v1(user['token'], dm_info['dm_id'], '2Hello')
+    message_pin_v1(user['token'], message['message_id'])
+    message_remove_v1(user['token'], message['message_id'])
+    with pytest.raises(InputError):
+        assert message_unpin_v1(user['token'], message['message_id'])
 def test_message_unpin_already_unpinned(clear, user, channel, message, pin, unpin):
     '''
     Tests if an InputError is raised when message pin is called when a message is already unpinned
     '''
     with pytest.raises(InputError):
         assert message_unpin_v1(user['token'], message['message_id'])
+def test_message_pin_already_unpinned_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an InputError is raised when message pin is called when a message is already pinned
+    '''
+    with pytest.raises(InputError):
+        assert message_unpin_v1(user['token'], dm_message['message_id'])
 def test_message_unpin_access_error(clear, user, user2, channel, join, message, pin):
     '''
     Tests if an AccessError is raised when a user that is not an owner tries to unpin a message
     '''
     with pytest.raises(AccessError):
         assert message_unpin_v1(user2['token'], message['message_id'])
+def test_message_unpin_access_error_dm(clear, user, user2, dm_info, dm_message):
+    '''
+    Tests if an AccessError is raised when a user that is not an owner tries to unpin a message
+    '''
+    message_pin_v1(user['token'], dm_message['message_id'])
+    with pytest.raises(AccessError):
+        assert message_unpin_v1(user2['token'], dm_message['message_id'])
 def test_message_unpin_invalid_token(clear, user, channel, message, pin):
     '''
     Tests if an InputError is raised when an invalid token is entered

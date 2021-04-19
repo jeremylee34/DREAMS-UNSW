@@ -5,11 +5,13 @@ from src.other import notifications_get_v1
 from src.auth import auth_register_v1
 from src.channels import channels_create_v1
 from src.channel import channel_invite_v1
+from src.channel import channel_join_v1
 from src.dm import dm_invite_v1 
 from src.dm import dm_create_v1
 from src.dm import dm_messages_v1
 from src.message import message_send_v1
 from src.message import message_senddm_v1
+from src.message import message_react_v1
 from src.other import clear_v1
 from src.error import InputError, AccessError
 
@@ -165,5 +167,17 @@ def test_notifications_break_when_noti_twenty(clear_data, user_token1, user_toke
 
     notification = notifications_get_v1(user_token2['token'])
     assert notification['notifications'][19]['notification_message'] == 'parasmins tagged you in goyaslsiwe, parasmins: Hello @goyaslsiwe'
-    
 
+def test_notifications_react_channel(clear_data, user_token1, user_token2):
+    channel_info = channels_create_v1(user_token1['token'], 'Channel1', True)
+    channel_join_v1(user_token2['token'], channel_info['channel_id'])
+    message_id = message_send_v1(user_token1['token'], channel_info['channel_id'], 'Hello')
+    message_react_v1(user_token2['token'], message_id['message_id'], 1)
+    notification = notifications_get_v1(user_token1['token'])
+    assert notification['notifications'][0]['notification_message'] == 'goyaslsiwe reacted to your message in Channel1'
+def test_notifications_react_dm(clear_data, user_token1, user_token2):
+    dm_info = dm_create_v1(user_token1['token'], [user_token2['auth_user_id']])
+    message_id = message_senddm_v1(user_token1['token'], dm_info['dm_id'], 'Hello')
+    message_react_v1(user_token2['token'], message_id['message_id'], 1)
+    notification = notifications_get_v1(user_token1['token'])
+    assert notification['notifications'][1]['notification_message'] == 'goyaslsiwe reacted to your message in goyaslsiwe, parasmins'
