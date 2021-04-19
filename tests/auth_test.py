@@ -206,8 +206,8 @@ def test_invalid_token(clear_data, user_token1):
     '''
     Tests whether input error is raised for invalid token
     '''
-    with pytest.raises(AccessError):
-        assert auth_logout_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE')
+    with pytest.raises(InputError):
+        assert auth_logout_v1('invalid_token')
 
 ########### Tests for passwordreset/request   ###########  
 

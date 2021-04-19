@@ -3,6 +3,7 @@ Implementation of user functions which includes user_profile_v1, user_profile_se
 user_profile_setemail_v1, user_profile_sethandle_v1, users_all_v1
 Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
+
 from flask import request
 import jwt
 import src.data as data
