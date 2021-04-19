@@ -48,8 +48,6 @@ from src.other import search_v1
 from src.standup import standup_start_v1
 from src.standup import standup_active_v1
 from src.standup import standup_send_v1
-
-
 from src.other import clear_v1
 
 def defaultHandler(err):
@@ -324,6 +322,7 @@ def user_stats():
     """      
     token = request.args.get('token')
     r = user.user_stats_v1(token)
+    save_data()
     return dumps(r)
 
 @APP.route('/users/stats/v1', methods=['GET']) 
@@ -340,6 +339,7 @@ def users_stats():
     """     
     token = request.args.get('token')
     r = user.users_stats_v1(token)
+    save_data()
     return dumps(r)   
 
 @APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
@@ -356,6 +356,7 @@ def uploadphoto():
     """      
     info = request.get_json()
     r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
+    save_data()
     return dumps(r)    
 
 ################################################################################
@@ -598,6 +599,7 @@ def message_unpin():
 def standup_start():
     data = request.get_json()
     time_finish = standup_start_v1(data['token'], data['channel_id'], data['length'])
+    save_data()
     return dumps(time_finish)
 
 @APP.route("/standup/active/v1", methods=['GET'])
@@ -605,12 +607,14 @@ def standup_active():
     token = request.args.get('token')
     channel_id = int(request.args.get('channel_id'))
     standup_info = standup_active_v1(token, channel_id)
+    save_data()
     return dumps(standup_info)
     
 @APP.route("/standup/send/v1", methods=['POST'])
 def standup_send():
     data = request.get_json()
     standup_send_v1(data['token'], data['channel_id'], data['message'])
+    save_data()
     return dumps({})
 
 ################################################################################

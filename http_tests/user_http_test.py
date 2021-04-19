@@ -186,7 +186,7 @@ def test_success_user_stats(clear_data, user, user2):
         'token': user['token'],
         'channel_id': c['channel_id'],
         'message': 'Hello'
-    })    
+    })
     assert requests.get(f"{url}user/stats/v1?token={user['token']}").status_code == 200
 
 def test_invalid_token_user_stat(clear_data, user):
@@ -208,20 +208,20 @@ def test_success_users_stats(clear_data, user, user2):
     }).json()
     requests.post(f'{url}/dm/create/v1', json={
         'token': user['token'],
-        'u_ids': [1],
+        'u_ids': [user2['auth_user_id']],
     })
     requests.post(f'{url}/message/send/v2', json={
         'token': user['token'],
         'channel_id': c['channel_id'],
         'message': 'Hello'
     })         
-    assert requests.get(f"{url}users/stats/v1?token={user['token']}").status_code == 200
+    assert requests.get(f"{url}/users/stats/v1?token={user['token']}").status_code == 200
 
 def test_invalid_token_users_stat(clear_data, user):
     '''
     Tests whether input error is raised for invalid token
     '''       
-    assert requests.get(f"{url}users/stats/v1?token=invalid_token").status_code == InputError.code
+    assert requests.get(f"{url}/users/stats/v1?token=invalid_token").status_code == InputError.code
 
 ##Tests for /user/profile/uploadphoto/v1
 def test_invalid_token_uploadphoto(clear_data, user):

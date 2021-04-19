@@ -179,6 +179,21 @@ def auth_register_v1(email, password, name_first, name_last):
     register['num_channels'] = 0
     register['num_dms'] = 0
     register['num_messages'] = 0
+    register['user_stats'] = {
+        'channels_joined': [{
+            'num_channels_joined': 0,
+            'timestamp': 0
+        }], 
+        'dms_joined': [{
+            'num_dms_joined': 0,
+            'timestamp': 0
+        }],
+        'messages_sent': [{
+            'num_messages_sent': 0,
+            'timestamp': 0
+        }],
+        'involvement_rate': 0
+    }
     data.data['users'].append(register)
     return {
         'token': token,
