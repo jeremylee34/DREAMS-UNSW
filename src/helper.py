@@ -130,7 +130,7 @@ def generate_secret_code(email):
     #loop through and see if email match any in database 
     valid_mail = 0
     for user in data['users']:
-        if user['email'] == email:
+        if email == user['email']:
             valid_mail = 1
     
     if valid_mail == 0:
@@ -140,7 +140,7 @@ def generate_secret_code(email):
 
         #attach random_str to user data
         for user in data['users']:
-            if user['email'] == email:
+            if email == user['email']:
                 user['secret_code'] = random_str
 
         return random_str

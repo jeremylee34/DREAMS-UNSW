@@ -15,6 +15,7 @@ from src.other import clear_v1
 from src.data import data
 from src.helper import check_secret_code
 from src.helper import get_secret_code
+from src.helper import generate_secret_code
 
 @pytest.fixture
 def clear_data():
@@ -265,3 +266,31 @@ def test_reset_invalid_password(clear_data, user_token1):
     secret_code = get_secret_code(user_token1['auth_user_id'])
     with pytest.raises(InputError):
         assert auth_passwordreset_reset_v1(secret_code, '1')
+
+########### Tests for secret code helper funcs   ###########
+
+def test_gen_secret_code_email_invalid(clear_data, user_token1):
+    '''
+    Test whether email is invalid or not
+    '''  
+    with pytest.raises(InputError):
+        assert generate_secret_code('yea@gmail.com')
+
+def test_gen_secret_code_email_valid(clear_data, user_token1):
+    '''
+    Test whether email is valid or not
+    '''  
+    assert generate_secret_code('firstUser@gmail.com') != '0'
+
+def test_gen_secret_code_email_valid2(clear_data, user_token1, user_token2):
+    '''
+    Test whether email is invalid or not
+    '''  
+    auth_passwordreset_request_v1("firstUser@gmail.com")
+    assert generate_secret_code('secondUser@gmail.com') != '0'
+
+def test_check_secret_code(clear_data, user_token1):
+    '''
+    Test whether condition is passed or not
+    '''  
+    assert check_secret_code('aaaaaa') == 0
