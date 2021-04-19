@@ -176,10 +176,11 @@ def test_handle_too_long_and_shared(clear_data):
     '''
     Tests when handle is too long and is shared (successful implementation)
     '''
-    auth_register_v1("honey@outlook.com", "hello12345", "honeybear", "beehivebears")
-    register = auth_register_v1("tommy@outlook.com", "tommy12345", "honeybear", "beehivebears")
+    auth_register_v1("honey@outlook.com", "hello12345", "honeybear", "beehivebearsasa")
+    register = auth_register_v1("tommy@outlook.com", "tommy12345", "honeybear", "beehivebearsasa")
     result = user_profile_v1(register['token'], 1)
     assert len(result['user']['handle_str']) <= 20
+    assert result['user']['handle_str'] == 'honeybearbeehivebea0'
 
 ########### Tests for logout   ###########  
 
