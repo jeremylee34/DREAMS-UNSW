@@ -261,7 +261,7 @@ def test_message_remove(clear, register_info, channel, message_id, remove, messa
     '''
     Basic test for message/remove/v2
     '''
-    assert messages['messages'][0]['message'] == ''
+    assert messages['messages'] == []
 def test_message_remove_input_error(clear, register_info, channel, message_id, remove):
     '''
     Tests for when message has already been removed
