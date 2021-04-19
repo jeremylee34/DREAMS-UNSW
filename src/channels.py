@@ -114,6 +114,9 @@ def channels_create_v1(token, name, is_public):
         "name": name,
         "is_public": is_public,
         "channel_id": len(data['channels']),
+        'active_standup': False,
+        'standup_time_finish': 0,   
+        'standup': [],
         "owner_members": [
             {
                 'u_id': auth_user_id,
@@ -139,8 +142,3 @@ def channels_create_v1(token, name, is_public):
     data['channels'].append(new_channel)
     data['users'][auth_user_id]['num_channels'] += 1
     return {'channel_id': channel_id}
-
-
-    ##############################
-    ### ADD SRC AFTER FINISHED ###
-    ##############################

@@ -246,6 +246,17 @@ def test_channel_messages_v1_access_error(clear_data, user_token1, user_token2, 
         # check user_token1's messages (never added to channel)
         assert channel_messages_v1(user_token2['token'], channel_id, start)
 
+def test_channel_messages_v1_empty_channel(clear_data, user_token1, public_channel):
+    """
+    Accessing messages from a new, empty channel should return nothing
+    """
+    channel_id = public_channel['channel_id']
+    start = 0
+    messages = channel_messages_v1(user_token1['token'], channel_id, start) 
+    assert messages['messages'] == []
+    assert messages['start'] == 0
+    assert messages['end'] == 0
+
 def test_channel_messages_v1_simple(clear_data, user_token1, user_token2, public_channel):
     """
     Test if -1 is returned if start + 50 surpasses total messages

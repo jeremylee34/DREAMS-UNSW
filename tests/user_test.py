@@ -21,7 +21,6 @@ from src.channel import channel_join_v1
 from src.dm import dm_create_v1, dm_remove_v1
 from src.error import InputError, AccessError
 from src.other import clear_v1
-import src.data as data
 
 IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"

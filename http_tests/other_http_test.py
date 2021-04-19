@@ -8,7 +8,6 @@ from src import config
 import src.auth
 import src.user
 import src.other
-import src.data
 from src.error import InputError, AccessError
 
 @pytest.fixture
@@ -23,28 +22,25 @@ def test_search_v2(clear_data):
     '''
     Basic test for functionality of search function
     '''
-    user = requests.post(config.url + 'auth/register/v2', json = {
+    user_pl = requests.post(config.url + '/auth/register/v2', json = {
         'email': 'skadi@gmail.com',
         'password': '1234aaaaaa',
         'name_first': 'Tom',
         'name_last': 'Diaaa',
     })
-    user_pl = user.json()
-
-    channel_info = requests.post(config.url + 'channels/create/v2', json = {
+    user_pl = user_pl.json()
+    channel_info = requests.post(config.url + '/channels/create/v2', json = {
         'token': user_pl['token'],
         'name': 'Channel1',
         'is_public': True,
     })
     channel_info_pl = channel_info.json()
-
-    requests.post(config.url + 'message/send/v2', json = {
+    requests.post(config.url + '/message/send/v2', json = {
         'token': user_pl['token'],
         'channel_id': channel_info_pl['channel_id'],
         'message': 'Hello',
     })
-  
-    assert requests.get(config.url + f"search/v2?token={user_pl['token']}&query_str=Hello").status_code == 200
+    assert requests.get(config.url + f"/search/v2?token={user_pl['token']}&query_str=Hello").status_code == 200
 
 def test_search_v2_input_error(clear_data):
     '''
@@ -77,13 +73,13 @@ def test_search_v2_input_token(clear_data):
     '''
     Test for invalid input token in search function
     '''
-    assert requests.get(config.url + 'search/v2?token=6&query_str=Hello').status_code == InputError.code
+    assert requests.get(config.url + 'search/v2?token=6&query_str=Hello').status_code == AccessError.code
 
 def test_notifications_get_invalid_token(clear_data):
     '''
     Test for invalid input token in notification function
     '''
-    assert requests.get(config.url + 'notifications/get/v1?token=6').status_code == InputError.code
+    assert requests.get(config.url + 'notifications/get/v1?token=6').status_code == AccessError.code
 
 def test_notifications_get_tag(clear_data):
     '''

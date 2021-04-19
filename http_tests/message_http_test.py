@@ -212,6 +212,32 @@ def test_message_edit(clear, register_info, channel, message_id, edit, messages)
     '''
     Basic test for functionality of message/edit/v2
     '''
+    register_info = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'gordon@gmail.com',
+        'password': '12345678',
+        'name_first': 'Gordon',
+        'name_last': 'Liang'
+    })
+    register_info = register_info.json()
+    channel = requests.post(f"{url}/channels/create/v2", json={
+        'token': register_info['token'],
+        'name': 'Channel1',
+        'is_public': True
+    })
+    channel = channel.json()
+    message_id = requests.post(f"{url}/message/send/v2", json={
+        'token': register_info['token'],
+        'channel_id': channel['channel_id'],
+        'message': 'Hello'
+    })
+    message_id = message_id.json()
+    requests.put(f"{url}/message/edit/v2", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id'],
+        'message': '123'
+    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
     assert messages['messages'][0]['message'] == '123'
 def test_message_edit_input_error(clear, register_info, channel, message_id):
     '''
@@ -263,6 +289,31 @@ def test_message_remove(clear, register_info, channel, message_id, remove, messa
     '''
     Basic test for message/remove/v2
     '''
+    register_info = requests.post(f"{url}/auth/register/v2", json={
+        'email': 'gordon@gmail.com',
+        'password': '12345678',
+        'name_first': 'Gordon',
+        'name_last': 'Liang'
+    })
+    register_info = register_info.json()
+    channel = requests.post(f"{url}/channels/create/v2", json={
+        'token': register_info['token'],
+        'name': 'Channel1',
+        'is_public': True
+    })
+    channel = channel.json()
+    message_id = requests.post(f"{url}/message/send/v2", json={
+        'token': register_info['token'],
+        'channel_id': channel['channel_id'],
+        'message': 'Hello'
+    })
+    message_id = message_id.json()
+    requests.delete(f"{url}/message/remove/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
     assert messages['messages'][0]['message'] == ''
 def test_message_remove_input_error(clear, register_info, channel, message_id, remove):
     '''
