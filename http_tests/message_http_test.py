@@ -510,7 +510,7 @@ def test_message_sendlaterdm_invalid_token(clear, register_info, register_info2,
         'dm_id': dm_info['dm_id'],
         'message': 'Goodbye',
         'time_sent': timestamp
-    }).status_code == 403
+    }).status_code == 400
 
 
 def test_message_react_channel(clear, register_info, channel, message_id):

@@ -657,7 +657,7 @@ def test_message_unpin_invalid_message_id(clear, user, channel, message, pin):
     '''
     with pytest.raises(InputError):
         assert message_unpin_v1(user['token'], 10)
-def test_message_unpin_already_pinned(clear, user, channel, message, pin, unpin):
+def test_message_unpin_already_unpinned(clear, user, channel, message, pin, unpin):
     '''
     Tests if an InputError is raised when message pin is called when a message is already unpinned
     '''
@@ -669,7 +669,7 @@ def test_message_unpin_access_error(clear, user, user2, channel, join, message, 
     '''
     with pytest.raises(AccessError):
         assert message_unpin_v1(user2['token'], message['message_id'])
-def test_message_unpin_invalid_token(clear, user, channel, message):
+def test_message_unpin_invalid_token(clear, user, channel, message, pin):
     '''
     Tests if an InputError is raised when an invalid token is entered
     '''

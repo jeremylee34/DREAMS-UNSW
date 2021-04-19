@@ -465,7 +465,7 @@ def message_sendlater():
 @APP.route("/message/sendlaterdm/v1", methods=['POST'])
 def message_sendlaterdm():
     message = request.get_json()
-    message_id = message_sendlaterdm_v1(message['token'], message['channel_id'], message['message'], message['time_sent'])
+    message_id = message_sendlaterdm_v1(message['token'], message['dm_id'], message['message'], message['time_sent'])
     save_data()
     return dumps(message_id)
 @APP.route("/message/react/v1", methods=['POST'])
