@@ -219,13 +219,10 @@ def channel_leave_v1(token, channel_id):
 
     for user in data.data['channels'][channel_id]['owner_members']:
         if user['u_id'] == u_id:
-            if len(data.data['channels'][channel_id]['owner_members']) > 1:
-                data.data['channels'][channel_id]['owner_members'].remove(user)  
-
+            data.data['channels'][channel_id]['owner_members'].remove(user)  
     for user in data.data['channels'][channel_id]['all_members']:
         if user['u_id'] == u_id:
-            if len(data.data['channels'][channel_id]['all_members']) > 1:
-                data.data['channels'][channel_id]['all_members'].remove(user)
+            data.data['channels'][channel_id]['all_members'].remove(user)
     data.data['users'][u_id]['num_channels'] -= 1
     return {
     }

@@ -541,15 +541,6 @@ def test_channel_leave_v1_LeaveOwner(clear_data, user_token1, channel_id1, user_
     assert channel_details1['all_members'][0]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
     assert channel_details1['owner_members'][0]['u_id'] == user_token1['auth_user_id']
-
-def test_channel_leave_v1_last_owner(clear_data, user_token1, channel_id1):
-    """
-    Test that the last owner in a channel can not leave
-    """
-    channel_leave_v1(user_token1['token'], channel_id1['channel_id'])
-    channel_details1 = channel_details_v1(user_token1['token'], channel_id1['channel_id'])
-    assert channel_details1['owner_members'][-1]['u_id'] == user_token1['auth_user_id']
-
 def test_channel_leave_invalid_token(clear_data, channel_id1):
     """
     InputError to be thrown when token is invalid
