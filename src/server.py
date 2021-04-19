@@ -41,9 +41,6 @@ from src.standup import standup_start_v1
 from src.standup import standup_active_v1
 from src.standup import standup_send_v1
 
-# with open('store.json', 'r') as fp:
-#    global data
-#    data = loads(fp.read())
 
 from src.other import clear_v1
 import pickle
