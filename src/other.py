@@ -49,7 +49,7 @@ def search_v1(token, query_str):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
 
     msg_list = []
     token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
@@ -91,7 +91,7 @@ def notifications_get_v1(token):
         if tokens == token:
             valid = 1
     if valid != 1:
-        raise AccessError('User does not exist')
+        raise InputError('User does not exist')
 
     decoded_token = jwt.decode(token, 'HELLO', algorithms=['HS256'])
     msg_list = []
@@ -107,7 +107,7 @@ def notifications_get_v1(token):
         handle_from = data.data['users'][notification['u_id']]['handle_str']
         if f'@{handle}' in notification['message']:
             if notification['channel_id'] == -1:
-                dm_name = data.data['dms'][notification['channel_id']]['name']
+                dm_name = data.data['dms'][notification['dm_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
@@ -121,10 +121,9 @@ def notifications_get_v1(token):
                     'notification_message': f"{handle_from} tagged you in {channel_name}: {notification['message'][:20]}",
                 }
             msg_list.append(new_dict)
-        #notification['message'] == '' and not @:
-        else:
+        if notification['message'] == '':
             if notification['channel_id'] == -1:
-                dm_name = data.data['dms'][notification['channel_id']]['name']
+                dm_name = data.data['dms'][notification['dm_id']]['name']
                 new_dict = {
                     'channel_id': notification['channel_id'],
                     'dm_id': notification['dm_id'],
@@ -137,6 +136,7 @@ def notifications_get_v1(token):
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} added you to {channel_name}"
                 }
+        
             msg_list.append(new_dict)
         notification_num += 1
     return {

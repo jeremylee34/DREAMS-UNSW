@@ -41,7 +41,7 @@ def test_search_v1_invalid_token(clear_data):
     '''
     Test for invalid token in search
     '''
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert search_v1(6, 'Hello')
         assert search_v1('asdf', 'Helloooo')
 
@@ -94,7 +94,7 @@ def test_notifications_get_invalid_token(clear_data):
     '''
     Test for invalid token in notifications_get
     '''
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert notifications_get_v1(5)
 
 def test_notifications_get_tag(clear_data):
