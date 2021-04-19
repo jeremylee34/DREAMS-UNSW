@@ -153,9 +153,7 @@ def timestamp():
     '''
     Creates a time two seconds from the present as a unix timestamp
     '''
-    curr = datetime.now()
-    new_time = curr + timedelta(seconds=2)
-    timestamp = new_time.replace(tzinfo=timezone.utc).timestamp()
+    timestamp = int(time.time())
     return timestamp
 @pytest.fixture
 def past_time():
