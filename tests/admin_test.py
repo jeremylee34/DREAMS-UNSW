@@ -81,24 +81,14 @@ def test_admin_remove_channel(clear_data):
     channel_join_v1(user['token'], channel_id)
     channel_join_v1(user2['token'], channel_id)
     admin_userpermission_change_v1(user['token'], user2['auth_user_id'], 1)
-<<<<<<< HEAD
     admin_userpermission_change_v1(user['token'], user3['auth_user_id'], 1)
     message_send_v1(user['token'], channel_id, "Hello")
     message_send_v1(user2['token'], channel_id, "Bye byee")
-=======
-    message_send_v1(user2['token'], channel_id, "Hello")
-    message_send_v1(user['token'], channel_id, "Hello2")
->>>>>>> master
 
     admin_user_remove_v1(user['token'], user2['auth_user_id'])
     channel_msg = channel_messages_v1(user['token'], channel_id, 0)
-<<<<<<< HEAD
 
     assert channel_msg['messages'][0]['message'] == 'Removed user'
-=======
-    assert channel_msg['messages'][1]['message'] == 'Removed user'
-    assert channel_msg['messages'][0]['message'] == 'Hello2'
->>>>>>> master
 
     
 def test_admin_remove_invalid_uid(clear_data):
