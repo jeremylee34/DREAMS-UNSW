@@ -17,6 +17,8 @@ from src.channels import channels_list_v1
 from src.channels import channels_listall_v1
 from datetime import datetime
 from datetime import timezone
+import requests
+
 
 
 SECRET = 'HELLO'
@@ -412,6 +414,11 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
             pass
         else:
             raise InputError("Invalid image url")
+        #Checking if img_url return a 200 http_status
+        try: 
+            request = requests.get(img_url)
+        except requests.exceptions.ConnectionError:    
+            raise InputError("Image_url doesn't have a HTTP status of 200")
         #Downloaded the photo
         fullfilename = os.path.join("static", f"user{u_id}_photo.jpg")
         urllib.request.urlretrieve(img_url, fullfilename)
@@ -435,46 +442,3 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     else:
         raise InputError("Invalid token")
     return {}
-    
-
-# if __name__ == '__main__':
-#     from message import message_send_v1, message_share_v1, message_remove_v1
-#     from channels import channels_create_v1
-#     IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
-#     r = auth_register_v1("tom@gmail.com", "hello1234", "tom", "brown")
-#     s = auth_register_v1("tim@gmail.com", "hello1234", "tom", "brown")
-#     k = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
-#     channel = channels_create_v1(r['token'], "Channel1", True)
-#     channels_create_v1(s['token'], "Channel2", True)
-#     channels_create_v1(r['token'], "Channel3", True)
-#     dms = dm.dm_create_v1(r['token'], [1])
-#     dms1 = dm.dm_create_v1(s['token'], [0])
-#     message_id = message_send_v1(r['token'], channel['channel_id'], 'Hello')
-#     message_send_v1(r['token'], channel['channel_id'], 'Hello')
-#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
-#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms1['dm_id'])
-#     message_share_v1(s['token'], message_id['message_id'], '', -1, dms['dm_id'])
-#     dm.dm_remove_v1(r['token'], 0)
-#     # message_remove_v1(r['token'], 4)
-#     # message_remove_v1(r['token'], 3)
-#     # message_remove_v1(r['token'], 2)
-#     # message_remove_v1(r['token'], 1)
-#     # message_remove_v1(r['token'], 0)
-#     p = user_stats_v1(r['token'])
-#     print(p)
-#     dms3 = dm.dm_create_v1(r['token'], [1])
-#     p = user_stats_v1(r['token'])
-#     print(p)
-#     t = user_stats_v1(s['token'])
-#     print(t)
-#     o = user_stats_v1(k['token'])
-#     print(o)
-#     e = users_stats_v1(r['token'])
-#     user_profile_uploadphoto_v1(r['token'], IMG_URL, 0, 0, 1500, 500)  
-#     # y = user_stats_v1(s['token'])
-#     # print(y)
-#     # j = users_stats_v1(s['token'])
-
-    ##############################
-    ### ADD SRC AFTER FINISHED ###
-    ##############################

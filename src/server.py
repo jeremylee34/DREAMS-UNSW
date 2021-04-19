@@ -257,7 +257,7 @@ def user_stats():
         Returns the result of the user_stats_v1 function in json
     """      
     token = request.args.get('token')
-    r = user.user_stats_v1('token')
+    r = user.user_stats_v1(token)
     return dumps(r)
 
 @APP.route('/users/stats/v1', methods=['GET']) 
@@ -273,7 +273,7 @@ def users_stats():
         Returns the result of the users_stats_v1 function in json
     """     
     token = request.args.get('token')
-    r = user.users_stats_v1('token')
+    r = user.users_stats_v1(token)
     return dumps(r)   
 
 @APP.route('/user/profile/uploadphoto/v1', methods=['POST'])

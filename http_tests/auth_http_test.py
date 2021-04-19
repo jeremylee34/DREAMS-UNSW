@@ -7,7 +7,6 @@ import pytest
 from src import config
 import src.auth
 import src.other
-import src.data
 from src.error import InputError, AccessError
 
 @pytest.fixture
@@ -144,7 +143,7 @@ def test_successful_logout(clear_data):
     payload2 = r.json()
     assert payload2["is_success"] == True
 
-#Tests whether input error is raised for invalid token
+#Tests whether access error is raised for invalid token
 def test_invalid_token_logout(clear_data):    
     requests.post(config.url + 'auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -156,40 +155,8 @@ def test_invalid_token_logout(clear_data):
         'email': 'tom@gmail.com',
         'password': 'hello1234',
     })              
-    assert requests.post(config.url + 'auth/logout/v1', json = {
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
+    assert requests.post(config.url + 'auth/logout/v1', json={
+        'token': 'invalid_token'
     }).status_code == InputError.code
 
-##Tests for passwordreset/request
-#Tests whether input error is raised for invalid reset code
-def test_reset_invalid_code(clear_data):    
-    requests.post(config.url + 'auth/register/v2', json={
-        'email': 'tom@gmail.com',
-        'password': 'hello1234',
-        'name_first': 'tom',
-        'name_last': 'brown',
-    })
-    requests.post(config.url + 'auth/passwordreset/request/v1', json={
-        'email': 'tom@gmail.com',
-    })              
-    assert requests.post(config.url + 'auth/passwordreset/reset/v1', json = {
-        'reset_code': 'temp_code',
-        'new_password': 'hello1234'
-    }).status_code == InputError.code
-
-#Tests whether input error is raised for invalid password
-def test_invalid_reset_password(clear_data):    
-    requests.post(config.url + 'auth/register/v2', json={
-        'email': 'tom@gmail.com',
-        'password': 'hello1234',
-        'name_first': 'tom',
-        'name_last': 'brown',
-    })
-    requests.post(config.url + 'auth/passwordreset/request/v1', json={
-        'email': 'tom@gmail.com',
-    })              
-    assert requests.post(config.url + 'auth/passwordreset/reset/v1', json = {
-        'reset_code': 'temp_code',
-        'new_password': 'hi'
-    }).status_code == InputError.code
 

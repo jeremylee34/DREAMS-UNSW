@@ -15,6 +15,7 @@ from src.error import InputError, AccessError
 
 IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
+FAKE_URL2 = "https://cdn.mos.cms/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 
 @pytest.fixture
 #Clears all data
@@ -220,7 +221,6 @@ def test_invalid_token_users_all(clear_data):
 
 ##Tests for user/stats/v1
 #checks for how big is the dictionary to test if function is successful
-#TODO: MAYBE CHANGING
 def test_success_user_stats(clear_data):
     r = requests.post(f'{url}/auth/register/v2', json={
         'email': 'tom@gmail.com',
@@ -243,7 +243,7 @@ def test_success_user_stats(clear_data):
         'token': r['token'],
         'u_ids': [1],
     })
-    requests.post(f'{url}/message/send/v1', json={
+    requests.post(f'{url}/message/send/v2', json={
         'token': r['token'],
         'channel_id': c['channel_id'],
         'message': 'Hello'
@@ -274,7 +274,7 @@ def test_success_users_stats(clear_data):
         'token': r['token'],
         'u_ids': [1],
     })
-    requests.post(f'{url}/message/send/v1', json={
+    requests.post(f'{url}/message/send/v2', json={
         'token': r['token'],
         'channel_id': 0,
         'message': 'Hello'
@@ -350,3 +350,35 @@ def test_invalid_img_url(clear_data):
         'x_end': 200,
         'y_end': 200,
     }).status_code == InputError.code
+
+def test_valid_img_url(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }).json() 
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': r['token'],
+        'img_url': IMG_URL,
+        'x_start': 50,
+        'y_start': 50,
+        'x_end': 200,
+        'y_end': 200,
+    }).status_code == 200
+
+def test_invalid_img_url2(clear_data):
+    r = requests.post(f'{url}/auth/register/v2', json={
+        'email': 'timmy@gmail.com',
+        'password': 'hello1234',
+        'name_first': 'tim',
+        'name_last': 'blue',
+    }).json() 
+    assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
+        'token': r['token'],
+        'img_url': FAKE_URL,
+        'x_start': 50,
+        'y_start': 50,
+        'x_end': 200,
+        'y_end': 200,
+    }).status_code == InputError.code   

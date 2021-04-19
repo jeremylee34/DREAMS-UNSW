@@ -25,6 +25,7 @@ import src.data as data
 
 IMG_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 FAKE_URL = "https://cdn.mos.cms.futurecdn.net/YB6aQqKZBVjtt3PuDSkJKe.png"
+FAKE_URL2 = "https://cdn.mos.cms/YB6aQqKZBVjtt3PuDSkJKe.jpg"
 
 @pytest.fixture
 #Clears all data
@@ -289,3 +290,10 @@ def test_img_url_saved(clear_data):
     auth_login_v1("toom@gmail.com", "hello1234")
     auth_login_v1("toom@gmail.com", "hello1234")
     assert user_profile_uploadphoto_v1(r['token'], IMG_URL, 50, 50, 200, 200) == {}
+
+def test_img_url_fake(clear_data):
+    r = auth_register_v1("toom@gmail.com", "hello1234", "tom", "brown")
+    auth_login_v1("toom@gmail.com", "hello1234")
+    auth_login_v1("toom@gmail.com", "hello1234")
+    with pytest.raises(InputError):
+        assert user_profile_uploadphoto_v1(r['token'], FAKE_URL2, 50, 50, 200, 200)
