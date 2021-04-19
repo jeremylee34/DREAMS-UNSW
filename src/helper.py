@@ -56,7 +56,9 @@ def check_valid_user(u_id):
     return valid_user
 
 def token_to_u_id(token):
-    # find u_id related to token
+    """
+    Returns u_id related to token
+    """
     session_id = jwt.decode(token, SECRET, algorithms=['HS256'])
     for user in data.data['users']:
         for session in user['session_ids']:
@@ -65,6 +67,9 @@ def token_to_u_id(token):
     return u_id
 
 def check_valid_dm(dm_id):
+    """
+    Checks whether dm_id refers to a valid dm
+    """
     valid_dm = False
     for dm in data.data['dms']:
         if dm['dm_id'] == dm_id:
@@ -73,6 +78,9 @@ def check_valid_dm(dm_id):
     return valid_dm
 
 def check_user_in_dm(u_id, dm_id):
+    """
+    Checks whether user with u_id is in dm with dm_id
+    """
     user_in_dm = False
     for member in data.data['dms'][dm_id]['members']:
         if member['u_id'] == u_id:
@@ -81,6 +89,9 @@ def check_user_in_dm(u_id, dm_id):
     return user_in_dm
 
 def check_valid_token(token):
+    """
+    Checks whether token refers to a valid token
+    """
     valid_token = False
     for token_hash in data.data['token_list']:
         if token_hash == token:
@@ -88,6 +99,9 @@ def check_valid_token(token):
     return valid_token
 
 def check_owner_perm(u_id):
+    """
+    Check if u_id refers to a user with global owner permission
+    """
     is_owner = False
     for user in data.data['users']:
         if user['u_id'] == u_id:
@@ -96,30 +110,15 @@ def check_owner_perm(u_id):
     return is_owner
 
 def check_if_owner(u_id, channel_id):
+    """
+    Checks if u_id refers to the owner of a channel with channel_id
+    """
     is_owner = False
     for user in data.data['channels'][channel_id]['owner_members']:
         if user['u_id'] == u_id:
             is_owner = True
             break
     return is_owner
-
-
-    
- 
-
-# def check_active_standup_in_channel(channel_id):
-#     if not data['channels'][channel_id]['standup']:
-#         active_standup = False
-#     elif data['channels'][channel_id]['is_active'] is True:
-#         active_standup = True
-#     return active_standup
-
-# def check_channel_owner(u_id, channel_id):
-#     channel_owner = False
-#     for owner in data.data['channels'][channel_id]['owner_members']:
-#         if owner['u_id'] == u_id:
-#             channel_owner = True
-#     return channel_owner
 
 def generate_secret_code(email):
     '''

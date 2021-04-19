@@ -15,10 +15,26 @@ import time
 import threading
 
 def standup_start_v1(token, channel_id, length):
+    """
+    Starts a standup where messages can be sent in a channel, and once the 
+    standup has ended, messages are bunched together and put in the message queue
 
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+        channel_id (integer)    - <unique id used to identify the particular
+        channel in which the standup is being started in
+        length(integer) - specifies how long the standup should be run for (secs)
+
+    Exceptions:
+        InputError  - Occurs when hannel_id does not refer to a valid channel
+        InputError  - an active standup is currently running in this channel
+        AccessError - Occurs when authorised user is not already a member of the channel
+
+    Return Value:
+        Returns a dict containing time_finish on all occassions
+    """
     # record the finishing time, create standup in channels and sleep
     curr_time = int(time.time()) + length
-
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     owner_u_id = token_to_u_id(token)
@@ -45,9 +61,24 @@ def standup_start_v1(token, channel_id, length):
     }
 
 def end_standup(channel_id, curr_time, owner_u_id, token):
-    if check_valid_channel(channel_id) is False:
-        raise InputError('channel_id does not refer to a valid channel')
-    
+    """
+    A helper function to end a standup and gather all the messages sent in the
+    standup, and finally adds it to the message queue.
+
+    Arguments:
+        channel_id (integer)    - <unique id used to identify the particular
+        channel in which the standup is being started in
+        curr_time (integer) - the time_finish that is to be added to the standup_msg
+        owner_u_id (integer) - unique id used to identify the user who started
+        the standup
+        token (str) - contains a session_id which is used to get user_id
+
+    Exceptions:
+        None - are checked in the standup_start_v1 (calls end_standup)
+
+    Return Value:
+        Returns None
+    """    
     data.data['channels'][channel_id]['active_standup'] = False
     data.data['channels'][channel_id]['standup_time_finish'] = 0
     # once timer ends, run this code 
@@ -77,6 +108,20 @@ def end_standup(channel_id, curr_time, owner_u_id, token):
     return{}
 
 def standup_active_v1(token, channel_id):
+    """
+    Returns whether a standup is active in the given channel
+
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+        channel_id (integer)    - <unique id used to identify the particular
+        channel in which the standup is being started in
+
+    Exceptions:
+        InputError  - Occurs when channel_id does not refer to a valid channel
+
+    Return Value:
+        Returns a dict containing is_active and time_finish keys
+    """
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     #Loop through channels list to check if channel_id is valid
@@ -95,6 +140,24 @@ def standup_active_v1(token, channel_id):
     }
 
 def standup_send_v1(token, channel_id, message):
+    """
+    <Brief description of what the function does>
+
+    Arguments:
+        token (str) - contains a session_id which is used to get user_id
+        channel_id (integer)    - <unique id used to identify the particular
+        channel in which the standup is being started in
+        message (str) - the message to be sent in the standup
+
+    Exceptions:
+        InputError  - Occurs when channel_id does not refer to a valid channel
+        InputError - Occurs when message is more than 1000 characters
+        InputError - Occurs when an active standup is not currently running in this channel
+        AccessError - Occurs when the authorised user is not already a member of the channel
+
+    Return Value:
+        Returns None
+    """
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     u_id = token_to_u_id(token)
