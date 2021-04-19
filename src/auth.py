@@ -176,6 +176,9 @@ def auth_register_v1(email, password, name_first, name_last):
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
+    register['num_channels'] = 0
+    register['num_dms'] = 0
+    register['num_messages'] = 0
     data['users'].append(register)
     return {
         'token': token,
@@ -196,8 +199,6 @@ def auth_logout_v1(token):
     """
     logout = False
     valid_token = 0
-    #Decodes the token
-    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
     #Removes token from token_list if it exists
     for t in data["token_list"]:
         if token == t:
@@ -205,13 +206,15 @@ def auth_logout_v1(token):
             data['token_list'].remove(token) 
     #If the token is valid, then particular session_id is removed, otherwise AccessError is raised
     if valid_token == 1:
+        #Decodes the token
+        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])        
         for x in data["users"]:
             for y in x["session_ids"]:
                 if decoded_token["session_id"] == y:
                     x["session_ids"].remove(y)
                     logout = True
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {
         'is_success': logout
     }

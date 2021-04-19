@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from json import dumps, loads
 from src import config
@@ -55,7 +55,7 @@ def defaultHandler(err):
     response.content_type = 'application/json'
     return response
 
-APP = Flask(__name__)
+APP = Flask(__name__, static_url_path='/static/')
 CORS(APP)
 
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
@@ -65,6 +65,12 @@ def load_data():
 def save_data():
     with open('datastore.p', 'wb') as FILE:
         pickle.dump(data.data, FILE)
+
+@APP.route('/static/<path:path>')
+def send__js(path):
+    return send_from_directory('', path)
+
+
 
 # Example
 @APP.route("/echo", methods=['GET'])
@@ -288,6 +294,54 @@ def users_all():
     r = user.users_all_v1(token)
     save_data()
     return dumps(r)
+
+@APP.route('/user/stats/v1', methods=['GET'])   
+def user_stats():
+    """
+    Description of function:
+        Gets the user inputs and calls the user_stats_v1 function
+    Parameters:
+        None
+    Exceptions:
+        None
+    Returns:
+        Returns the result of the user_stats_v1 function in json
+    """      
+    token = request.args.get('token')
+    r = user.user_stats_v1(token)
+    return dumps(r)
+
+@APP.route('/users/stats/v1', methods=['GET']) 
+def users_stats():
+    """
+    Description of function:
+        Gets the user inputs and calls the users_stats_v1 function
+    Parameters:
+        None
+    Exceptions:
+        None
+    Returns:
+        Returns the result of the users_stats_v1 function in json
+    """     
+    token = request.args.get('token')
+    r = user.users_stats_v1(token)
+    return dumps(r)   
+
+@APP.route('/user/profile/uploadphoto/v1', methods=['POST'])
+def uploadphoto():
+    """
+    Description of function:
+        Gets the user inputs and calls the user_profile_uploadphoto_v1 function
+    Parameters:
+        None
+    Exceptions:
+        None
+    Returns:
+        Returns the result of the user_profile_uploadphoto_v1 function in json
+    """      
+    info = request.get_json()
+    r = user.user_profile_uploadphoto_v1(info['token'], info['img_url'], int(info['x_start']), int(info['y_start']), int(info['x_end']), int(info['y_end']))  
+    return dumps(r)    
 
 ################################################################################
 #####################          OTHER ROUTES            #########################
