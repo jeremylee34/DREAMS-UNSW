@@ -32,6 +32,7 @@ def user_profile_v1(token, u_id):
         u_id (int)
     Exceptions:
         InputError - if the u_id is not a valid user
+        InputError - if token is invalid
     Returns:
         Dictionary 'profile' containing u_id, email, name_first, name_last and handle
     """
@@ -74,6 +75,7 @@ def user_profile_setname_v1(token, name_first, name_last):
         name_last (str)
     Exceptions:
         InputError - if name_first is invalid (less than 1 character or greater than 50 character)
+        InputError - if token is invalid
         InputError - if name_last is invalid (less than 1 character or greater than 50 character)
     Returns:
         Empty dictionary
@@ -110,6 +112,7 @@ def user_profile_setemail_v1(token, email):
         email (str)
     Exceptions:
         InputError - if email is invalid
+        InputError - if token is invalid
         InputError - if email is already user by an existing user
     Returns:
         Empty dictionary
@@ -150,6 +153,7 @@ def user_profile_sethandle_v1(token, handle_str):
         token (str)
         handle_str (str)
     Exceptions:
+        InputError - if token is invalid
         InputError - if handle_str is invalid (less than 3 characters or greater than 20 characters)
     Returns:
         Empty dictionary
@@ -185,7 +189,7 @@ def users_all_v1(token):
     Parameters:
         token (str)
     Exceptions:
-        None
+        InputError - if token is invalid
     Returns:
         A list containig all of the users and their information
     """
@@ -212,6 +216,16 @@ def users_all_v1(token):
 
 
 def user_stats_v1(token):
+    """
+    Description of function:
+        Provides a information on the involvement of the user in dreams (channels and dms joined and messages sent)
+    Parameters:
+        token (str)
+    Exceptions:
+        InputError - if token is invalid
+    Returns:
+        A dictionary containing channels_joined, dms_joined, messages_sent and involvement_rate
+    """    
     valid = 0
     #Checking to see if token is valid
     for t in data.data['token_list']:
@@ -299,9 +313,19 @@ def user_stats_v1(token):
     return_stat = data.data['user_stats'][count].copy()
     return_stat.pop('u_id')
     return_stat['involvement_rate'] = involvement_rate
-    return return_stat
+    return {'user_stats': return_stat}
 
 def users_stats_v1(token):
+    """
+    Description of function:
+        Provides a information on the utilization of dreams (channels, dms, messages currently existing)
+    Parameters:
+        token (str)
+    Exceptions:
+        InputError - if token is invalid
+    Returns:
+        A dictionary containing channels_exist dms_exist, messages_exist and utilization_rate
+    """        
     valid = 0
     #Checking to see if token is valid
     for t in data.data['token_list']:
@@ -390,9 +414,30 @@ def users_stats_v1(token):
     else:
         raise InputError("Invalid token")
     data.data['dreams_stats']['utilization_rate'] = utilization_rate
-    return data.data['dreams_stats']
+    return {'dreams_stats': data.data['dreams_stats']}
 
 def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
+    """
+    Description of function:
+        Uploads and crops a user's profile photo
+    Parameters:
+        token (str)
+        img_url (str)
+        x_start (int)
+        y_start (int)
+        x_end (int)
+        y_end (int)
+    Exceptions:
+        InputError - if token is invalid
+        InputError - if x dimensions are not within the photo size
+        InputError - if y dimensions are not within the photo size
+        InputError - if x_start and x_end are the same
+        InputError - if y_start and y_end are the same
+        InputError - if image is not JPG
+        InputError - if image url is not valid
+    Returns:
+        An empty dictionary
+    """       
     valid = 0
     #Checking to see if token is valid
     for t in data.data['token_list']:
