@@ -82,7 +82,7 @@ def notifications_get_v1(token):
         u_id (int)
     Exceptions:
         InputError - if the u_id is not a valid user
-        AccessError - Authorised user isn't an owner
+        InputError - Authorised user isn't an owner
     Returns:
         Blank dictionary
     """

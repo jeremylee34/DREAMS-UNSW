@@ -138,3 +138,4 @@ def test_channels_create_invalid_token(clear):
         'name': 'Channel1',
         'is_public': True
     }).status_code == 400
+

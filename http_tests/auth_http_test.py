@@ -155,9 +155,9 @@ def test_invalid_token_logout(clear_data):
         'email': 'tom@gmail.com',
         'password': 'hello1234',
     })              
-    assert requests.post(config.url + 'auth/logout/v1', json = {
-        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjo1fQ.L6p3XfadFmkykAtJmcBFkXAvAaxa52Tz3lvitd9ZNNo'
-    }).status_code == AccessError.code
+    assert requests.post(config.url + 'auth/logout/v1', json={
+        'token': 'invalid_token'
+    }).status_code == InputError.code
 
 ###### Tests for passwordreset/request
 #Test if email is invalid
