@@ -474,6 +474,7 @@ def test_message_sendlaterdm(clear, register_info, register_info2, dm_info, time
     })
     time.sleep(3)
     dm_messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
+    dm_messages = dm_messages.json()
     assert dm_messages['messages'][0]['message'] == 'Goodbye'
 def test_message_sendlaterdm_invalid_dm(clear, register_info, register_info2, dm_info, timestamp):
     assert requests.post(f"{url}/message/sendlaterdm/v1", json={
@@ -519,6 +520,7 @@ def test_message_react_channel(clear, register_info, channel, message_id):
         'react_id': 1
     })
     messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
     assert messages['messages'][0]['reacts'][0]['react_id'] == 1
     assert register_info['auth_user_id'] in messages['messages'][0]['reacts'][0]['u_ids']
 def test_message_react_dm(clear, register_info, register_info2, dm_info, dm_message_id):
@@ -528,6 +530,7 @@ def test_message_react_dm(clear, register_info, register_info2, dm_info, dm_mess
         'react_id': 1
     })
     dm_messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
+    dm_messages = dm_messages.json()
     assert dm_messages['messages'][0]['reacts'][0]['react_id'] == 1
     assert register_info['auth_user_id'] in dm_messages['messages'][0]['reacts'][0]['u_ids'] 
 def test_message_react_invalid_message_id(clear, register_info, channel, message_id):
@@ -579,6 +582,7 @@ def test_message_unreact_channel(clear, register_info, channel, message_id):
         'react_id': 1
     })
     messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
     assert messages['messages'][0]['reacts'][0]['react_id'] == 1
     assert messages['messages'][0]['reacts'][0]['u_ids'] == []
     assert messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
@@ -594,6 +598,7 @@ def test_message_unreact_dm(clear, register_info, register_info2, dm_info, dm_me
         'react_id': 1
     })
     dm_messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
+    dm_messages = dm_messages.json()
     assert dm_messages['messages'][0]['reacts'][0]['react_id'] == 1
     assert dm_messages['messages'][0]['reacts'][0]['u_ids'] == []
     assert dm_messages['messages'][0]['reacts'][0]['is_this_user_reacted'] == False
@@ -655,6 +660,7 @@ def test_message_pin_channel(clear, register_info, channel, message_id):
         'message_id': message_id['message_id']
     })
     messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
     assert messages['messages'][0]['is_pinned'] == True
 def test_message_pin_dm(clear, register_info, register_info2, dm_info, dm_message_id):
     requests.post(f"{url}/message/pin/v1", json={
@@ -662,6 +668,7 @@ def test_message_pin_dm(clear, register_info, register_info2, dm_info, dm_messag
         'message_id': dm_message_id['message_id']
     })
     dm_messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
+    dm_messages = dm_messages.json()
     assert dm_messages['messages'][0]['is_pinned'] == True
 def test_message_pin_invalid_message_id(clear, register_info, channel, message_id):
     assert requests.post(f"{url}/message/pin/v1", json={
@@ -684,6 +691,72 @@ def test_message_pin_access_error(clear, register_info, register_info2, channel,
     }).status_code == 403
 def test_message_pin_invalid_token(clear, register_info, channel, message_id):
     assert requests.post(f"{url}/message/pin/v1", json={
+        'token': 10,
+        'message_id': message_id['message_id']
+    }).status_code == 400
+
+
+def test_message_unpin_channel(clear, register_info, channel, message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
+    messages = messages.json()
+    assert messages['messages'][0]['is_pinned'] == False
+def test_message_unpin_dm(clear, register_info, register_info2, dm_info, dm_message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': dm_message_id['message_id']
+    })
+    requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info['token'],
+        'message_id': dm_message_id['message_id']
+    })
+    dm_messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
+    dm_messages = dm_messages.json()
+    assert dm_messages['messages'][0]['is_pinned'] == False
+def test_message_unpin_invalid_message_id(clear, register_info, channel, message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    assert requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info['token'],
+        'message_id': 10
+    }).status_code == 400
+def test_message_already_unpinned(clear, register_info, channel, message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    assert requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info['token'],
+        'message_id': message_id['message_id']
+    }).status_code == 400
+def test_message_unpin_access_error(clear, register_info, register_info2, channel, join, message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    assert requests.post(f"{url}/message/unpin/v1", json={
+        'token':register_info2['token'],
+        'message_id': message_id['message_id']
+    }).status_code == 403
+def test_message_unpin_invalid_token(clear, register_info, channel, message_id):
+    requests.post(f"{url}/message/pin/v1", json={
+        'token': register_info['token'],
+        'message_id': message_id['message_id']
+    })
+    assert requests.post(f"{url}/message/unpin/v1", json={
         'token': 10,
         'message_id': message_id['message_id']
     }).status_code == 400
