@@ -3,6 +3,9 @@ from src.error import AccessError
 from src.data import data
 
 import jwt
+import random
+import string
+from re import search
 import time
 import threading
 
@@ -118,3 +121,52 @@ def check_if_owner(u_id, channel_id):
 #         if owner['u_id'] == u_id:
 #             channel_owner = True
 #     return channel_owner
+
+def generate_secret_code(email):
+    '''
+    return generated secret code, 6 characters,
+    mixture of uppercase letters and digits
+    ''' 
+    #loop through and see if email match any in database 
+    valid_mail = 0
+    for user in data['users']:
+        if user['email'] == email:
+            valid_mail = 1
+    
+    if valid_mail == 0:
+        raise InputError('Invalid email')
+    else:
+        random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+        #attach random_str to user data
+        for user in data['users']:
+            if user['email'] == email:
+                user['secret_code'] = random_str
+
+        return random_str
+
+def check_secret_code(secret):
+    '''
+    check if secret code is valid, 
+    return 1 if valid,
+    return 0 if invalid
+    '''
+    if len(secret) == 6:
+        for letter in secret:
+            if letter in (string.ascii_uppercase + string.digits): 
+                return 1
+    return 0
+
+def get_secret_code(u_id):
+    '''
+    Return user's secret code if any
+    '''
+    secret_code_exist = 0
+    for user in data['users']:
+        if user['u_id'] == u_id:
+            secret_code = user['secret_code']
+            secret_code_exist = 1
+    if secret_code_exist == 0:
+        raise InputError('No secret code in this u_id')
+
+    return secret_code
