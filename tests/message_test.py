@@ -462,6 +462,9 @@ def test_message_sendlater_invalid_token(clear, user, channel, timestamp):
     with pytest.raises(InputError):
         assert message_sendlater_v1(55, channel['channel_id'], 'Hello', timestamp)
 def test_message_sendlater_notifications(clear, user):
+    '''
+    Tests notification code to see if any errors are raised
+    '''
     channel = channels_create_v1(user['token'], "Channel1", True)
     timestamp = int(time.time())
     user_login = auth_login_v1('gordonl@gmail.com', '1234567')
@@ -506,6 +509,9 @@ def test_message_sendlaterdm_invalid_token(clear, user, user2, dm_info, timestam
     with pytest.raises(InputError):
         assert message_sendlaterdm_v1(7, dm_info['dm_id'], 'Hello', timestamp)
 def test_message_sendlaterdm_notifications(clear, user, user2):
+    '''
+    Tests notifications code to see if it brings any errors 
+    '''
     dm_info = dm_create_v1(user['token'], [user2['auth_user_id']])
     timestamp = int(time.time())
     user_login = auth_login_v1('gordonl@gmail.com', '1234567')
