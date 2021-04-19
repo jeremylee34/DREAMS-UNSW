@@ -683,7 +683,7 @@ def test_message_pin_already_pinned(clear, user, channel, message, pin):
         assert message_pin_v1(user['token'], message['message_id'])
 def test_message_pin_already_pinned_dm(clear, user, user2, dm_info, dm_message):
     '''
-    Tests if an InputError is raised when message pin is called when a message is already pinned
+    Tests if an InputError is raised when message pin is called when a message is already pinned in a dm
     '''
     message_pin_v1(user['token'], dm_message['message_id'])
     with pytest.raises(InputError):
@@ -696,7 +696,7 @@ def test_message_pin_access_error(clear, user, user2, channel, join, message):
         assert message_pin_v1(user2['token'], message['message_id'])
 def test_message_pin_access_error_dm(clear, user, user2, dm_info, dm_message):
     '''
-    Tests if an AccessError is raised when a user that is not an owner tries to pin a message
+    Tests if an AccessError is raised when a user that is not an owner tries to pin a message in a dm
     '''
     with pytest.raises(AccessError):
         assert message_pin_v1(user2['token'], dm_message['message_id'])
@@ -756,7 +756,7 @@ def test_message_unpin_already_unpinned(clear, user, channel, message, pin, unpi
         assert message_unpin_v1(user['token'], message['message_id'])
 def test_message_pin_already_unpinned_dm(clear, user, user2, dm_info, dm_message):
     '''
-    Tests if an InputError is raised when message pin is called when a message is already pinned
+    Tests if an InputError is raised when message pin is called when a message is already pinned in a dm
     '''
     with pytest.raises(InputError):
         assert message_unpin_v1(user['token'], dm_message['message_id'])
@@ -768,7 +768,7 @@ def test_message_unpin_access_error(clear, user, user2, channel, join, message, 
         assert message_unpin_v1(user2['token'], message['message_id'])
 def test_message_unpin_access_error_dm(clear, user, user2, dm_info, dm_message):
     '''
-    Tests if an AccessError is raised when a user that is not an owner tries to unpin a message
+    Tests if an AccessError is raised when a user that is not an owner tries to unpin a message in a dm
     '''
     message_pin_v1(user['token'], dm_message['message_id'])
     with pytest.raises(AccessError):
