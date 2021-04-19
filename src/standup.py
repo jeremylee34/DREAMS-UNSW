@@ -44,9 +44,6 @@ def standup_start_v1(token, channel_id, length):
     }
 
 def end_standup(channel_id, curr_time, owner_u_id, token):
-    if check_valid_channel(channel_id) is False:
-        raise InputError('channel_id does not refer to a valid channel')
-    
     data['channels'][channel_id]['active_standup'] = False
     data['channels'][channel_id]['standup_time_finish'] = 0
     # once timer ends, run this code 
