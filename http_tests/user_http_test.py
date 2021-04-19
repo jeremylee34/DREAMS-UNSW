@@ -361,8 +361,8 @@ def test_valid_img_url(clear_data):
     assert requests.post(f'{url}/user/profile/uploadphoto/v1', json={
         'token': r['token'],
         'img_url': IMG_URL,
-        'x_start': 50,
-        'y_start': 50,
+        'x_start': 60,
+        'y_start': 60,
         'x_end': 200,
         'y_end': 200,
     }).status_code == 200
