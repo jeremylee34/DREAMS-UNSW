@@ -5,9 +5,14 @@ Written by Kanit Srihakorth and Tharushi Gunawardana
 '''
 from src.data import data
 from src.error import InputError, AccessError
+from src.helper import generate_secret_code
+from src.helper import check_secret_code
 import re
 import jwt
 import hashlib
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from flask import request
 SECRET = 'HELLO'
 
@@ -211,4 +216,67 @@ def auth_logout_v1(token):
         'is_success': logout
     }
 
+def auth_passwordreset_request_v1(email):
+    '''
+    Given email address, send secret code to user's mail
+    '''
+    #check if user is registered user
+    valid_email = 0
+    for user in data['users']:
+        if user['email'] == email:
+            valid_email = 1
+    if valid_email == 0:
+        raise InputError('User did not registered yet')
 
+    #generate secret code, to be send to user
+    secret_code = generate_secret_code(email)
+
+    #setup server mail
+    server_sender_email = "cactusw09c@gmail.com"
+    server_sender_password = "cactusw09c123"
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login(server_sender_email, server_sender_password)
+
+    #create email body
+    email_body = MIMEMultipart()
+    email_body['From'] = server_sender_email
+    email_body['To'] = email
+    email_body['Subject'] = 'YOUR SECRET CODE!'
+    email_body.attach(MIMEText(secret_code))
+
+    #SEND IT!!
+    server.sendmail(server_sender_email, email, email_body.as_string())
+    print('Secret code has been sent to user')
+
+    #terminate session
+    server.quit()
+
+    return {}
+
+def auth_passwordreset_reset_v1(reset_code, new_password):
+    '''
+    Set user's new password if reset_code is correct
+    '''
+    #check if reset code is valid
+    valid_code = check_secret_code(reset_code)
+    if valid_code == 1:
+        pass
+    else:
+        raise InputError('Reset code invalid')
+
+    #check if reset code match
+    for user in data['users']:
+        if user['secret_code'] == reset_code:
+            if len(new_password) >= 6:
+                user["password"] = hashlib.sha256(new_password.encode()).hexdigest()
+            else:
+                raise InputError("Password too short")
+            #terminate secret_code
+            user.pop('secret_code')
+        else:
+            raise InputError("secret code can't be found")
+    print('Password reset success')
+
+    return {}
