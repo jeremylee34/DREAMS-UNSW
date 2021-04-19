@@ -74,22 +74,31 @@ def test_admin_remove_channel(clear_data):
     '''
     user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
     user2 = auth_register_v1('Kanit@gmail.com', '12345678', 'Kanit', 'Liang')
+    user3 = auth_register_v1('asdf@gmail.com', '12345678', 'Lop', 'Ang')
     new_channel = channels_create_v1(user['token'], "Public channel", True)
     channel_id = new_channel['channel_id']
 
     channel_join_v1(user['token'], channel_id)
     channel_join_v1(user2['token'], channel_id)
-
     admin_userpermission_change_v1(user['token'], user2['auth_user_id'], 1)
-    message_send_v1(user2['token'], channel_id, "Hello")
-    message_send_v1(user['token'], channel_id, "Hello2")
+    admin_userpermission_change_v1(user['token'], user3['auth_user_id'], 1)
+    message_send_v1(user['token'], channel_id, "Hello")
+    message_send_v1(user2['token'], channel_id, "Bye byee")
 
-    channel_msg = channel_messages_v1(user2['token'], channel_id, 0)
     admin_user_remove_v1(user['token'], user2['auth_user_id'])
-    
     channel_msg = channel_messages_v1(user['token'], channel_id, 0)
-    assert channel_msg['messages'][1]['message'] == 'Removed user'
-    assert channel_msg['messages'][0]['message'] == 'Hello2'
+
+    assert channel_msg['messages'][0]['message'] == 'Removed user'
+
+    
+def test_admin_remove_invalid_uid(clear_data):
+    '''
+    Test if input u_id is invalid
+    '''
+    user = auth_register_v1('gordon@gmail.com', '12345678', 'Gordon', 'Liang')
+    with pytest.raises(InputError):
+        admin_user_remove_v1(user['token'], 78673456)
+      
 
 def test_admin_remove_dm(clear_data):
     '''

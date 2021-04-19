@@ -114,6 +114,9 @@ def channels_create_v1(token, name, is_public):
         "name": name,
         "is_public": is_public,
         "channel_id": len(data.data['channels']),
+        'active_standup': False,
+        'standup_time_finish': 0,   
+        'standup': [],
         "owner_members": [
             {
                 'u_id': auth_user_id,
