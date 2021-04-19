@@ -34,11 +34,7 @@ def test_message_send(clear):
         'channel_id': channel['channel_id'],
         'message': 'Hello'
     })
-    messages = requests.get(f"{url}/channel/messages/v2", json={
-        'token': register_info['token'],
-        'channel_id': channel['channel_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_send_input_error(clear):
@@ -160,17 +156,12 @@ def test_message_edit(clear):
         'message': 'Hello'
     })
     message_id = message_id.json()
-    print(message_id)
     requests.put(f"{url}/message/edit/v2", json={
         'token': register_info['token'],
         'message_id': message_id['message_id'],
         'message': '123'
     })
-    messages = requests.get(f"{url}/channel/messages/v2", json={
-        'token': register_info['token'],
-        'channel_id': channel['channel_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == '123'
 def test_message_edit_input_error(clear):
@@ -311,11 +302,7 @@ def test_edit_message_no_error(clear):
         'message_id': message_id['message_id'],
         'message': '123'
     })
-    messages = requests.get(f"{url}/channel/messages/v2", json={
-        'token': register_info2['token'],
-        'channel_id': channel['channel_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info2['token']}&channel_id={channel['channel_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == '123'
 
@@ -346,11 +333,7 @@ def test_message_remove(clear):
         'token': register_info['token'],
         'message_id': message_id['message_id']
     })
-    messages = requests.get(f"{url}/channel/messages/v2", json={
-        'token': register_info['token'],
-        'channel_id': channel['channel_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel['channel_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == ''
 def test_message_remove_input_error(clear):
@@ -455,11 +438,7 @@ def test_message_remove_dm(clear):
         'token': register_info['token'],
         'message_id': message_info['message_id'],
     })
-    messages = requests.get(f"{url}/dm/messages/v1", json={
-        'token': register_info['token'],
-        'dm_id': dm_info['dm_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == ''
 
@@ -499,11 +478,7 @@ def test_message_share(clear):
         'channel_id': channel2['channel_id'],
         'dm_id': -1
     })
-    messages = requests.get(f"{url}/channel/messages/v2", json={
-        'token': register_info['token'],
-        'channel_id': channel2['channel_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/channel/messages/v2?token={register_info['token']}&channel_id={channel2['channel_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello123'
 def test_message_share_access_error(clear):
@@ -654,11 +629,7 @@ def test_message_senddm(clear):
         'dm_id': dm_info['dm_id'],
         'message': 'Hello'
     })
-    messages = requests.get(f"{url}/dm/messages/v1", json={
-        'token': register_info['token'],
-        'dm_id': dm_info['dm_id'],
-        'start': 0
-    })
+    messages = requests.get(f"{url}/dm/messages/v1?token={register_info['token']}&dm_id={dm_info['dm_id']}&start=0")
     messages = messages.json()
     assert messages['messages'][0]['message'] == 'Hello'
 def test_message_senddm_input_error(clear):

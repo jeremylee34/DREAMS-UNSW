@@ -6,10 +6,11 @@ import jwt
 import random
 import string
 from re import search
+import time
+import threading
 
 SECRET = "HELLO"
 OWNER_PERMISSION = 1
-
 def check_valid_channel(channel_id):
     """
     Checks if channel_id is a valid channel
@@ -80,6 +81,7 @@ def check_user_in_dm(u_id, dm_id):
     return user_in_dm
 
 def check_valid_token(token):
+    global data
     valid_token = False
     for token_hash in data['token_list']:
         if token_hash == token:
@@ -101,6 +103,17 @@ def check_if_owner(u_id, channel_id):
             is_owner = True
             break
     return is_owner
+
+
+    
+ 
+
+# def check_active_standup_in_channel(channel_id):
+#     if not data['channels'][channel_id]['standup']:
+#         active_standup = False
+#     elif data['channels'][channel_id]['is_active'] is True:
+#         active_standup = True
+#     return active_standup
 
 # def check_channel_owner(u_id, channel_id):
 #     channel_owner = False

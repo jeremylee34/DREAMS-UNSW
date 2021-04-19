@@ -22,33 +22,35 @@ def user_profile_v1(token, u_id):
         InputError - if the u_id is not a valid user
     Returns:
         Dictionary 'profile' containing u_id, email, name_first, name_last and handle
-    """    
+    """
     valid = 0
     valid_token = 0
+    profile = {}
     for t in data["token_list"]:
         if token == t:
             valid_token = 1
     #If token is valid, then profile dict is updated otherwise access error is thrown
     if valid_token == 1:
         decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-        profile = {}
         #Getting information for user profile
         for x in data["users"]:
                 if u_id == x['u_id']:
                     valid = 1
                     for y in x["session_ids"]:
                         if decoded_token["session_id"] == y:
-                            profile['u_id'] = x['u_id']
-                            profile['email'] = x['email']
-                            profile['name_first'] = x['name_first']
-                            profile['name_last'] = x['name_last']
-                            profile['handle_str'] = x['handle_str']  
+                            profile = {
+                                'u_id': x['u_id'],
+                                'email': x['email'],
+                                'name_first': x['name_first'],
+                                'name_last': x['name_last'],
+                                'handle_str': x['handle_str']  
+                            }
         #If u_id is not valid
         if valid == 0:
             raise InputError("Invalid user")
     else:
-        raise AccessError("Invalid token")
-    return profile
+        raise InputError("Invalid token")
+    return {'user': profile}
 
 def user_profile_setname_v1(token, name_first, name_last):
     """
@@ -63,7 +65,7 @@ def user_profile_setname_v1(token, name_first, name_last):
         InputError - if name_last is invalid (less than 1 character or greater than 50 character)
     Returns:
         Empty dictionary
-    """       
+    """
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -84,7 +86,7 @@ def user_profile_setname_v1(token, name_first, name_last):
                     x['name_first'] = name_first
                     x['name_last'] = name_last 
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}    
 
 def user_profile_setemail_v1(token, email):
@@ -99,7 +101,7 @@ def user_profile_setemail_v1(token, email):
         InputError - if email is already user by an existing user
     Returns:
         Empty dictionary
-    """           
+    """
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -123,7 +125,7 @@ def user_profile_setemail_v1(token, email):
                     if y == decoded_token["session_id"]:
                         x['email'] = email
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
         
 
@@ -139,7 +141,7 @@ def user_profile_sethandle_v1(token, handle_str):
         InputError - if handle_str is invalid (less than 3 characters or greater than 20 characters)
     Returns:
         Empty dictionary
-    """           
+    """  
     valid_token = 0
     for t in data["token_list"]:
         if token == t:
@@ -160,7 +162,7 @@ def user_profile_sethandle_v1(token, handle_str):
                     if y == decoded_token["session_id"]:
                         x['handle_str'] = handle_str
     else:
-        raise AccessError("Invalid token")
+        raise InputError("Invalid token")
     return {}
 
 
@@ -193,5 +195,5 @@ def users_all_v1(token):
             info['permission_id'] = x['permission_id']
             all_users.append(info)
     else:
-        raise AccessError("Invalid token")
-    return all_users
+        raise InputError("Invalid token")  
+    return {'users': all_users}

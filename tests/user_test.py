@@ -13,7 +13,6 @@ from src.user import user_profile_sethandle_v1
 from src.user import users_all_v1
 from src.error import InputError, AccessError
 from src.other import clear_v1
-from src.data import data
 
 @pytest.fixture
 #Clears all data
@@ -33,12 +32,12 @@ def test_profile_success(clear_data):
     login = auth_login_v1("asdf@gmail.com", "12344545")
     auth_login_v1("asdf@gmail.com", "12344545")
     profile = user_profile_v1(login['token'], 0)
-    assert register['auth_user_id'] == profile['u_id']
+    assert register['auth_user_id'] == profile['user']['u_id']
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_profile(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert user_profile_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 0)    
 
 ##Tests for user_profile_setname_v1
@@ -62,12 +61,12 @@ def test_profile_setname_success(clear_data):
     result1 = user_profile_v1(register['token'], 0)
     user_profile_setname_v1(register['token'], 'timothy', 'smith')
     result2 = user_profile_v1(register['token'], 0)
-    assert result1['name_first'] != result2['name_first'] and result1['name_last'] != result2['name_last']
+    assert result1['user']['name_first'] != result2['user']['name_first'] and result1['user']['name_last'] != result2['user']['name_last']
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_setname(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert user_profile_setname_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'tim', 'blue') 
 
 ##Tests for user_profile_setemail_v1
@@ -92,12 +91,12 @@ def test_profile_email_success(clear_data):
     result1 = user_profile_v1(register['token'], 0)
     user_profile_setemail_v1(register['token'], 'tom@gmail.com')
     result2 = user_profile_v1(register['token'], 0)
-    assert result1['email'] != result2['email']
+    assert result1['user']['email'] != result2['user']['email']
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_setemail(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert user_profile_setemail_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'tim@gmail.com') 
             
 
@@ -123,12 +122,12 @@ def test_profile_sethandle_success(clear_data):
     result1 = user_profile_v1(register['token'], 0)
     user_profile_sethandle_v1(register['token'], 'hello')
     result2 = user_profile_v1(register['token'], 0)
-    assert result1['handle_str'] != result2['handle_str']
+    assert result1['user']['handle_str'] != result2['user']['handle_str']
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_sethandle(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert user_profile_sethandle_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE', 'honeybear') 
             
 
@@ -138,10 +137,10 @@ def test_all_users(clear_data):
     register1 = auth_register_v1("asdf@gmail.com", "12344545", "K","S")
     auth_register_v1("honey@yahoo.com", "12344545", "honey","bear")
     user_result = users_all_v1(register1['token'])
-    assert len(user_result) == 2 
+    assert len(user_result['users']) == 2 
 
 #Tests whether access error is raised for invalid token
 def test_invalid_token_users_all(clear_data):
     auth_register_v1("asdf@gmail.com", "12344545", "K","S")
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         assert users_all_v1('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkcyI6NX0.b_nkhJ8W5M5ThXePUyvtyltxuiYkvqZ-j4FEbiMSKyE') 

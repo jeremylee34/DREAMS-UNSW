@@ -14,7 +14,6 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import request
-
 SECRET = 'HELLO'
 
 session_id = 0
@@ -48,7 +47,6 @@ def auth_login_v1(email, password):
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
     """
-    
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Checks for valid email
     if re.search(regex, email):
@@ -80,7 +78,7 @@ def auth_login_v1(email, password):
     data['token_list'].append(token)
     return {
         'token': token,
-        'auth_user_id': count,
+        'auth_user_id': count
     }
 
 
@@ -103,29 +101,20 @@ def auth_register_v1(email, password, name_first, name_last):
         
     Returns:
         Dictionary containing 'token' and 'auth_user_id'
-    """    
+    """ 
     regex = '^[a-zA-Z0-9]+[\\._]?[a-zA-Z0-9]+[@]\\w+[.]\\w{2,3}$'
     # Getting auth_user_id
     count = len(data['users'])
     register = {}
     register['u_id'] = count
     # Checks for valid email
-    if re.search(regex, email):
-        pass
-    else:    
-        raise InputError("Invalid email")
-
-    # Checks for shared email
-    check_empty = bool(data["users"])
-    if check_empty == False:
-        register["email"] = email
+    if not re.search(regex, email):
+        raise InputError("Invalid email") 
     # If there are already thing in the dictionary
-    else:
-        for y in data["users"]:
-            if y["email"] == email:
-                raise InputError("Email is already used")
-            else:
-                register["email"] = email
+    for y in data["users"]:
+        if y["email"] == email:
+            raise InputError("Email is already used")
+    register["email"] = email
     # Checks for valid password
     if len(password) >= 6:
         register["password"] = hashlib.sha256(password.encode()).hexdigest()
@@ -183,14 +172,14 @@ def auth_register_v1(email, password, name_first, name_last):
         register['permission_id'] = 2
     #creating session_id list for user
     register['session_ids'] = []
-    register['session_ids'].append(create_session_id())    
+    register['session_ids'].append(create_session_id())   
     #generating the token
     token = jwt.encode({'session_id': session_id}, SECRET, algorithm='HS256')
     data['token_list'].append(token)
-    data['users'].append(register)    
+    data['users'].append(register)
     return {
         'token': token,
-        'auth_user_id': count,
+        'auth_user_id': count
     }
 
 
@@ -204,7 +193,7 @@ def auth_logout_v1(token):
         None
     Returns:
         Dictionary containing 'is_success'
-    """    
+    """
     logout = False
     valid_token = 0
     #Decodes the token
@@ -224,7 +213,7 @@ def auth_logout_v1(token):
     else:
         raise AccessError("Invalid token")
     return {
-        'is_success': logout,
+        'is_success': logout
     }
 
 def auth_passwordreset_request_v1(email):
