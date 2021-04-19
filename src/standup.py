@@ -17,9 +17,7 @@ import threading
 def standup_start_v1(token, channel_id, length):
 
     # record the finishing time, create standup in channels and sleep
-    time_finish = datetime.now() + timedelta(seconds=length)
-    curr_time = time_finish.replace(tzinfo=timezone.utc).timestamp()
-
+    curr_time = int(time.time()) + length
     if check_valid_token(token) == False:
         raise InputError("token does not refer to a valid token")
     owner_u_id = token_to_u_id(token)
@@ -65,7 +63,7 @@ def end_standup(channel_id, curr_time, owner_u_id, token):
             'time_created': curr_time,
             'message': message_block_joined
         }
-        data['channels'][channel_id]['messages'].append(standup_msg)
+        data['channels'][channel_id]['messages'].insert(0, standup_msg)
         data['channels'][channel_id]['standup'].clear()
 
         # message_send_v1(token, channel_id, message_block_joined)
