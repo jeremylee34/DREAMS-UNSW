@@ -125,7 +125,8 @@ def dm_create_v1(token, u_ids):
         "u_id": owner_u_id,
         "message": "",
         "channel_id": -1,
-        "dm_id": dm_id
+        "dm_id": dm_id,
+        'reacts': []
     }
     data.data['notifications'].append(new_notification)
     data.data['users'][owner_u_id]['num_dms'] += 1
@@ -218,7 +219,8 @@ def dm_invite_v1(token, dm_id, u_id):
         "u_id": user,
         "message": "",
         "channel_id": -1,
-        "dm_id": dm_id
+        "dm_id": dm_id,
+        'reacts': []
     }
     data.data['notifications'].append(new_notification)
     data.data['users'][u_id]['num_dms'] += 1

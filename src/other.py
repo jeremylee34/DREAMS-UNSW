@@ -136,7 +136,22 @@ def notifications_get_v1(token):
                     'dm_id': notification['dm_id'],
                     'notification_message': f"{handle_from} added you to {channel_name}"
                 }
-        
+            msg_list.append(new_dict)
+        if notification['reacts'] != []:
+            if notification['channel_id'] == -1:
+                dm_name = data.data['dms'][notification['dm_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} reacted to your message in {dm_name}"
+                }
+            else:
+                channel_name = data.data['channels'][notification['channel_id']]['name']
+                new_dict = {
+                    'channel_id': notification['channel_id'],
+                    'dm_id': notification['dm_id'],
+                    'notification_message': f"{handle_from} reacted to your message in {channel_name}"
+                }
             msg_list.append(new_dict)
         notification_num += 1
     return {

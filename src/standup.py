@@ -63,7 +63,13 @@ def end_standup(channel_id, curr_time, owner_u_id):
             'message_id': len(temp_channel['messages']),
             'u_id': owner_u_id,
             'time_created': curr_time,
-            'message': message_block_joined
+            'message': message_block_joined,
+            'reacts': [{
+                'react_id': 1,
+                'u_ids': [],
+                'is_this_user_reacted': False
+            }],
+            'is_pinned': False
         }
         data['channels'][channel_id]['messages'].append(standup_msg)
     return{}

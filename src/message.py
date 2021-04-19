@@ -80,7 +80,8 @@ def message_send_v1(token, channel_id, message):
             'message': message,
             'channel_id': channel_id,
             'dm_id': -1,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
@@ -358,7 +359,8 @@ def message_senddm_v1(token, dm_id, message):
             'message': message,
             'channel_id': -1,
             'dm_id': dm_id,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts message into dms
@@ -393,7 +395,8 @@ def helper_sendlater(token, channel_id, message, message_id):
             'message': message,
             'channel_id': channel_id,
             'dm_id': -1,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts the message into the channel messages
@@ -454,7 +457,8 @@ def helper_sendlaterdm(token, dm_id, message, message_id):
             'message': message,
             'channel_id': -1,
             'dm_id': dm_id,
-            'u_id': auth_user_id
+            'u_id': auth_user_id,
+            'reacts': []
         }
         data.data['notifications'].append(new_notification)
     # Inserts message into dms
@@ -536,10 +540,27 @@ def message_react_v1(token, message_id, react_id):
         for message3 in channel3['messages']:
             if message_id == message3['message_id']:
                 message3['reacts'][0]['u_ids'].append(auth_user_id)
+                channel_id = channel3['channel_id']
+                dm_id = -1
+                message = message3['message']
     for dm3 in data.data['dms']:
         for dm_message3 in dm3['messages']:
             if message_id == dm_message3['message_id']:
                 dm_message3['reacts'][0]['u_ids'].append(auth_user_id)
+                channel_id = -1
+                dm_id = dm3['dm_id']
+                message = message3['message']
+    new_notification = {
+        'message': message,
+        'channel_id': channel_id,
+        'dm_id': dm_id,
+        'u_id': auth_user_id,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': message3['reacts'][0]['u_ids']
+        }]
+    }
+    data.data['notifications'].append(new_notification)
     return {
     }
 def message_unreact_v1(token, message_id, react_id):
