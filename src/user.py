@@ -243,7 +243,10 @@ def user_stats_v1(token):
     #Getting number of dms user is in
     num_user_dms = data.data['users'][u_id]['num_dms']
     #Getting total number of dms
-    total_dms = len(data.data['dms'])
+    total_dms = 0
+    for dm in data.data['dms']:
+        if dm['dm_id'] != '':
+            total_dms += 1
     #Getting number of messages user has sent
     num_user_messages = data.data['users'][u_id]['num_messages']
     #Getting total number of messages
