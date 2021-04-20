@@ -194,6 +194,7 @@ def auth_register_v1(email, password, name_first, name_last):
         }],
         'involvement_rate': 0
     }
+    register['secret_code'] = 0
     data.data['users'].append(register)
     return {
         'token': token,
@@ -292,9 +293,7 @@ def auth_passwordreset_reset_v1(reset_code, new_password):
             else:
                 raise InputError("Password too short")
             #terminate secret_code
-            user.pop('secret_code')
         else:
             raise InputError("secret code can't be found")
     print('Password reset success')
-
     return {}

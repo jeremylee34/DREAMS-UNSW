@@ -236,14 +236,17 @@ def user_stats_v1(token):
         for j in i["session_ids"]:
             if decoded_token["session_id"] == j:
                 u_id = i['u_id']
-    #Getting number of channels user is in
+    # Getting number of channels user is in
     num_user_channels = data.data['users'][u_id]['num_channels']
-    #Getting total number of channels
+    # Getting total number of channels
     total_channels = len(data.data['channels'])
     #Getting number of dms user is in
     num_user_dms = data.data['users'][u_id]['num_dms']
     #Getting total number of dms
-    total_dms = len(data.data['dms'])
+    total_dms = 0
+    for dm in data.data['dms']:
+        if dm['dm_id'] != '':
+            total_dms += 1
     #Getting number of messages user has sent
     num_user_messages = data.data['users'][u_id]['num_messages']
     #Getting total number of messages
@@ -374,45 +377,44 @@ def user_profile_uploadphoto_v1(token, img_url, x_start, y_start, x_end, y_end):
     for t in data.data['token_list']:
         if t == token:
             valid = 1
-    #If token is valid then returns the users stats, otherwise raises input error
-    if valid == 1:   
-        decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
-        u_id = ''
-        for x in data.data["users"]:
-            for y in x["session_ids"]:
-                if decoded_token["session_id"] == y:
-                    u_id = x['u_id']  
-        #Checking if img_url ends with jpg
-        regex = '.*jpg$'
-        if re.search(regex, img_url):
-            pass
-        else:
-            raise InputError("Invalid image url")
-        #Checking if img_url return a 200 http_status
-        try: 
-            requests.get(img_url)
-        except requests.exceptions.ConnectionError as invalid_url:    
-            raise InputError("Image_url doesn't have a HTTP status of 200") from invalid_url
-        #Downloaded the photo
-        fullfilename = os.path.join("static", f"user{u_id}_photo.jpg")
-        urllib.request.urlretrieve(img_url, fullfilename)
-        image = Image.open(fullfilename)  
-        width, height = image.size
-        #Accounting for invalid x inputs
-        if x_start > width or x_end > width or x_start < 0 or x_end < 0:
-            raise InputError("Invalid x dimensions")
-        if x_start == x_end:
-            raise InputError("Invalid x dimensions")
-        #Accounting for invalid y inputs
-        if y_start > height or y_end > height or y_start < 0 or y_end < 0:
-            raise InputError("Invalid y dimensions")
-        if y_start == y_end:
-            raise InputError("Invalid y dimensions")
-        #Cropping image
-        crop_image = image.crop((x_start,y_start,x_end,y_end))
-        crop_image.save(fullfilename)
-        #Adding link to data
-        data.data["users"][u_id]["img_url"] = f'http://127.0.0.1:{port}/' + fullfilename
-    else:
+    if valid != 1:
         raise InputError("Invalid token")
+    #If token is valid then returns the users stats, otherwise raises input error
+    decoded_token = jwt.decode(token, SECRET, algorithms=['HS256'])
+    u_id = ''
+    for x in data.data["users"]:
+        for y in x["session_ids"]:
+            if decoded_token["session_id"] == y:
+                u_id = x['u_id']  
+    #Checking if img_url ends with jpg
+    regex = '.*jpg$'
+    if re.search(regex, img_url):
+        pass
+    else:
+        raise InputError("Invalid image url")
+    #Checking if img_url return a 200 http_status
+    try: 
+        requests.get(img_url)
+    except requests.exceptions.ConnectionError as invalid_url:    
+        raise InputError("Image_url doesn't have a HTTP status of 200") from invalid_url
+    #Downloaded the photo
+    fullfilename = os.path.join("static", f"user{u_id}_photo.jpg")
+    urllib.request.urlretrieve(img_url, fullfilename)
+    image = Image.open(fullfilename)  
+    width, height = image.size
+    #Accounting for invalid x inputs
+    if x_start > width or x_end > width or x_start < 0 or x_end < 0:
+        raise InputError("Invalid x dimensions")
+    if x_start == x_end:
+        raise InputError("Invalid x dimensions")
+    #Accounting for invalid y inputs
+    if y_start > height or y_end > height or y_start < 0 or y_end < 0:
+        raise InputError("Invalid y dimensions")
+    if y_start == y_end:
+        raise InputError("Invalid y dimensions")
+    #Cropping image
+    crop_image = image.crop((x_start,y_start,x_end,y_end))
+    crop_image.save(fullfilename)
+    #Adding link to data
+    data.data["users"][u_id]["img_url"] = f'http://127.0.0.1:{port}/' + fullfilename
     return {}

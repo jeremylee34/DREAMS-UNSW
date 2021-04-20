@@ -135,14 +135,11 @@ def generate_secret_code(email):
         raise InputError('Invalid email')
     else:
         random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-
         #attach random_str to user data
         for user in data.data['users']:
             if user['email'] == email:
-                user['secret_code'] = random_str
-
+                data.data['users'][user['u_id']]['secret_code'] = random_str
         return random_str
-
 def check_secret_code(secret):
     '''
     check if secret code is valid, 
@@ -168,3 +165,64 @@ def get_secret_code(u_id):
         raise InputError('No secret code in this u_id')
 
     return secret_code
+def helper_sendlaterdm(token, dm_id, message, message_id):
+    # Converts token to auth_user_id
+    auth_user_id = token_to_u_id(token)
+    # Gets the current time
+    timestamp = int(time.time())
+    # Dictionary for new message
+    new_message = {
+        'message_id': message_id,
+        'u_id': auth_user_id,
+        'message': message,
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
+    }
+    # Adds message to notifications list if @ is found in the message
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'channel_id': -1,
+            'dm_id': dm_id,
+            'u_id': auth_user_id,
+            'reacts': []
+        }
+        data.data['notifications'].append(new_notification)
+    # Inserts message into dms
+    data.data['dms'][dm_id]['messages'].insert(0, new_message)
+    data.data['users'][auth_user_id]['num_messages'] += 1
+def helper_sendlater(token, channel_id, message, message_id):
+    # Gets auth_user_id from token
+    auth_user_id = token_to_u_id(token)
+    timestamp = int(time.time())
+    # Dictionary for new message
+    new_message = {
+        'message_id': message_id,
+        'u_id': auth_user_id,
+        'message': message,
+        'time_created': timestamp,
+        'reacts': [{
+            'react_id': 1,
+            'u_ids': [],
+            'is_this_user_reacted': False
+        }],
+        'is_pinned': False
+    }
+    # Adds to notifications list if @ is in the message
+    if '@' in message:
+        new_notification = {
+            'message': message,
+            'channel_id': channel_id,
+            'dm_id': -1,
+            'u_id': auth_user_id,
+            'reacts': []
+        }
+        data.data['notifications'].append(new_notification)
+    # Inserts the message into the channel messages
+    data.data['channels'][channel_id]['messages'].insert(0, new_message)
+    data.data['users'][auth_user_id]['num_messages'] += 1
